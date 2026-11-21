@@ -49,6 +49,16 @@ a{color:inherit;text-decoration:none}
 .side-card b{display:block;margin-bottom:4px;color:var(--muted);font-size:11px}
 .side-card .dot-line{display:flex;align-items:center;gap:6px;margin-top:8px;color:var(--accent)}
 .side-card .dot-line i{width:5px;height:5px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px rgba(62,230,192,.7)}
+.cloud-state{display:block;margin-top:8px;color:var(--warm);font-size:9.5px;line-height:1.5}
+.cloud-state.ok{color:var(--ok)}
+.cloud-state.err{color:var(--danger)}
+.cloud-btn .cloud-dot{width:5px;height:5px;border-radius:50%;background:var(--warm);margin-left:2px}
+.cloud-btn.ok .cloud-dot{background:var(--ok);box-shadow:0 0 8px rgba(65,217,154,.6)}
+.cloud-modal{max-width:min(520px,calc(100vw - 36px))}
+.cloud-intro{margin:0 0 13px;color:var(--muted);font-size:11px;line-height:1.75}
+.cloud-status{margin-top:12px;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--panel);color:var(--muted);font-size:10.5px;line-height:1.6}
+.cloud-status.ok{color:var(--ok);border-color:rgba(65,217,154,.26);background:rgba(65,217,154,.06)}
+.cloud-status.err{color:var(--danger);border-color:rgba(255,115,115,.26);background:rgba(255,115,115,.06)}
 
 .main{min-width:0;padding:26px 32px 52px}
 .top{display:flex;align-items:flex-start;justify-content:space-between;gap:18px;flex-wrap:wrap;margin-bottom:26px}
@@ -300,8 +310,9 @@ dialog.modal::backdrop{background:rgba(0,0,0,.62);backdrop-filter:blur(5px)}
     </nav>
     <div class="side-spacer"></div>
     <div class="side-card">
-      <b>数据存在本浏览器</b>
-      后台与前台同一域名下会共用这份数据；换设备请用「导出 JSON」迁移。
+      <b>数据同步到 Supabase</b>
+      后台保存后自动发布到云端；安装包上传到公开存储，所有访客都能下载。
+      <span id="cloudState" class="cloud-state">未连接云端</span>
       <span class="dot-line"><i></i><span id="sideUpdated">尚未保存</span></span>
     </div>
   </aside>
@@ -316,6 +327,10 @@ dialog.modal::backdrop{background:rgba(0,0,0,.62);backdrop-filter:blur(5px)}
       <div class="top-actions">
         <button type="button" class="btn icon-only ghost" id="themeBtn" aria-label="切换主题">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M20 14.2A8.2 8.2 0 1 1 9.8 4a6.6 6.6 0 0 0 10.2 10.2z"/></svg>
+        </button>
+        <button type="button" class="btn ghost cloud-btn" id="cloudBtn" title="Supabase 云端发布">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18h9.5a4.5 4.5 0 0 0 .6-8.96A6 6 0 0 0 5.3 9.2 4.4 4.4 0 0 0 7 18z"/><path d="M12 11v7m0-7l-2.5 2.5M12 11l2.5 2.5"/></svg>
+          <span id="cloudTopLabel">云端</span>
         </button>
         <button type="button" class="btn ghost" id="importBtn">导入 JSON</button>
         <button type="button" class="btn" id="exportBtn">导出 JSON</button>
@@ -363,6 +378,29 @@ dialog.modal::backdrop{background:rgba(0,0,0,.62);backdrop-filter:blur(5px)}
       <button type="button" class="btn danger" id="confirmYes">确认</button>
     </footer>
   </div>
+</dialog>
+
+<dialog id="cloudDialog" class="modal cloud-modal">
+  <form class="modal-card" id="cloudForm">
+    <header class="modal-head">
+      <div>
+        <small>SUPABASE</small>
+        <h2>云端发布</h2>
+      </div>
+      <button type="button" class="x" id="cloudX" aria-label="关闭">×</button>
+    </header>
+    <div class="modal-body">
+      <p class="cloud-intro">安装包上传和前台数据发布都走 Supabase。密钥只保存在当前浏览器会话，不写进前端代码，也不会出现在公开页面。</p>
+      <label class="field"><span>云端管理密钥</span><input id="cloudKey" type="password" autocomplete="current-password" placeholder="输入 Supabase 管理密钥"></label>
+      <div class="cloud-status" id="cloudDialogState">未连接云端</div>
+      <p class="cloud-intro">保存后，后台每次保存会自动同步分类、应用、下载信息和前端文案；安装包会写入公开存储桶，前台所有访客都能真实下载。</p>
+    </div>
+    <footer class="modal-foot">
+      <button type="button" class="btn ghost" id="cloudCancel">取消</button>
+      <button type="button" class="btn" id="cloudSaveKey">保存密钥</button>
+      <button type="button" class="btn primary" id="cloudPublish">立即发布</button>
+    </footer>
+  </form>
 </dialog>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -585,6 +623,14 @@ dialog.modal::backdrop{background:rgba(0,0,0,.62);backdrop-filter:blur(5px)}
 const $=(s,r=document)=>r.querySelector(s);
 const $$=(s,r=document)=>[...r.querySelectorAll(s)];
 const KEY='weakdock_admin_v1';
+const SUPABASE_URL='https://gngcducutevgllbaejec.supabase.co';
+const SUPABASE_ANON='sb_publishable_i5npxDKfL83UBEDBBPm57A_WqqYeh-P';
+const CLOUD_FN=SUPABASE_URL+'/functions/v1/weakdock-api';
+const CLOUD_KEY_SLOT='weakdock_cloud_key';
+let cloudKey=(()=>{try{return sessionStorage.getItem(CLOUD_KEY_SLOT)||''}catch(e){return ''}})();
+let cloudTimer=null;
+let cloudPublishing=false;
+let cloudHydrating=false;
 const PLAT_DEFS=[
   {key:'win',label:'Windows',short:'WIN',type:'EXE'},
   {key:'android',label:'安卓',short:'AND',type:'APK'},
@@ -692,6 +738,7 @@ function saveData(){
     localStorage.setItem(KEY,JSON.stringify(data));
     $('#sideUpdated').textContent='已保存 · '+data.updatedAt;
     renderAll();
+    scheduleCloudPublish();
     return true;
   }catch(e){
     toast('保存失败：浏览器存储空间可能已满，请先导出 JSON 备份。','err');
@@ -701,6 +748,86 @@ function saveData(){
 function toast(msg,type='ok'){
   const t=$('#toast');t.textContent=msg;t.className='toast show '+type;
   clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.className='toast '+type,2800);
+}
+
+/* ============================================================
+   Supabase 云端：共享配置 + 公开安装包
+   ============================================================ */
+function cloudHeaders(extra={}){
+  return {apikey:SUPABASE_ANON,Authorization:'Bearer '+SUPABASE_ANON,...extra};
+}
+function setCloudState(text,kind=''){
+  const s=$('#cloudState');if(s){s.textContent=text;s.className='cloud-state '+kind;}
+  const d=$('#cloudDialogState');if(d){d.textContent=text;d.className='cloud-status '+kind;}
+  const t=$('#cloudTopLabel');if(t)t.textContent=kind==='ok'?'已连云端':(kind==='err'?'云端异常':'云端');
+  const b=$('#cloudBtn');if(b)b.classList.toggle('ok',kind==='ok');
+}
+async function loadCloudData(silent=true){
+  try{
+    const r=await fetch(CLOUD_FN+'/config?ts='+Date.now(),{headers:cloudHeaders(),cache:'no-store'});
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    const j=await r.json();
+    if(!j||!j.ok) throw new Error((j&&j.error)||'云端读取失败');
+    const snap=j.data||{};
+    if(Array.isArray(snap.apps)&&snap.apps.length){
+      const cloudTime=Date.parse(j.updatedAt||snap.updatedAt||'')||0;
+      const localTime=Date.parse(data.updatedAt||'')||0;
+      if(!data.updatedAt||cloudTime>=localTime||data.apps.length===0){
+        data=normalize(snap);
+        try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){}
+        renderAll();
+      }
+      setCloudState('云端已连接 · '+(j.updatedAt||data.updatedAt||'已有配置'),'ok');
+    }else{
+      setCloudState(cloudKey?'云端为空，保存后自动发布':'云端为空，填写密钥后发布','');
+    }
+    return true;
+  }catch(e){
+    setCloudState('云端读取失败，当前为本地模式','err');
+    if(!silent)toast('云端读取失败：'+(e.message||'网络错误'),'err');
+    return false;
+  }
+}
+function scheduleCloudPublish(){
+  if(!cloudKey)return;
+  clearTimeout(cloudTimer);
+  setCloudState('有修改待发布 · 正在同步','');
+  cloudTimer=setTimeout(()=>publishCloud({silent:true}),900);
+}
+async function publishCloud(opts={}){
+  const silent=!!opts.silent;
+  if(!cloudKey){setCloudState('未连接云端','');if(!silent)toast('请先在右上角「云端」里填写管理密钥。','err');return false;}
+  if(cloudPublishing)return false;
+  cloudPublishing=true;
+  const snapshot=JSON.parse(JSON.stringify(data));
+  snapshot.updatedAt=nowStr();
+  try{
+    const r=await fetch(CLOUD_FN+'/config',{method:'POST',headers:cloudHeaders({'Content-Type':'application/json'}),body:JSON.stringify({key:cloudKey,data:snapshot})});
+    const j=await r.json().catch(()=>({}));
+    if(!r.ok||!j.ok) throw new Error(j.error||('HTTP '+r.status));
+    data.updatedAt=snapshot.updatedAt;
+    try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){}
+    $('#sideUpdated').textContent='已发布 · '+data.updatedAt;
+    setCloudState('已发布到 Supabase · '+data.updatedAt,'ok');
+    if(!silent)toast('已发布到 Supabase，所有访客都会看到最新内容。','ok');
+    if(opts.closeDialog){$('#cloudDialog').close();}
+    return true;
+  }catch(e){
+    setCloudState('发布失败：'+(e.message||'网络错误'),'err');
+    if(!silent)toast('发布失败：'+(e.message||'请检查管理密钥和网络'),'err');
+    return false;
+  }finally{cloudPublishing=false;}
+}
+async function uploadPackageToCloud(file){
+  if(!cloudKey)throw new Error('请先在右上角「云端」里填写管理密钥。');
+  const fd=new FormData();
+  fd.append('key',cloudKey);
+  fd.append('file',file,file.name);
+  const r=await fetch(CLOUD_FN+'/upload',{method:'POST',headers:cloudHeaders(),body:fd});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok||!j.ok||!j.file) throw new Error(j.error||('上传失败 HTTP '+r.status));
+  setCloudState('安装包已上传 Supabase · '+file.name,'ok');
+  return j.file;
 }
 function iconOf(app,size='38'){
   if(app.iconImg) return `<div class="app-icon" style="background:${esc(app.color||'#12A6E8')}"><img src="${esc(app.iconImg)}" alt=""></div>`;
@@ -748,7 +875,7 @@ function bindCSelect(root,onChange){
 function sortedCategories(){return [...data.categories].sort((a,b)=>(a.order||999)-(b.order||999)||a.name.localeCompare(b.name,'zh-Hans-CN'));}
 
 function renderAll(){
-  const labels={overview:['概览','管理台总览','维护分类、应用与官方下载信息。'],categories:['分类管理','分类管理','新增、排序和整理应用分类。'],apps:['应用管理','应用管理','添加应用并维护平台、版本与直链信息。'],copy:['前端文案','前端文案','修改前台静态文字，保存后同一浏览器生效。']};
+  const labels={overview:['概览','管理台总览','维护分类、应用与官方下载信息。'],categories:['分类管理','分类管理','新增、排序和整理应用分类。'],apps:['应用管理','应用管理','添加应用并维护平台、版本与直链信息。'],copy:['前端文案','前端文案','修改前台静态文字，保存并发布后所有访客生效。']};
   const l=labels[view]||labels.overview;
   $('#crumbView').textContent=l[0];$('#pageTitle').textContent=l[1];$('#pageSub').textContent=l[2];
   $$('.nav button').forEach(b=>b.classList.toggle('on',b.dataset.view===view));
@@ -764,7 +891,7 @@ function renderOverview(){
   $('#viewOverview').innerHTML=`
     <div class="notice">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg>
-      <div>数据保存在当前浏览器（localStorage）。要让访客看到，需把同一域名下的前台和后台在同一浏览器里打开；跨设备请导出 JSON，后续接真实后端即可多端同步。</div>
+      <div>分类、应用与前端文案已接入 Supabase：保存后自动发布，所有访客刷新即可看到；安装包写入公开存储。未填写云端密钥时只保存在本机。</div>
     </div>
     <div class="stats">
       <div class="stat accent"><span>应用总数</span><b>${data.apps.length}</b><i>个应用正在管理</i></div>
@@ -857,7 +984,7 @@ function renderCopy(){
   data.copy=data.copy&&typeof data.copy==='object'?data.copy:{};
   const keys=copyKeys();
   $('#viewCopy').innerHTML=`
-    <div class="notice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg><div>这里修改的是前台可见文字，不改应用数据。保存后同一域名下的前台刷新即可生效；数字、链接和过短符号不会进入清单。</div></div>
+    <div class="notice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg><div>这里修改的是前台可见文字，不改应用数据。保存并发布后所有访客刷新即可生效；数字、链接和过短符号不会进入清单。</div></div>
     <div class="toolbar">
       <div class="toolbar-left"><div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg><input id="copySearch" placeholder="搜索原文或替换文案" value="${esc(copyQuery)}"></div></div>
       <div class="toolbar-right"><span class="status ok"><i></i>${keys.length} 条文案</span><button type="button" class="btn" id="copyScanBtn">扫描前台</button><button type="button" class="btn primary" id="copySaveBtn">保存文案</button></div>
@@ -999,7 +1126,7 @@ function openAppModal(id){
     const pending=draft?false:(cur.pending||!cur.url);
     const upName=draft?(draft.name+' · '+fmtFileSize(draft.size)):'未上传';
     const displayUrl=isUploadUrl(cur.url)?'':(cur.url||'');
-    const urlPlaceholder=draft?'已上传安装包，保存后本机可下载':'https://…（待上架可留空）';
+    const urlPlaceholder=draft?(draft.provider==='supabase'?'已上传到 Supabase，保存并发布后所有访客可下载':'已上传安装包，保存后本机可下载'):'https://…（待上架可留空）';
     return `<section class="plat-panel" data-panel="${p.key}" ${app.platforms[p.key]?'':'hidden'}>
       <div class="plat-panel-head"><b>${p.label} 安装包</b><i class="tag ${p.key}">${p.short}</i></div>
       <div class="p-grid">
@@ -1014,7 +1141,7 @@ function openAppModal(id){
         <label class="field"><span>Content-Type</span><input data-field="ctype" value="${esc(cur.ctype||'')}" placeholder="例如 application/octet-stream"></label>
         <div class="field wide"><span>安装包文件</span><div class="pkg-line"><label class="file-label">选择安装包<input type="file" data-pkg-input="${p.key}" hidden></label><span class="pkg-name" data-pkg-name="${p.key}">${esc(upName)}</span><button type="button" class="btn small ghost" data-pkg-clear="${p.key}">移除</button></div></div>
       </div>
-      <p class="plat-note">上传包保存在本浏览器（IndexedDB），同一浏览器的前台可直接下载；公开分发请同时填写官方直链。</p></section>`;
+      <p class="plat-note">安装包会上传到 Supabase 公共存储桶（weakdock），保存并发布后所有访客都能真实下载。也可继续填写官方直链。</p></section>`;
   }).join('');
   const catOpts=data.categories.map(c=>({value:c.name,label:c.name}));
   if(app.cat&&!catOpts.some(o=>o.value===app.cat)) catOpts.unshift({value:app.cat,label:app.cat});
@@ -1047,17 +1174,28 @@ function openAppModal(id){
     inp.onchange=async e=>{
       const file=e.target.files&&e.target.files[0]; if(!file) return;
       const key=inp.dataset.pkgInput,panel=inp.closest('[data-panel]'),id=uid('pkg');
-      try{ await putUploadedFile(id,file); }
-      catch(err){toast('安装包存储失败：'+(err.message||'本机存储空间不足'),'err');e.target.value='';return;}
-      const fmt=uploadFormat(file.name);
-      uploadDrafts[key]={id,name:file.name,size:file.size,type:fmt};
+      const nameEl=panel.querySelector('[data-pkg-name]');
+      if(!cloudKey){
+        toast('请先在右上角「云端」里填写管理密钥，安装包要上传到 Supabase 公共存储。','err');
+        e.target.value='';
+        return;
+      }
       const set=(name,value)=>{const el=panel.querySelector(`[data-field="${name}"]`);if(el)el.value=value;};
-      set('type',fmt);set('file',file.name);set('size',Math.max(0.1,Number((file.size/1048576).toFixed(1))));set('url','');
-      if(!panel.querySelector('[data-field="ctype"]').value)set('ctype',file.type||'application/octet-stream');
-      const seg=panel.querySelector('[data-seg="pending"]');if(seg){seg.querySelector('input').value='published';seg.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.val==='published'));}
-      const nameEl=panel.querySelector('[data-pkg-name]');if(nameEl)nameEl.textContent=file.name+' · '+fmtFileSize(file.size);
+      if(nameEl)nameEl.textContent='正在上传到 Supabase…';
+      try{
+        const meta=await uploadPackageToCloud(file);
+        uploadDrafts[key]={...meta,existing:false};
+        set('type',meta.type);set('file',meta.name);set('size',Math.max(0.1,Number((meta.size/1048576).toFixed(1))));set('url',meta.url);
+        if(!panel.querySelector('[data-field="ctype"]').value)set('ctype','application/octet-stream');
+        if(!panel.querySelector('[data-field="src"]').value)set('src','Supabase 公共存储 · weakdock');
+        const seg=panel.querySelector('[data-seg="pending"]');if(seg){seg.querySelector('input').value='published';seg.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.val==='published'));}
+        if(nameEl)nameEl.textContent=meta.name+' · '+fmtFileSize(meta.size);
+        toast('安装包已上传到 Supabase，保存应用并发布后所有访客都能下载。','ok');
+      }catch(err){
+        if(nameEl)nameEl.textContent='未上传';
+        toast('安装包上传失败：'+(err.message||'请检查云端连接'),'err');
+      }
       e.target.value='';
-      toast('安装包已暂存，保存应用后前台本机可下载。','ok');
     };
   });
   $$('#modalBody [data-pkg-clear]').forEach(btn=>{
@@ -1139,10 +1277,16 @@ function collectPlatform(panel,key){
   if(http)obj.http=http;
   if(ctype)obj.ctype=ctype;
   if(hasPkg){
-    obj.url=`upload:${draft.id}`;
     obj.size=draft.size;
-    obj.upload={id:draft.id,name:draft.name,size:draft.size,type:draft.type||type,uploadedAt:draft.uploadedAt||nowStr()};
-    if(!obj.src)obj.src='后台上传 · 本机存储';
+    if(draft.provider==='supabase'&&draft.url){
+      obj.url=draft.url;
+      obj.upload={id:draft.id,name:draft.name,size:draft.size,type:draft.type||type,url:draft.url,path:draft.path||'',provider:'supabase',uploadedAt:draft.uploadedAt||nowStr()};
+      if(!obj.src)obj.src='Supabase 公共存储 · weakdock';
+    }else{
+      obj.url=`upload:${draft.id}`;
+      obj.upload={id:draft.id,name:draft.name,size:draft.size,type:draft.type||type,uploadedAt:draft.uploadedAt||nowStr()};
+      if(!obj.src)obj.src='后台上传 · 本机存储';
+    }
   }else if(draft&&draft.remove&&obj.url&&isUploadUrl(obj.url)){
     delete obj.url;
   }
@@ -1233,9 +1377,39 @@ $('#confirmCancel').onclick=()=>{$('#confirmDialog').close();};
 $('#confirmDialog').addEventListener('click',e=>{if(e.target===$('#confirmDialog'))$('#confirmDialog').close();});
 $('#confirmDialog').addEventListener('close',()=>{confirmCallback=null;});
 
+/* 云端 */
+if($('#cloudKey'))$('#cloudKey').value=cloudKey;
+$('#cloudBtn').onclick=()=>{
+  if($('#cloudKey'))$('#cloudKey').value=cloudKey||'';
+  if($('#cloudDialogState'))$('#cloudDialogState').textContent=$('#cloudState')?.textContent||'未连接云端';
+  $('#cloudDialog').showModal();
+  setTimeout(()=>$('#cloudKey').focus(),50);
+};
+$('#cloudX').onclick=()=>$('#cloudDialog').close();
+$('#cloudCancel').onclick=()=>$('#cloudDialog').close();
+$('#cloudDialog').addEventListener('click',e=>{if(e.target===$('#cloudDialog'))$('#cloudDialog').close();});
+$('#cloudSaveKey').onclick=async()=>{
+  const k=$('#cloudKey').value.trim();
+  if(!k){toast('请输入云端管理密钥。','err');return;}
+  cloudKey=k;
+  try{sessionStorage.setItem(CLOUD_KEY_SLOT,k);}catch(e){}
+  setCloudState('密钥已保存，正在读取云端配置','');
+  await loadCloudData(false);
+  if($('#cloudState').classList.contains('ok'))toast('云端已连接。','ok');
+};
+$('#cloudPublish').onclick=async()=>{
+  const k=$('#cloudKey').value.trim();
+  if(!k){toast('请输入云端管理密钥。','err');return;}
+  cloudKey=k;
+  try{sessionStorage.setItem(CLOUD_KEY_SLOT,k);}catch(e){}
+  await publishCloud({closeDialog:true});
+};
+
 const savedTheme=localStorage.getItem('weakdock_admin_theme');
 if(savedTheme==='light') document.documentElement.dataset.theme='light';
 renderAll();
+setCloudState(cloudKey?'密钥已载入，保存后自动发布':'未连接云端');
+loadCloudData(true);
 </script>
 </body>
 </html>
