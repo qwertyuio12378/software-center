@@ -1,0 +1,1422 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1, maximum-scale=5">
+<title>软件坞 SoftDock · 软件下载中心 — 官方直链，逐条实测</title>
+<meta name="description" content="软件坞是一个只收录官方下载源的软件下载中心：18 款常用软件、19 条官方直链，逐条实测真实可下载，不转存、不捆绑、不插下载器。">
+<meta name="theme-color" content="#06070a">
+<meta property="og:title" content="软件坞 SoftDock · 软件下载中心">
+<meta property="og:description" content="18 款常用软件、19 条官方直链，逐条实测。没有下载器，没有捆绑包。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://qwertyuio12378.github.io/software-center/">
+<meta property="og:site_name" content="软件坞 SoftDock">
+<link rel="canonical" href="https://qwertyuio12378.github.io/software-center/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%233ee6c0'/%3E%3Cstop offset='1' stop-color='%2345a8ff'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='16' fill='%23090c12'/%3E%3Cpath d='M32 14v22m0 0l-9-9m9 9l9-9M17 46h30' stroke='url(%23g)' stroke-width='5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://miaoda.feishu.cn">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Manrope:wght@500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700;900&display=swap">
+<style>
+/* ============================================================
+   软件坞 SoftDock — 设计系统
+   ============================================================ */
+:root{
+  --bg:#06070a;
+  --bg-2:#090c12;
+  --header-bg:rgba(6,7,10,.66);
+  --panel:rgba(255,255,255,.045);
+  --panel-2:rgba(255,255,255,.075);
+  --panel-3:rgba(255,255,255,.11);
+  --line:rgba(255,255,255,.085);
+  --line-strong:rgba(255,255,255,.16);
+  --ink:#f3f6fb;
+  --muted:#98a3b6;
+  --muted-2:#6d7a8e;
+  --accent:#3ee6c0;
+  --accent-2:#4aa8ff;
+  --warm:#ffc66b;
+  --ok:#48e6a8;
+  --danger:#ff8b8b;
+  --card-bg:linear-gradient(180deg,rgba(255,255,255,.062),rgba(255,255,255,.022));
+  --drawer-bg:rgba(9,12,18,.94);
+  --shadow:0 30px 70px -28px rgba(0,0,0,.9);
+  --header-h:72px;
+  --r-xl:26px; --r-lg:20px; --r-md:14px; --r-sm:10px;
+  --ease:cubic-bezier(.22,1,.36,1);
+  --ease-soft:cubic-bezier(.4,0,.2,1);
+}
+[data-theme="light"]{
+  --bg:#f2f5fa;
+  --bg-2:#eef2f8;
+  --header-bg:rgba(247,249,253,.78);
+  --panel:rgba(255,255,255,.72);
+  --panel-2:rgba(255,255,255,.9);
+  --panel-3:rgba(255,255,255,.98);
+  --line:rgba(12,20,36,.09);
+  --line-strong:rgba(12,20,36,.16);
+  --ink:#0b1220;
+  --muted:#5b6980;
+  --muted-2:#8794a8;
+  --accent:#0fb894;
+  --accent-2:#2b82e8;
+  --warm:#c8842a;
+  --ok:#12a86f;
+  --card-bg:linear-gradient(180deg,rgba(255,255,255,.96),rgba(255,255,255,.78));
+  --drawer-bg:rgba(250,252,255,.96);
+  --shadow:0 30px 60px -34px rgba(20,35,60,.42);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;min-height:100vh;background:var(--bg);color:var(--ink);
+  font-family:'Manrope','Noto Sans SC',system-ui,-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
+  font-feature-settings:'tnum' 1,'lnum' 1;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;
+  overflow-x:hidden;
+}
+body.locked{overflow:hidden}
+::selection{background:rgba(62,230,192,.28);color:var(--ink)}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+input,select{font:inherit;color:inherit}
+svg{display:block}
+img{max-width:100%}
+:focus-visible{outline:2px solid color-mix(in srgb,var(--accent) 70%,transparent);outline-offset:3px;border-radius:6px}
+
+/* ---------- 背景 ---------- */
+.bg{position:fixed;inset:0;z-index:-2;overflow:hidden;
+  background:
+    radial-gradient(1200px 760px at 10% -10%,rgba(62,230,192,.16),transparent 62%),
+    radial-gradient(1000px 680px at 92% -6%,rgba(74,168,255,.17),transparent 60%),
+    radial-gradient(900px 620px at 52% 112%,rgba(255,198,107,.09),transparent 64%),
+    linear-gradient(180deg,#06070a 0%,#080b11 45%,#050609 100%);
+}
+[data-theme="light"] .bg{
+  background:
+    radial-gradient(1100px 700px at 8% -12%,rgba(15,184,148,.16),transparent 62%),
+    radial-gradient(900px 640px at 94% -8%,rgba(43,130,232,.16),transparent 60%),
+    radial-gradient(900px 600px at 50% 112%,rgba(255,196,110,.18),transparent 64%),
+    linear-gradient(180deg,#f4f7fc 0%,#eef3fa 52%,#f7f9fd 100%);
+}
+.aurora{position:fixed;z-index:-1;inset:0;overflow:hidden;pointer-events:none;filter:saturate(120%)}
+.aurora i{position:absolute;display:block;border-radius:50%;filter:blur(90px);opacity:.5;will-change:transform}
+.aurora i:nth-child(1){width:46vw;height:46vw;left:-8vw;top:-12vw;background:radial-gradient(circle,rgba(62,230,192,.5),transparent 66%);animation:drift1 26s var(--ease-soft) infinite alternate}
+.aurora i:nth-child(2){width:42vw;height:42vw;right:-6vw;top:-8vw;background:radial-gradient(circle,rgba(74,168,255,.46),transparent 66%);animation:drift2 32s var(--ease-soft) infinite alternate}
+.aurora i:nth-child(3){width:38vw;height:38vw;left:32vw;bottom:-22vw;background:radial-gradient(circle,rgba(255,198,107,.28),transparent 68%);animation:drift3 30s var(--ease-soft) infinite alternate}
+[data-theme="light"] .aurora i{opacity:.38}
+@keyframes drift1{to{transform:translate3d(6vw,4vw,0) scale(1.12)}}
+@keyframes drift2{to{transform:translate3d(-5vw,6vw,0) scale(1.08)}}
+@keyframes drift3{to{transform:translate3d(4vw,-5vw,0) scale(1.14)}}
+.grain{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.5;mix-blend-mode:overlay;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CcolorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.16'/%3E%3C/svg%3E");
+}
+
+/* ---------- 通用 ---------- */
+.wrap{width:min(1240px,calc(100vw - 56px));margin-inline:auto}
+@media(max-width:700px){.wrap{width:calc(100vw - 32px)}}
+.glass{
+  background:var(--panel);
+  border:1px solid var(--line);
+  -webkit-backdrop-filter:blur(26px) saturate(160%);
+  backdrop-filter:blur(26px) saturate(160%);
+  box-shadow:var(--shadow),inset 0 1px 0 rgba(255,255,255,.10);
+}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  height:46px;padding:0 22px;border-radius:14px;font-weight:700;font-size:14.5px;letter-spacing:.01em;
+  transition:transform .28s var(--ease),box-shadow .28s var(--ease),background .28s var(--ease),border-color .28s var(--ease);
+  white-space:nowrap;user-select:none;
+}
+.btn:active{transform:scale(.97)}
+.btn-primary{
+  background:linear-gradient(135deg,#41e8c2 0%,#4bb6ff 100%);
+  color:#04140f;box-shadow:0 16px 36px -14px rgba(62,230,192,.65),inset 0 1px 0 rgba(255,255,255,.5);
+}
+.btn-primary:hover{box-shadow:0 20px 44px -14px rgba(62,230,192,.8),inset 0 1px 0 rgba(255,255,255,.5);transform:translateY(-1px)}
+.btn-ghost{background:var(--panel);border:1px solid var(--line-strong);color:var(--ink)}
+.btn-ghost:hover{background:var(--panel-2);border-color:rgba(62,230,192,.35)}
+.mono{font-variant-numeric:tabular-nums;font-feature-settings:'tnum' 1}
+
+/* ---------- 顶部 ---------- */
+.progress{position:fixed;top:0;left:0;height:2px;width:0;z-index:70;background:linear-gradient(90deg,#3ee6c0,#4aa8ff,#ffc66b);box-shadow:0 0 14px rgba(62,230,192,.6);transition:width .12s linear}
+.site-header{position:fixed;top:0;left:0;right:0;z-index:60;height:var(--header-h);display:flex;align-items:center;transition:background .35s var(--ease),border-color .35s,box-shadow .35s;border-bottom:1px solid transparent}
+.site-header.scrolled{background:var(--header-bg);border-bottom-color:var(--line);-webkit-backdrop-filter:blur(26px) saturate(150%);backdrop-filter:blur(26px) saturate(150%);box-shadow:0 18px 40px -30px rgba(0,0,0,.8)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;width:min(1240px,calc(100vw - 56px));margin-inline:auto}
+.brand{display:flex;align-items:center;gap:11px;flex:0 0 auto}
+.brand-mark{width:36px;height:36px;border-radius:11px;display:grid;place-items:center;background:linear-gradient(145deg,#0d1117,#111823);border:1px solid var(--line-strong);box-shadow:inset 0 1px 0 rgba(255,255,255,.12),0 8px 20px -10px rgba(62,230,192,.5);overflow:hidden;position:relative}
+.brand-mark::before{content:'';position:absolute;inset:-40%;background:conic-gradient(from 90deg,rgba(62,230,192,.55),rgba(74,168,255,.55),rgba(255,198,107,.45),rgba(62,230,192,.55));filter:blur(12px);opacity:.55}
+.brand-mark svg{position:relative;width:19px;height:19px;color:#eafff9}
+.brand-text{display:flex;flex-direction:column;line-height:1}
+.brand-text b{font-size:17px;font-weight:900;letter-spacing:.02em}
+.brand-text i{font-style:normal;font-size:9px;letter-spacing:.22em;color:var(--muted-2);margin-top:4px;font-weight:700}
+.nav{display:flex;align-items:center;gap:4px;margin-left:8px}
+.nav button,.nav a{font-size:13.5px;font-weight:600;color:var(--muted);padding:9px 13px;border-radius:10px;transition:color .2s,background .2s}
+.nav button:hover,.nav a:hover{color:var(--ink);background:var(--panel)}
+.header-actions{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+.icon-btn{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--panel);border:1px solid var(--line);color:var(--muted);transition:.25s var(--ease)}
+.icon-btn:hover{color:var(--ink);background:var(--panel-2);transform:translateY(-1px)}
+.icon-btn svg{width:18px;height:18px}
+.header-search{display:flex;align-items:center;gap:8px;height:38px;padding:0 12px;border-radius:11px;background:var(--panel);border:1px solid var(--line);color:var(--muted-2);font-size:12px;min-width:190px;transition:.25s}
+.header-search:hover{border-color:var(--line-strong);color:var(--muted)}
+.header-search kbd{margin-left:auto;font-family:inherit;font-size:10px;padding:2px 6px;border-radius:5px;border:1px solid var(--line-strong);color:var(--muted-2)}
+@media(max-width:1080px){.header-search{display:none}.nav{display:none}}
+@media(max-width:700px){:root{--header-h:62px}.brand-text i{display:none}.icon-btn{width:36px;height:36px}}
+
+/* ---------- Hero ---------- */
+.hero{padding:calc(var(--header-h) + 76px) 0 46px;display:grid;grid-template-columns:minmax(0,1.16fr) minmax(300px,.84fr);gap:52px;align-items:center}
+.eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:11.5px;font-weight:700;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;padding:7px 12px;border-radius:999px;background:var(--panel);border:1px solid var(--line)}
+.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 4px rgba(62,230,192,.14);animation:blink 2.6s var(--ease-soft) infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.35}}
+.hero h1{margin:22px 0 20px;font-size:clamp(38px,5.6vw,72px);line-height:1.03;letter-spacing:-.045em;font-weight:900}
+.hero h1 .grad{background:linear-gradient(96deg,#7df3d2 0%,#4fb6ff 48%,#ffd08a 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent;display:inline-block}
+.lede{margin:0;max-width:540px;color:var(--muted);font-size:15px;line-height:1.85;letter-spacing:.01em}
+.lede b{color:var(--ink);font-weight:600}
+.stats{display:flex;gap:34px;margin:34px 0 0;padding:0;list-style:none;flex-wrap:wrap}
+.stat{display:flex;flex-direction:column;gap:5px;position:relative}
+.stat + .stat::before{content:'';position:absolute;left:-17px;top:6px;bottom:6px;width:1px;background:var(--line)}
+.stat b{font-size:27px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.stat b i{font-style:normal;font-size:14px;font-weight:700;color:var(--muted);margin-left:1px}
+.stat span{font-size:11.5px;color:var(--muted-2);letter-spacing:.06em}
+.hero-actions{display:flex;align-items:center;gap:12px;margin-top:34px;flex-wrap:wrap}
+.devbtn{font-size:13px;color:var(--muted);padding-inline:16px}
+.devbtn b{color:var(--ink)}
+.devbtn svg{width:16px;height:16px;opacity:.8}
+.verify-card{padding:22px;border-radius:var(--r-xl);position:relative;overflow:hidden}
+.verify-card::after{content:'';position:absolute;inset:0;background:radial-gradient(600px 200px at 80% -20%,rgba(62,230,192,.13),transparent 60%);pointer-events:none}
+.verify-card header{display:flex;align-items:center;gap:9px;font-size:11.5px;letter-spacing:.1em;color:var(--muted);text-transform:uppercase;font-weight:700}
+.verify-card header b{margin-left:auto;letter-spacing:.02em;color:var(--muted-2);font-weight:600;font-size:11px}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--ok);box-shadow:0 0 0 5px rgba(72,230,168,.12)}
+.verify-list{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-direction:column}
+.verify-list li{display:grid;grid-template-columns:1fr auto 18px;gap:10px;align-items:center;padding:13px 0;border-top:1px solid var(--line);font-size:13.5px}
+.verify-list li:first-child{border-top:0;padding-top:4px}
+.verify-list .vn{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.verify-list .vn em{font-style:normal;color:var(--muted-2);font-size:11px;margin-left:8px;letter-spacing:.02em}
+.verify-list .vs{font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.verify-list .vok{width:18px;height:18px;border-radius:50%;display:grid;place-items:center;background:rgba(72,230,168,.12);color:var(--ok);font-size:10px}
+.verify-card footer{margin-top:14px;padding-top:14px;border-top:1px solid var(--line);font-size:11px;color:var(--muted-2);line-height:1.7}
+@media(max-width:1020px){
+  .hero{grid-template-columns:1fr;gap:36px;padding-top:calc(var(--header-h) + 52px)}
+  .verify-card{max-width:620px}
+}
+@media(max-width:700px){
+  .hero{padding-top:calc(var(--header-h) + 42px);padding-bottom:26px}
+  .hero h1{margin:18px 0 16px}
+  .lede{font-size:14px;line-height:1.8}
+  .stats{gap:22px;margin-top:26px}
+  .stat + .stat::before{left:-11px}
+  .hero-actions{margin-top:26px}
+  .verify-card{display:none}
+}
+
+/* ---------- 工具栏 ---------- */
+.library{padding-bottom:80px}
+.toolbar{border-radius:var(--r-lg);padding:14px;position:sticky;top:calc(var(--header-h) + 12px);z-index:40;display:flex;flex-direction:column;gap:12px}
+.tool-main{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.search{flex:1 1 260px;min-width:200px;display:flex;align-items:center;gap:10px;height:46px;padding:0 14px;border-radius:13px;background:var(--panel-2);border:1px solid var(--line);position:relative;transition:border-color .25s,box-shadow .25s}
+.search:focus-within{border-color:rgba(62,230,192,.45);box-shadow:0 0 0 3px rgba(62,230,192,.10)}
+.search svg{width:17px;height:17px;color:var(--muted-2);flex:0 0 auto}
+.search input{flex:1;min-width:0;background:none;border:0;outline:none;font-size:13.5px;font-weight:500;letter-spacing:.01em;color:var(--ink)}
+.search input::placeholder{color:var(--muted-2)}
+.search input::-webkit-search-cancel-button,.search input::-webkit-search-decoration{-webkit-appearance:none;display:none}
+.search kbd{flex:0 0 auto;font-family:inherit;font-size:10px;font-weight:700;padding:3px 7px;border-radius:6px;border:1px solid var(--line-strong);color:var(--muted-2);background:var(--panel)}
+.search .clear{width:22px;height:22px;border-radius:50%;display:none;place-items:center;background:var(--panel-3);color:var(--muted);font-size:12px;line-height:1}
+.search.hasq .clear{display:grid}
+.search.hasq kbd{display:none}
+.seg{display:flex;align-items:center;gap:2px;padding:4px;border-radius:12px;background:var(--panel);border:1px solid var(--line);flex:0 0 auto}
+.seg button{height:36px;padding:0 13px;border-radius:9px;font-size:12.5px;font-weight:700;color:var(--muted);display:inline-flex;align-items:center;gap:6px;transition:.2s var(--ease)}
+.seg button em{font-style:normal;font-size:10.5px;color:var(--muted-2);font-weight:600;letter-spacing:.02em}
+.seg button.on{background:var(--panel-3);color:var(--ink);box-shadow:0 6px 14px -8px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.12)}
+.seg button.on em{color:var(--accent)}
+.seg button:hover:not(.on){color:var(--ink)}
+.tool-right{display:flex;align-items:center;gap:8px;margin-left:auto;flex:0 0 auto}
+.select{height:46px;border-radius:12px;background:var(--panel-2);border:1px solid var(--line);padding:0 32px 0 13px;font-size:12.5px;font-weight:600;color:var(--muted);outline:none;cursor:pointer;appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2398a3b6' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 11px center;background-size:12px;
+}
+.select:hover{border-color:var(--line-strong);color:var(--ink)}
+.select option{background:#11151d;color:#f3f6fb}
+[data-theme="light"] .select option{background:#fff;color:#0b1220}
+.chip{height:46px;padding:0 14px;border-radius:12px;background:var(--panel-2);border:1px solid var(--line);display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:var(--muted);transition:.2s}
+.chip svg{width:14px;height:14px}
+.chip em{font-style:normal;font-size:10.5px;color:var(--muted-2);font-weight:700}
+.chip:hover{border-color:var(--line-strong);color:var(--ink)}
+.chip.on{color:var(--warm);border-color:rgba(255,198,107,.4);background:rgba(255,198,107,.09)}
+.chip.on svg{color:var(--warm)}
+.cats{display:flex;align-items:center;gap:7px;overflow-x:auto;scrollbar-width:none;padding-bottom:1px;mask-image:linear-gradient(90deg,transparent,#000 14px,#000 calc(100% - 14px),transparent)}
+.cats::-webkit-scrollbar{display:none}
+.cats button{flex:0 0 auto;height:32px;padding:0 12px;border-radius:999px;font-size:12px;font-weight:600;color:var(--muted);border:1px solid transparent;background:var(--panel);transition:.2s}
+.cats button em{font-style:normal;color:var(--muted-2);margin-left:5px;font-size:10.5px}
+.cats button:hover{color:var(--ink);border-color:var(--line)}
+.cats button.on{color:var(--ink);border-color:rgba(62,230,192,.4);background:rgba(62,230,192,.10);box-shadow:inset 0 0 0 1px rgba(62,230,192,.08)}
+.cats button.on em{color:var(--accent)}
+@media(max-width:900px){
+  .toolbar{position:static;top:auto;padding:12px}
+  .tool-main > .search{order:1}
+  .seg{order:2;width:100%;overflow-x:auto;scrollbar-width:none}
+  .seg::-webkit-scrollbar{display:none}
+  .seg button{flex:1 0 auto;justify-content:center}
+  .tool-right{order:3;margin-left:auto}
+  .select{height:42px}
+  .chip{height:42px}
+}
+@media(max-width:700px){
+  .search{flex:1 1 100%;height:44px}
+  .tool-right{width:100%;justify-content:space-between}
+  .select{flex:1}
+}
+
+/* ---------- 结果区 ---------- */
+.resultline{display:flex;align-items:center;gap:12px;margin:18px 2px 0;font-size:12px;color:var(--muted-2);letter-spacing:.02em}
+.resultline b{color:var(--ink);font-weight:700}
+.resultline .reset{margin-left:auto;font-size:11.5px;color:var(--accent);border-bottom:1px dashed rgba(62,230,192,.4);padding-bottom:1px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:16px}
+@media(max-width:1080px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:680px){.grid{grid-template-columns:1fr;gap:14px}}
+
+/* ---------- 卡片 ---------- */
+.card{
+  position:relative;display:flex;flex-direction:column;gap:0;
+  padding:19px 19px 17px;border-radius:var(--r-lg);
+  background:var(--card-bg);border:1px solid var(--line);
+  box-shadow:0 18px 40px -30px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.06);
+  overflow:hidden;cursor:pointer;
+  transition:transform .45s var(--ease),border-color .3s,box-shadow .45s var(--ease);
+}
+[data-theme="light"] .card{box-shadow:0 18px 36px -30px rgba(20,35,60,.35),inset 0 1px 0 #fff}
+.card::before{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .4s;
+  background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.10),transparent 62%)}
+.card:hover{transform:translateY(-5px);border-color:var(--line-strong);box-shadow:0 34px 70px -34px rgba(0,0,0,.95),inset 0 1px 0 rgba(255,255,255,.12)}
+[data-theme="light"] .card:hover{box-shadow:0 30px 60px -30px rgba(20,35,60,.4),inset 0 1px 0 #fff}
+.card:hover::before{opacity:1}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.tile{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;flex:0 0 auto;position:relative;
+  background-color:var(--c,#3ee6c0);
+  background-image:
+    radial-gradient(120% 120% at 28% 18%,rgba(255,255,255,.42) 0%,rgba(255,255,255,0) 54%),
+    linear-gradient(158deg,rgba(255,255,255,.10) 0%,rgba(0,0,0,.42) 100%);
+  box-shadow:0 12px 26px -12px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.35),inset 0 -1px 0 rgba(0,0,0,.25);
+  transition:transform .4s var(--ease)
+}
+.card:hover .tile{transform:translateY(-1px) scale(1.03)}
+.tile svg{width:28px;height:28px;color:#fff;filter:drop-shadow(0 2px 4px rgba(0,0,0,.35));opacity:.97}
+.tile svg path{fill:currentColor}
+.fav{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;color:var(--muted-2);border:1px solid transparent;transition:.25s;flex:0 0 auto}
+.fav svg{width:16px;height:16px;transition:transform .3s var(--ease)}
+.fav:hover{color:var(--warm);background:rgba(255,198,107,.09)}
+.fav.on{color:var(--warm)}
+.fav.on svg{transform:scale(1.12)}
+.card h3{margin:16px 0 0;font-size:18.5px;font-weight:800;letter-spacing:-.02em;display:flex;align-items:baseline;gap:8px;line-height:1.2}
+.card h3 .en{font-size:10.5px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card .tag{margin:8px 0 0;font-size:12.5px;line-height:1.65;color:var(--muted);min-height:2.6em;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+mark{background:rgba(255,198,107,.22);color:var(--ink);border-radius:4px;padding:0 1px}
+.meta{display:flex;align-items:center;gap:6px;margin-top:14px;flex-wrap:wrap}
+.pill{font-size:10.5px;font-weight:600;letter-spacing:.02em;padding:4px 8px;border-radius:6px;background:var(--panel);border:1px solid var(--line);color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
+.pill.ver{color:var(--ink);border-color:var(--line-strong)}
+.plats{display:flex;gap:4px;margin-left:auto}
+.pt{font-style:normal;font-size:9px;font-weight:800;letter-spacing:.08em;padding:3px 5px;border-radius:5px;background:var(--panel);border:1px solid var(--line);color:var(--muted-2)}
+.pt.win{color:#8fd0ff;border-color:rgba(74,168,255,.28);background:rgba(74,168,255,.08)}
+.pt.android{color:#b6f5c9;border-color:rgba(72,230,168,.28);background:rgba(72,230,168,.08)}
+[data-theme="light"] .pt.win{color:#1f6fd0;border-color:rgba(31,111,208,.26);background:rgba(31,111,208,.09)}
+[data-theme="light"] .pt.android{color:#0b8a5a;border-color:rgba(11,138,90,.26);background:rgba(11,138,90,.09)}
+[data-theme="light"] .hero h1 .grad{background:linear-gradient(96deg,#079b7e 0%,#1e6ad6 52%,#b26a12 100%);-webkit-background-clip:text;background-clip:text}
+.actions{display:flex;align-items:center;gap:8px;margin-top:16px}
+.dl{flex:1;height:42px;border-radius:12px;display:flex;align-items:center;gap:9px;padding:0 8px 0 12px;background:var(--panel-2);border:1px solid var(--line-strong);font-size:12.5px;font-weight:700;color:var(--ink);transition:.25s var(--ease);position:relative;overflow:hidden}
+.dl em{font-style:normal;flex:1;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dl .ico{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:linear-gradient(135deg,#3ee6c0,#4aa8ff);color:#05130f;flex:0 0 auto;transition:.25s}
+.dl .ico svg{width:14px;height:14px}
+.dl:hover{border-color:rgba(62,230,192,.45);background:rgba(62,230,192,.08)}
+.dl:hover .ico{transform:translateY(1px);box-shadow:0 6px 14px -6px rgba(62,230,192,.8)}
+.dl:active{transform:scale(.985)}
+.info{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--panel);border:1px solid var(--line);color:var(--muted);transition:.2s}
+.info:hover{color:var(--ink);border-color:var(--line-strong);background:var(--panel-2)}
+.info svg{width:16px;height:16px}
+.grid.anim .card{animation:cardIn .7s var(--ease) both;animation-delay:calc(var(--i,0) * 36ms)}
+@keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+@media(max-width:680px){
+  .card{padding:16px}
+  .tile{width:48px;height:48px;border-radius:14px}
+  .tile svg{width:25px;height:25px}
+  .card h3{font-size:17px;margin-top:13px}
+  .actions{margin-top:14px}
+  .dl{height:40px}
+}
+
+/* ---------- 空状态 ---------- */
+.empty{padding:70px 20px 90px;text-align:center;color:var(--muted)}
+.empty .eico{width:68px;height:68px;margin:0 auto 20px;border-radius:20px;display:grid;place-items:center;background:var(--panel);border:1px solid var(--line);color:var(--muted-2)}
+.empty .eico svg{width:28px;height:28px}
+.empty h4{margin:0 0 8px;font-size:17px;font-weight:800;color:var(--ink)}
+.empty p{margin:0 0 20px;font-size:13px}
+.empty button{height:40px;padding:0 18px;border-radius:11px;background:var(--panel-2);border:1px solid var(--line-strong);font-size:12.5px;font-weight:700}
+.empty button:hover{border-color:rgba(62,230,192,.4)}
+
+/* ---------- 页脚 ---------- */
+.site-footer{border-top:1px solid var(--line);padding:38px 0 46px;background:linear-gradient(180deg,transparent,rgba(0,0,0,.24))}
+.foot-inner{display:flex;align-items:flex-start;justify-content:space-between;gap:28px;flex-wrap:wrap}
+.foot-brand{display:flex;align-items:center;gap:11px}
+.foot-brand .brand-mark{width:32px;height:32px;border-radius:10px}
+.foot-brand b{font-size:14.5px;font-weight:800}
+.foot-brand span{font-size:11px;color:var(--muted-2);display:block;margin-top:4px;letter-spacing:.04em}
+.foot-note{max-width:520px;font-size:11.5px;line-height:1.9;color:var(--muted-2)}
+.foot-note b{color:var(--muted);font-weight:600}
+.foot-links{display:flex;gap:16px;font-size:11.5px;color:var(--muted-2)}
+.foot-links a,.foot-links button{transition:color .2s}
+.foot-links a:hover,.foot-links button:hover{color:var(--accent)}
+
+/* ---------- 详情抽屉 ---------- */
+.scrim{position:fixed;inset:0;z-index:74;background:rgba(3,5,9,.56);-webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);opacity:0;visibility:hidden;transition:opacity .4s,visibility .4s}
+.scrim.open{opacity:1;visibility:visible}
+.drawer{position:fixed;inset:0;z-index:75;display:flex;justify-content:flex-end;pointer-events:none}
+.drawer-panel{pointer-events:auto;position:relative;width:min(520px,100%);height:100%;overflow-y:auto;overscroll-behavior:contain;
+  background:var(--drawer-bg);border-left:1px solid var(--line-strong);
+  -webkit-backdrop-filter:blur(34px) saturate(170%);backdrop-filter:blur(34px) saturate(170%);
+  transform:translateX(104%);transition:transform .55s var(--ease);
+  box-shadow:-40px 0 90px -30px rgba(0,0,0,.85);
+  padding:26px 26px 40px;scrollbar-width:thin;
+}
+.drawer.open .drawer-panel{transform:none}
+.drawer-panel::-webkit-scrollbar{width:8px}
+.drawer-panel::-webkit-scrollbar-thumb{background:var(--panel-3);border-radius:8px}
+.grab{display:none}
+.drawer-x{position:absolute;top:18px;right:18px;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--panel-2);border:1px solid var(--line);color:var(--muted);z-index:2;transition:.2s}
+.drawer-x:hover{color:var(--ink);background:var(--panel-3)}
+.drawer-x svg{width:15px;height:15px}
+.d-head{display:flex;align-items:center;gap:16px;padding-right:30px}
+.d-head .tile{width:72px;height:72px;border-radius:20px}
+.d-head .tile svg{width:38px;height:38px}
+.d-title{min-width:0}
+.d-title h2{margin:0;font-size:26px;font-weight:900;letter-spacing:-.03em;line-height:1.15;display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+.d-title h2 span{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2);font-weight:700}
+.d-sub{display:flex;align-items:center;gap:7px;margin-top:8px;font-size:11.5px;color:var(--muted);flex-wrap:wrap}
+.d-sub .cat{color:var(--accent);font-weight:700}
+.d-sub i{font-style:normal;width:3px;height:3px;border-radius:50%;background:var(--muted-2)}
+.d-desc{margin:22px 0 0;font-size:13.5px;line-height:1.9;color:var(--muted)}
+.d-plats{display:flex;gap:6px;margin-top:22px;padding:5px;border-radius:13px;background:var(--panel);border:1px solid var(--line)}
+.d-plats button{flex:1;height:40px;border-radius:9px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:12.5px;font-weight:700;color:var(--muted);transition:.2s}
+.d-plats button svg{width:15px;height:15px;opacity:.8}
+.d-plats button.on{background:var(--panel-3);color:var(--ink);box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.d-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-top:18px;border-radius:14px;overflow:hidden;border:1px solid var(--line);background:var(--line)}
+.d-cell{background:var(--bg-2);padding:13px 14px}
+[data-theme="light"] .d-cell{background:#fff}
+.d-cell span{display:block;font-size:10.5px;letter-spacing:.08em;color:var(--muted-2);text-transform:uppercase;font-weight:700}
+.d-cell b{display:block;margin-top:6px;font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;word-break:break-word}
+.d-file{display:flex;align-items:center;gap:8px;margin-top:12px;padding:9px 12px;border-radius:11px;background:var(--panel);border:1px solid var(--line);font-size:11.5px;color:var(--muted)}
+.d-file code{flex:1;min-width:0;font-family:'SFMono-Regular',Consolas,monospace;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
+.d-file button{flex:0 0 auto;width:26px;height:26px;border-radius:7px;display:grid;place-items:center;color:var(--muted);background:var(--panel-2)}
+.d-file button:hover{color:var(--accent)}
+.d-file svg{width:13px;height:13px}
+.d-dl{display:flex;align-items:center;gap:12px;margin-top:18px;height:56px;padding:0 18px;border-radius:15px;
+  background:linear-gradient(135deg,#41e8c2,#4bb6ff);color:#04140f;font-weight:800;font-size:14px;
+  box-shadow:0 20px 44px -16px rgba(62,230,192,.55),inset 0 1px 0 rgba(255,255,255,.45);transition:.25s var(--ease)}
+.d-dl:hover{transform:translateY(-1px);box-shadow:0 26px 54px -16px rgba(62,230,192,.7),inset 0 1px 0 rgba(255,255,255,.45)}
+.d-dl .big{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:rgba(4,20,15,.14);flex:0 0 auto}
+.d-dl .big svg{width:17px;height:17px}
+.d-dl .txt{flex:1;min-width:0}
+.d-dl .txt b{display:block;font-size:14.5px}
+.d-dl .txt span{display:block;font-size:10.5px;font-weight:600;opacity:.72;margin-top:2px;letter-spacing:.02em}
+.d-dl .sz{font-size:11.5px;font-weight:700;opacity:.72;font-variant-numeric:tabular-nums}
+.d-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}
+.d-actions button,.d-actions a{height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;gap:7px;font-size:12px;font-weight:600;background:var(--panel);border:1px solid var(--line);color:var(--muted);transition:.2s}
+.d-actions button:hover,.d-actions a:hover{color:var(--ink);border-color:var(--line-strong);background:var(--panel-2)}
+.d-actions svg{width:14px;height:14px}
+.block{margin-top:26px}
+.block-h{display:flex;align-items:center;gap:8px;font-size:11px;font-weight:700;letter-spacing:.12em;color:var(--muted-2);text-transform:uppercase;margin-bottom:12px}
+.block-h i{flex:1;height:1px;background:var(--line)}
+.qr-wrap{display:flex;align-items:center;gap:16px;padding:14px;border-radius:14px;background:var(--panel);border:1px solid var(--line)}
+.qr{width:120px;height:120px;border-radius:12px;background:#fff;padding:8px;flex:0 0 auto;display:grid;place-items:center}
+.qr svg{width:100%;height:100%;display:block}
+.qr-cap{min-width:0}
+.qr-cap b{display:block;font-size:13px;font-weight:700}
+.qr-cap p{margin:6px 0 0;font-size:11.5px;line-height:1.7;color:var(--muted)}
+.verify-box{margin-top:12px;border-radius:14px;border:1px solid var(--line);overflow:hidden;background:var(--panel)}
+.v-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:11px 14px;font-size:11.5px;border-top:1px solid var(--line)}
+.v-row:first-child{border-top:0}
+.v-row span{color:var(--muted-2);letter-spacing:.04em}
+.v-row b{font-weight:700;font-variant-numeric:tabular-nums;color:var(--ink);text-align:right;word-break:break-all}
+.v-row b.ok{color:var(--ok)}
+.live-box{margin-top:12px;padding:14px;border-radius:14px;border:1px solid var(--line);background:var(--panel)}
+.live-top{display:flex;align-items:center;gap:10px}
+.live-btn{height:36px;padding:0 14px;border-radius:10px;border:1px solid var(--line-strong);background:var(--panel-2);font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:7px;color:var(--ink);transition:.2s}
+.live-btn:hover{border-color:rgba(62,230,192,.4)}
+.live-btn:disabled{opacity:.6;cursor:wait}
+.live-btn svg{width:14px;height:14px}
+.live-status{margin-top:10px;font-size:11.5px;line-height:1.7;color:var(--muted)}
+.live-status b{color:var(--ink)}
+.live-status.ok{color:var(--ok)}
+.live-status.err{color:var(--danger)}
+.spin{display:inline-block;width:13px;height:13px;border-radius:50%;border:2px solid rgba(255,255,255,.2);border-top-color:var(--accent);animation:sp .7s linear infinite;vertical-align:-2px;margin-right:6px}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+@media(max-width:760px){
+  .drawer{justify-content:center;align-items:flex-end}
+  .drawer-panel{width:100%;height:92vh;height:92dvh;border-left:0;border-top:1px solid var(--line-strong);border-radius:26px 26px 0 0;transform:translateY(104%);padding:18px 18px calc(26px + env(safe-area-inset-bottom))}
+  .drawer.open .drawer-panel{transform:none}
+  .grab{display:block;width:42px;height:4px;border-radius:4px;background:var(--panel-3);margin:0 auto 14px}
+  .drawer-x{top:14px;right:14px}
+  .d-head .tile{width:60px;height:60px;border-radius:17px}
+  .d-head .tile svg{width:32px;height:32px}
+  .d-title h2{font-size:22px}
+}
+
+/* ---------- 关于弹窗 ---------- */
+.modal-wrap{position:fixed;inset:0;z-index:90;display:grid;place-items:center;padding:20px;background:rgba(3,5,9,.58);-webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px);opacity:0;visibility:hidden;transition:.3s}
+.modal-wrap.open{opacity:1;visibility:visible}
+.modal-card{width:min(620px,100%);max-height:82vh;overflow-y:auto;border-radius:var(--r-xl);background:var(--drawer-bg);border:1px solid var(--line-strong);box-shadow:var(--shadow);padding:28px;transform:translateY(16px) scale(.98);transition:.4s var(--ease);scrollbar-width:thin}
+.modal-wrap.open .modal-card{transform:none}
+.modal-card h3{margin:0 0 6px;font-size:24px;font-weight:900;letter-spacing:-.03em}
+.modal-card .m-sub{margin:0 0 22px;font-size:12.5px;color:var(--muted)}
+.m-item{display:grid;grid-template-columns:38px 1fr;gap:14px;padding:15px 0;border-top:1px solid var(--line)}
+.m-item .n{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;font-size:11px;font-weight:800;color:var(--accent);background:rgba(62,230,192,.09);border:1px solid rgba(62,230,192,.18)}
+.m-item b{display:block;font-size:13.5px;font-weight:700;margin-bottom:5px}
+.m-item p{margin:0;font-size:12px;line-height:1.8;color:var(--muted)}
+.modal-x{position:absolute;top:16px;right:16px}
+.modal-card{position:relative}
+
+/* ---------- Toast ---------- */
+.toast{position:fixed;left:50%;bottom:30px;z-index:95;transform:translate(-50%,24px);opacity:0;visibility:hidden;
+  display:flex;align-items:center;gap:10px;padding:11px 16px;border-radius:13px;max-width:calc(100vw - 32px);
+  background:rgba(14,19,28,.92);border:1px solid var(--line-strong);box-shadow:0 20px 50px -16px rgba(0,0,0,.9);
+  -webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px);font-size:12.5px;color:var(--ink);transition:.35s var(--ease)}
+[data-theme="light"] .toast{background:rgba(255,255,255,.95)}
+.toast.show{transform:translate(-50%,0);opacity:1;visibility:visible}
+.toast .t-ico{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;background:rgba(72,230,168,.14);color:var(--ok);flex:0 0 auto;font-size:11px}
+.toast p{margin:0;line-height:1.5;min-width:0}
+.toast p b{font-weight:700}
+.toast a{color:var(--accent);font-weight:700;white-space:nowrap}
+
+/* ---------- 动效偏好 ---------- */
+@media(prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important;scroll-behavior:auto !important}
+}
+</style>
+</head>
+<body id="top">
+<div class="bg"></div>
+<div class="aurora"><i></i><i></i><i></i></div>
+<div class="grain"></div>
+<div class="progress" id="progress"></div>
+
+<header class="site-header" id="header">
+  <div class="header-inner">
+    <a class="brand" href="#top" aria-label="软件坞首页">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v10m0 0l-4-4m4 4l4-4M5 18h14"/></svg>
+      </span>
+      <span class="brand-text"><b>软件坞</b><i>SOFTDOCK</i></span>
+    </a>
+    <nav class="nav" aria-label="主导航">
+      <a href="#library">软件库</a>
+      <button type="button" data-about>校验说明</button>
+    </nav>
+    <div class="header-actions">
+      <button class="header-search" type="button" id="headerSearch" aria-label="搜索软件">
+        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <span>搜索软件</span><kbd>/</kbd>
+      </button>
+      <button class="icon-btn" id="themeBtn" type="button" aria-label="切换深色 / 浅色主题">
+        <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8z"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- ================= Hero ================= -->
+  <section class="hero wrap">
+    <div class="hero-copy">
+      <div class="eyebrow"><span class="dot"></span>SoftDock · 官方直链下载中心</div>
+      <h1>好软件，<br><span class="grad">直接从官方装。</span></h1>
+      <p class="lede">
+        <b>18 款常用软件、19 条官方下载直链。</b>每一条都在今天被真实请求验证过——
+        没有下载器、没有捆绑包、没有二次转存。点开就是厂商自己的服务器。
+      </p>
+      <ul class="stats" aria-label="站点数据">
+        <li class="stat"><b id="statApps">18</b><span>款软件</span></li>
+        <li class="stat"><b id="statLinks">19</b><span>条直链</span></li>
+        <li class="stat"><b id="statPlats">2</b><span>个平台</span></li>
+        <li class="stat"><b>100<i>%</i></b><span>实测通过</span></li>
+      </ul>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#library">
+          浏览软件库
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13m0 0l-5-5m5 5l-5 5"/></svg>
+        </a>
+        <button class="btn btn-ghost devbtn" id="deviceBtn" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8"/></svg>
+          <span id="deviceText">正在识别你的系统</span>
+        </button>
+      </div>
+    </div>
+
+    <aside class="verify-card glass" aria-label="最近校验记录">
+      <header><span class="pulse"></span>今日校验 <b>2026-11-21</b></header>
+      <ul class="verify-list">
+        <li><span class="vn">微信 4.2.0 <em>Windows</em></span><span class="vs">247.8 MB</span><span class="vok">✓</span></li>
+        <li><span class="vn">OBS Studio 33.0.2 <em>Windows</em></span><span class="vs">185.1 MB</span><span class="vok">✓</span></li>
+        <li><span class="vn">VLC 3.0.24 <em>Windows</em></span><span class="vs">44.1 MB</span><span class="vok">✓</span></li>
+        <li><span class="vn">Chrome <em>Windows · MSI</em></span><span class="vs">167.8 MB</span><span class="vok">✓</span></li>
+      </ul>
+      <footer>逐条发起真实请求，HTTP 状态、Content-Type、字节数全部留档在详情页。</footer>
+    </aside>
+  </section>
+
+  <!-- ================= 软件库 ================= -->
+  <section class="library wrap" id="library">
+    <div class="toolbar glass">
+      <div class="tool-main">
+        <label class="search" id="searchWrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          <input id="q" type="search" inputmode="search" placeholder="搜索软件、标签，例如「压缩」「播放器」" autocomplete="off" spellcheck="false" aria-label="搜索软件">
+          <kbd>/</kbd>
+          <button class="clear" id="clearQ" type="button" aria-label="清空搜索">✕</button>
+        </label>
+        <div class="seg" id="platSeg" role="group" aria-label="平台筛选"></div>
+        <div class="tool-right">
+          <select class="select" id="sort" aria-label="排序方式">
+            <option value="rec">推荐排序</option>
+            <option value="name">名称 A–Z</option>
+            <option value="size">体积从小到大</option>
+            <option value="fresh">最近校验</option>
+          </select>
+          <button class="chip" id="favBtn" type="button" aria-pressed="false">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></svg>
+            收藏 <em id="favCount">0</em>
+          </button>
+        </div>
+      </div>
+      <div class="cats" id="cats" role="group" aria-label="分类筛选"></div>
+    </div>
+
+    <div class="resultline">
+      <span id="resultText">共 18 款软件</span>
+      <button class="reset" id="resetBtn" type="button" hidden>清除筛选</button>
+    </div>
+
+    <div class="grid anim" id="grid"></div>
+
+    <div class="empty" id="empty" hidden>
+      <div class="eico">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5M8 11h6"/></svg>
+      </div>
+      <h4>没有匹配的软件</h4>
+      <p>换个关键词，或者把筛选条件清掉试试。</p>
+      <button type="button" id="emptyReset">清除全部筛选</button>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap foot-inner">
+    <div class="foot-brand">
+      <span class="brand-mark" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v10m0 0l-4-4m4 4l4-4M5 18h14"/></svg>
+      </span>
+      <div><b>软件坞 SoftDock</b><span>官方直链 · 逐条实测 · 2026</span></div>
+    </div>
+    <p class="foot-note">
+      <b>本站不托管任何安装包。</b>所有下载按钮均跳转至软件厂商的官方域名；站内不提供破解、修改版或二次打包文件。
+      软件商标归各自所有者，本站与厂商无从属关系。
+    </p>
+    <div class="foot-links">
+      <a href="#top">回到顶部</a>
+      <a href="https://github.com/qwertyuio12378/software-center" target="_blank" rel="noopener">GitHub</a>
+      <button type="button" data-about>数据说明</button>
+    </div>
+  </div>
+</footer>
+
+<!-- ================= 详情抽屉 ================= -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="软件详情">
+  <div class="drawer-panel" id="drawerPanel">
+    <div class="grab" aria-hidden="true"></div>
+    <button class="drawer-x" id="drawerX" type="button" aria-label="关闭详情">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </button>
+    <div id="drawerBody"></div>
+  </div>
+</aside>
+
+<!-- ================= 关于 / 校验说明 ================= -->
+<div class="modal-wrap" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-card">
+    <button class="icon-btn modal-x" id="modalX" type="button" aria-label="关闭">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </button>
+    <h3 id="modalTitle">这个站是怎么做出来的</h3>
+    <p class="m-sub">软件坞不卖软件，也不做排行榜。它只做一件事：把官方下载入口整理干净。</p>
+    <div class="m-item"><span class="n">01</span><div><b>只跳官方源</b><p>每款软件的下载地址都来自厂商自己的域名或官方 CDN。本站不转存安装包，不改包，不塞下载器。</p></div></div>
+    <div class="m-item"><span class="n">02</span><div><b>链接逐条实测</b><p>收录时对每个地址发起真实请求，确认返回的是可执行文件而不是网页，并把 HTTP 状态、Content-Type、真实字节数写进详情页。</p></div></div>
+    <div class="m-item"><span class="n">03</span><div><b>体积是真实字节</b><p>卡片上的文件大小来自服务器返回的 Content-Length，不是估算；下载前你就能知道要花多少流量。</p></div></div>
+    <div class="m-item"><span class="n">04</span><div><b>无账号、无统计</b><p>站点没有登录、没有埋点 SDK。收藏和主题偏好只存在你自己的浏览器 localStorage 里，不会上传。</p></div></div>
+    <div class="m-item"><span class="n">05</span><div><b>更新怎么处理</b><p>对托管在 GitHub Releases 的软件，详情页可以现场查询最新版本；查到更新会直接换成新的官方资产地址。</p></div></div>
+  </div>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite">
+  <span class="t-ico" id="toastIco">✓</span>
+  <p id="toastMsg"></p>
+  <a href="#" id="toastAct" hidden>打开</a>
+</div>
+
+<script>/**
+ * Minified by jsDelivr using Terser v5.37.0.
+ * Original file: /npm/qrcode-generator@1.4.4/qrcode.js
+ *
+ * Do NOT use SRI with dynamically generated files! More information: https://www.jsdelivr.com/using-sri-with-dynamic-files
+ */
+var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],f={},c=function(t,r){o=function(t){for(var r=new Array(t),e=0;e<t;e+=1){r[e]=new Array(t);for(var n=0;n<t;n+=1)r[e][n]=null}return r}(i=4*e+17),l(0,0),l(i-7,0),l(0,i-7),s(),h(),d(t,r),e>=7&&v(t),null==a&&(a=p(e,n,u)),w(a,r)},l=function(t,r){for(var e=-1;e<=7;e+=1)if(!(t+e<=-1||i<=t+e))for(var n=-1;n<=7;n+=1)r+n<=-1||i<=r+n||(o[t+e][r+n]=0<=e&&e<=6&&(0==n||6==n)||0<=n&&n<=6&&(0==e||6==e)||2<=e&&e<=4&&2<=n&&n<=4)},h=function(){for(var t=8;t<i-8;t+=1)null==o[t][6]&&(o[t][6]=t%2==0);for(var r=8;r<i-8;r+=1)null==o[6][r]&&(o[6][r]=r%2==0)},s=function(){for(var t=B.getPatternPosition(e),r=0;r<t.length;r+=1)for(var n=0;n<t.length;n+=1){var i=t[r],a=t[n];if(null==o[i][a])for(var u=-2;u<=2;u+=1)for(var f=-2;f<=2;f+=1)o[i+u][a+f]=-2==u||2==u||-2==f||2==f||0==u&&0==f}},v=function(t){for(var r=B.getBCHTypeNumber(e),n=0;n<18;n+=1){var a=!t&&1==(r>>n&1);o[Math.floor(n/3)][n%3+i-8-3]=a}for(n=0;n<18;n+=1){a=!t&&1==(r>>n&1);o[n%3+i-8-3][Math.floor(n/3)]=a}},d=function(t,r){for(var e=n<<3|r,a=B.getBCHTypeInfo(e),u=0;u<15;u+=1){var f=!t&&1==(a>>u&1);u<6?o[u][8]=f:u<8?o[u+1][8]=f:o[i-15+u][8]=f}for(u=0;u<15;u+=1){f=!t&&1==(a>>u&1);u<8?o[8][i-u-1]=f:u<9?o[8][15-u-1+1]=f:o[8][15-u-1]=f}o[i-8][8]=!t},w=function(t,r){for(var e=-1,n=i-1,a=7,u=0,f=B.getMaskFunction(r),c=i-1;c>0;c-=2)for(6==c&&(c-=1);;){for(var g=0;g<2;g+=1)if(null==o[n][c-g]){var l=!1;u<t.length&&(l=1==(t[u]>>>a&1)),f(n,c-g)&&(l=!l),o[n][c-g]=l,-1==(a-=1)&&(u+=1,a=7)}if((n+=e)<0||i<=n){n-=e,e=-e;break}}},p=function(t,r,e){for(var n=A.getRSBlocks(t,r),o=b(),i=0;i<e.length;i+=1){var a=e[i];o.put(a.getMode(),4),o.put(a.getLength(),B.getLengthInBits(a.getMode(),t)),a.write(o)}var u=0;for(i=0;i<n.length;i+=1)u+=n[i].dataCount;if(o.getLengthInBits()>8*u)throw"code length overflow. ("+o.getLengthInBits()+">"+8*u+")";for(o.getLengthInBits()+4<=8*u&&o.put(0,4);o.getLengthInBits()%8!=0;)o.putBit(!1);for(;!(o.getLengthInBits()>=8*u||(o.put(236,8),o.getLengthInBits()>=8*u));)o.put(17,8);return function(t,r){for(var e=0,n=0,o=0,i=new Array(r.length),a=new Array(r.length),u=0;u<r.length;u+=1){var f=r[u].dataCount,c=r[u].totalCount-f;n=Math.max(n,f),o=Math.max(o,c),i[u]=new Array(f);for(var g=0;g<i[u].length;g+=1)i[u][g]=255&t.getBuffer()[g+e];e+=f;var l=B.getErrorCorrectPolynomial(c),h=k(i[u],l.getLength()-1).mod(l);for(a[u]=new Array(l.getLength()-1),g=0;g<a[u].length;g+=1){var s=g+h.getLength()-a[u].length;a[u][g]=s>=0?h.getAt(s):0}}var v=0;for(g=0;g<r.length;g+=1)v+=r[g].totalCount;var d=new Array(v),w=0;for(g=0;g<n;g+=1)for(u=0;u<r.length;u+=1)g<i[u].length&&(d[w]=i[u][g],w+=1);for(g=0;g<o;g+=1)for(u=0;u<r.length;u+=1)g<a[u].length&&(d[w]=a[u][g],w+=1);return d}(o,n)};f.addData=function(t,r){var e=null;switch(r=r||"Byte"){case"Numeric":e=M(t);break;case"Alphanumeric":e=x(t);break;case"Byte":e=m(t);break;case"Kanji":e=L(t);break;default:throw"mode:"+r}u.push(e),a=null},f.isDark=function(t,r){if(t<0||i<=t||r<0||i<=r)throw t+","+r;return o[t][r]},f.getModuleCount=function(){return i},f.make=function(){if(e<1){for(var t=1;t<40;t++){for(var r=A.getRSBlocks(t,n),o=b(),i=0;i<u.length;i++){var a=u[i];o.put(a.getMode(),4),o.put(a.getLength(),B.getLengthInBits(a.getMode(),t)),a.write(o)}var g=0;for(i=0;i<r.length;i++)g+=r[i].dataCount;if(o.getLengthInBits()<=8*g)break}e=t}c(!1,function(){for(var t=0,r=0,e=0;e<8;e+=1){c(!0,e);var n=B.getLostPoint(f);(0==e||t>n)&&(t=n,r=e)}return r}())},f.createTableTag=function(t,r){t=t||2;var e="";e+='<table style="',e+=" border-width: 0px; border-style: none;",e+=" border-collapse: collapse;",e+=" padding: 0px; margin: "+(r=void 0===r?4*t:r)+"px;",e+='">',e+="<tbody>";for(var n=0;n<f.getModuleCount();n+=1){e+="<tr>";for(var o=0;o<f.getModuleCount();o+=1)e+='<td style="',e+=" border-width: 0px; border-style: none;",e+=" border-collapse: collapse;",e+=" padding: 0px; margin: 0px;",e+=" width: "+t+"px;",e+=" height: "+t+"px;",e+=" background-color: ",e+=f.isDark(n,o)?"#000000":"#ffffff",e+=";",e+='"/>';e+="</tr>"}return e+="</tbody>",e+="</table>"},f.createSvgTag=function(t,r,e,n){var o={};"object"==typeof arguments[0]&&(t=(o=arguments[0]).cellSize,r=o.margin,e=o.alt,n=o.title),t=t||2,r=void 0===r?4*t:r,(e="string"==typeof e?{text:e}:e||{}).text=e.text||null,e.id=e.text?e.id||"qrcode-description":null,(n="string"==typeof n?{text:n}:n||{}).text=n.text||null,n.id=n.text?n.id||"qrcode-title":null;var i,a,u,c,g=f.getModuleCount()*t+2*r,l="";for(c="l"+t+",0 0,"+t+" -"+t+",0 0,-"+t+"z ",l+='<svg version="1.1" xmlns="http://www.w3.org/2000/svg"',l+=o.scalable?"":' width="'+g+'px" height="'+g+'px"',l+=' viewBox="0 0 '+g+" "+g+'" ',l+=' preserveAspectRatio="xMinYMin meet"',l+=n.text||e.text?' role="img" aria-labelledby="'+y([n.id,e.id].join(" ").trim())+'"':"",l+=">",l+=n.text?'<title id="'+y(n.id)+'">'+y(n.text)+"</title>":"",l+=e.text?'<description id="'+y(e.id)+'">'+y(e.text)+"</description>":"",l+='<rect width="100%" height="100%" fill="white" cx="0" cy="0"/>',l+='<path d="',a=0;a<f.getModuleCount();a+=1)for(u=a*t+r,i=0;i<f.getModuleCount();i+=1)f.isDark(a,i)&&(l+="M"+(i*t+r)+","+u+c);return l+='" stroke="transparent" fill="black"/>',l+="</svg>"},f.createDataURL=function(t,r){t=t||2,r=void 0===r?4*t:r;var e=f.getModuleCount()*t+2*r,n=r,o=e-r;return I(e,e,(function(r,e){if(n<=r&&r<o&&n<=e&&e<o){var i=Math.floor((r-n)/t),a=Math.floor((e-n)/t);return f.isDark(a,i)?0:1}return 1}))},f.createImgTag=function(t,r,e){t=t||2,r=void 0===r?4*t:r;var n=f.getModuleCount()*t+2*r,o="";return o+="<img",o+=' src="',o+=f.createDataURL(t,r),o+='"',o+=' width="',o+=n,o+='"',o+=' height="',o+=n,o+='"',e&&(o+=' alt="',o+=y(e),o+='"'),o+="/>"};var y=function(t){for(var r="",e=0;e<t.length;e+=1){var n=t.charAt(e);switch(n){case"<":r+="&lt;";break;case">":r+="&gt;";break;case"&":r+="&amp;";break;case'"':r+="&quot;";break;default:r+=n}}return r};return f.createASCII=function(t,r){if((t=t||1)<2)return function(t){t=void 0===t?2:t;var r,e,n,o,i,a=1*f.getModuleCount()+2*t,u=t,c=a-t,g={"██":"█","█ ":"▀"," █":"▄","  ":" "},l={"██":"▀","█ ":"▀"," █":" ","  ":" "},h="";for(r=0;r<a;r+=2){for(n=Math.floor((r-u)/1),o=Math.floor((r+1-u)/1),e=0;e<a;e+=1)i="█",u<=e&&e<c&&u<=r&&r<c&&f.isDark(n,Math.floor((e-u)/1))&&(i=" "),u<=e&&e<c&&u<=r+1&&r+1<c&&f.isDark(o,Math.floor((e-u)/1))?i+=" ":i+="█",h+=t<1&&r+1>=c?l[i]:g[i];h+="\n"}return a%2&&t>0?h.substring(0,h.length-a-1)+Array(a+1).join("▀"):h.substring(0,h.length-1)}(r);t-=1,r=void 0===r?2*t:r;var e,n,o,i,a=f.getModuleCount()*t+2*r,u=r,c=a-r,g=Array(t+1).join("██"),l=Array(t+1).join("  "),h="",s="";for(e=0;e<a;e+=1){for(o=Math.floor((e-u)/t),s="",n=0;n<a;n+=1)i=1,u<=n&&n<c&&u<=e&&e<c&&f.isDark(o,Math.floor((n-u)/t))&&(i=0),s+=i?g:l;for(o=0;o<t;o+=1)h+=s+"\n"}return h.substring(0,h.length-1)},f.renderTo2dContext=function(t,r){r=r||2;for(var e=f.getModuleCount(),n=0;n<e;n++)for(var o=0;o<e;o++)t.fillStyle=f.isDark(n,o)?"black":"white",t.fillRect(n*r,o*r,r,r)},f};t.stringToBytes=(t.stringToBytesFuncs={default:function(t){for(var r=[],e=0;e<t.length;e+=1){var n=t.charCodeAt(e);r.push(255&n)}return r}}).default,t.createStringToBytes=function(t,r){var e=function(){for(var e=S(t),n=function(){var t=e.read();if(-1==t)throw"eof";return t},o=0,i={};;){var a=e.read();if(-1==a)break;var u=n(),f=n()<<8|n();i[String.fromCharCode(a<<8|u)]=f,o+=1}if(o!=r)throw o+" != "+r;return i}(),n="?".charCodeAt(0);return function(t){for(var r=[],o=0;o<t.length;o+=1){var i=t.charCodeAt(o);if(i<128)r.push(i);else{var a=e[t.charAt(o)];"number"==typeof a?(255&a)==a?r.push(a):(r.push(a>>>8),r.push(255&a)):r.push(n)}}return r}};var r,e,n,o,i,a=1,u=2,f=4,c=8,g={L:1,M:0,Q:3,H:2},l=0,h=1,s=2,v=3,d=4,w=5,p=6,y=7,B=(r=[[],[6,18],[6,22],[6,26],[6,30],[6,34],[6,22,38],[6,24,42],[6,26,46],[6,28,50],[6,30,54],[6,32,58],[6,34,62],[6,26,46,66],[6,26,48,70],[6,26,50,74],[6,30,54,78],[6,30,56,82],[6,30,58,86],[6,34,62,90],[6,28,50,72,94],[6,26,50,74,98],[6,30,54,78,102],[6,28,54,80,106],[6,32,58,84,110],[6,30,58,86,114],[6,34,62,90,118],[6,26,50,74,98,122],[6,30,54,78,102,126],[6,26,52,78,104,130],[6,30,56,82,108,134],[6,34,60,86,112,138],[6,30,58,86,114,142],[6,34,62,90,118,146],[6,30,54,78,102,126,150],[6,24,50,76,102,128,154],[6,28,54,80,106,132,158],[6,32,58,84,110,136,162],[6,26,54,82,110,138,166],[6,30,58,86,114,142,170]],e=1335,n=7973,i=function(t){for(var r=0;0!=t;)r+=1,t>>>=1;return r},(o={}).getBCHTypeInfo=function(t){for(var r=t<<10;i(r)-i(e)>=0;)r^=e<<i(r)-i(e);return 21522^(t<<10|r)},o.getBCHTypeNumber=function(t){for(var r=t<<12;i(r)-i(n)>=0;)r^=n<<i(r)-i(n);return t<<12|r},o.getPatternPosition=function(t){return r[t-1]},o.getMaskFunction=function(t){switch(t){case l:return function(t,r){return(t+r)%2==0};case h:return function(t,r){return t%2==0};case s:return function(t,r){return r%3==0};case v:return function(t,r){return(t+r)%3==0};case d:return function(t,r){return(Math.floor(t/2)+Math.floor(r/3))%2==0};case w:return function(t,r){return t*r%2+t*r%3==0};case p:return function(t,r){return(t*r%2+t*r%3)%2==0};case y:return function(t,r){return(t*r%3+(t+r)%2)%2==0};default:throw"bad maskPattern:"+t}},o.getErrorCorrectPolynomial=function(t){for(var r=k([1],0),e=0;e<t;e+=1)r=r.multiply(k([1,C.gexp(e)],0));return r},o.getLengthInBits=function(t,r){if(1<=r&&r<10)switch(t){case a:return 10;case u:return 9;case f:case c:return 8;default:throw"mode:"+t}else if(r<27)switch(t){case a:return 12;case u:return 11;case f:return 16;case c:return 10;default:throw"mode:"+t}else{if(!(r<41))throw"type:"+r;switch(t){case a:return 14;case u:return 13;case f:return 16;case c:return 12;default:throw"mode:"+t}}},o.getLostPoint=function(t){for(var r=t.getModuleCount(),e=0,n=0;n<r;n+=1)for(var o=0;o<r;o+=1){for(var i=0,a=t.isDark(n,o),u=-1;u<=1;u+=1)if(!(n+u<0||r<=n+u))for(var f=-1;f<=1;f+=1)o+f<0||r<=o+f||0==u&&0==f||a==t.isDark(n+u,o+f)&&(i+=1);i>5&&(e+=3+i-5)}for(n=0;n<r-1;n+=1)for(o=0;o<r-1;o+=1){var c=0;t.isDark(n,o)&&(c+=1),t.isDark(n+1,o)&&(c+=1),t.isDark(n,o+1)&&(c+=1),t.isDark(n+1,o+1)&&(c+=1),0!=c&&4!=c||(e+=3)}for(n=0;n<r;n+=1)for(o=0;o<r-6;o+=1)t.isDark(n,o)&&!t.isDark(n,o+1)&&t.isDark(n,o+2)&&t.isDark(n,o+3)&&t.isDark(n,o+4)&&!t.isDark(n,o+5)&&t.isDark(n,o+6)&&(e+=40);for(o=0;o<r;o+=1)for(n=0;n<r-6;n+=1)t.isDark(n,o)&&!t.isDark(n+1,o)&&t.isDark(n+2,o)&&t.isDark(n+3,o)&&t.isDark(n+4,o)&&!t.isDark(n+5,o)&&t.isDark(n+6,o)&&(e+=40);var g=0;for(o=0;o<r;o+=1)for(n=0;n<r;n+=1)t.isDark(n,o)&&(g+=1);return e+=Math.abs(100*g/r/r-50)/5*10},o),C=function(){for(var t=new Array(256),r=new Array(256),e=0;e<8;e+=1)t[e]=1<<e;for(e=8;e<256;e+=1)t[e]=t[e-4]^t[e-5]^t[e-6]^t[e-8];for(e=0;e<255;e+=1)r[t[e]]=e;var n={glog:function(t){if(t<1)throw"glog("+t+")";return r[t]},gexp:function(r){for(;r<0;)r+=255;for(;r>=256;)r-=255;return t[r]}};return n}();function k(t,r){if(void 0===t.length)throw t.length+"/"+r;var e=function(){for(var e=0;e<t.length&&0==t[e];)e+=1;for(var n=new Array(t.length-e+r),o=0;o<t.length-e;o+=1)n[o]=t[o+e];return n}(),n={getAt:function(t){return e[t]},getLength:function(){return e.length},multiply:function(t){for(var r=new Array(n.getLength()+t.getLength()-1),e=0;e<n.getLength();e+=1)for(var o=0;o<t.getLength();o+=1)r[e+o]^=C.gexp(C.glog(n.getAt(e))+C.glog(t.getAt(o)));return k(r,0)},mod:function(t){if(n.getLength()-t.getLength()<0)return n;for(var r=C.glog(n.getAt(0))-C.glog(t.getAt(0)),e=new Array(n.getLength()),o=0;o<n.getLength();o+=1)e[o]=n.getAt(o);for(o=0;o<t.getLength();o+=1)e[o]^=C.gexp(C.glog(t.getAt(o))+r);return k(e,0).mod(t)}};return n}var A=function(){var t=[[1,26,19],[1,26,16],[1,26,13],[1,26,9],[1,44,34],[1,44,28],[1,44,22],[1,44,16],[1,70,55],[1,70,44],[2,35,17],[2,35,13],[1,100,80],[2,50,32],[2,50,24],[4,25,9],[1,134,108],[2,67,43],[2,33,15,2,34,16],[2,33,11,2,34,12],[2,86,68],[4,43,27],[4,43,19],[4,43,15],[2,98,78],[4,49,31],[2,32,14,4,33,15],[4,39,13,1,40,14],[2,121,97],[2,60,38,2,61,39],[4,40,18,2,41,19],[4,40,14,2,41,15],[2,146,116],[3,58,36,2,59,37],[4,36,16,4,37,17],[4,36,12,4,37,13],[2,86,68,2,87,69],[4,69,43,1,70,44],[6,43,19,2,44,20],[6,43,15,2,44,16],[4,101,81],[1,80,50,4,81,51],[4,50,22,4,51,23],[3,36,12,8,37,13],[2,116,92,2,117,93],[6,58,36,2,59,37],[4,46,20,6,47,21],[7,42,14,4,43,15],[4,133,107],[8,59,37,1,60,38],[8,44,20,4,45,21],[12,33,11,4,34,12],[3,145,115,1,146,116],[4,64,40,5,65,41],[11,36,16,5,37,17],[11,36,12,5,37,13],[5,109,87,1,110,88],[5,65,41,5,66,42],[5,54,24,7,55,25],[11,36,12,7,37,13],[5,122,98,1,123,99],[7,73,45,3,74,46],[15,43,19,2,44,20],[3,45,15,13,46,16],[1,135,107,5,136,108],[10,74,46,1,75,47],[1,50,22,15,51,23],[2,42,14,17,43,15],[5,150,120,1,151,121],[9,69,43,4,70,44],[17,50,22,1,51,23],[2,42,14,19,43,15],[3,141,113,4,142,114],[3,70,44,11,71,45],[17,47,21,4,48,22],[9,39,13,16,40,14],[3,135,107,5,136,108],[3,67,41,13,68,42],[15,54,24,5,55,25],[15,43,15,10,44,16],[4,144,116,4,145,117],[17,68,42],[17,50,22,6,51,23],[19,46,16,6,47,17],[2,139,111,7,140,112],[17,74,46],[7,54,24,16,55,25],[34,37,13],[4,151,121,5,152,122],[4,75,47,14,76,48],[11,54,24,14,55,25],[16,45,15,14,46,16],[6,147,117,4,148,118],[6,73,45,14,74,46],[11,54,24,16,55,25],[30,46,16,2,47,17],[8,132,106,4,133,107],[8,75,47,13,76,48],[7,54,24,22,55,25],[22,45,15,13,46,16],[10,142,114,2,143,115],[19,74,46,4,75,47],[28,50,22,6,51,23],[33,46,16,4,47,17],[8,152,122,4,153,123],[22,73,45,3,74,46],[8,53,23,26,54,24],[12,45,15,28,46,16],[3,147,117,10,148,118],[3,73,45,23,74,46],[4,54,24,31,55,25],[11,45,15,31,46,16],[7,146,116,7,147,117],[21,73,45,7,74,46],[1,53,23,37,54,24],[19,45,15,26,46,16],[5,145,115,10,146,116],[19,75,47,10,76,48],[15,54,24,25,55,25],[23,45,15,25,46,16],[13,145,115,3,146,116],[2,74,46,29,75,47],[42,54,24,1,55,25],[23,45,15,28,46,16],[17,145,115],[10,74,46,23,75,47],[10,54,24,35,55,25],[19,45,15,35,46,16],[17,145,115,1,146,116],[14,74,46,21,75,47],[29,54,24,19,55,25],[11,45,15,46,46,16],[13,145,115,6,146,116],[14,74,46,23,75,47],[44,54,24,7,55,25],[59,46,16,1,47,17],[12,151,121,7,152,122],[12,75,47,26,76,48],[39,54,24,14,55,25],[22,45,15,41,46,16],[6,151,121,14,152,122],[6,75,47,34,76,48],[46,54,24,10,55,25],[2,45,15,64,46,16],[17,152,122,4,153,123],[29,74,46,14,75,47],[49,54,24,10,55,25],[24,45,15,46,46,16],[4,152,122,18,153,123],[13,74,46,32,75,47],[48,54,24,14,55,25],[42,45,15,32,46,16],[20,147,117,4,148,118],[40,75,47,7,76,48],[43,54,24,22,55,25],[10,45,15,67,46,16],[19,148,118,6,149,119],[18,75,47,31,76,48],[34,54,24,34,55,25],[20,45,15,61,46,16]],r=function(t,r){var e={};return e.totalCount=t,e.dataCount=r,e},e={};return e.getRSBlocks=function(e,n){var o=function(r,e){switch(e){case g.L:return t[4*(r-1)+0];case g.M:return t[4*(r-1)+1];case g.Q:return t[4*(r-1)+2];case g.H:return t[4*(r-1)+3];default:return}}(e,n);if(void 0===o)throw"bad rs block @ typeNumber:"+e+"/errorCorrectionLevel:"+n;for(var i=o.length/3,a=[],u=0;u<i;u+=1)for(var f=o[3*u+0],c=o[3*u+1],l=o[3*u+2],h=0;h<f;h+=1)a.push(r(c,l));return a},e}(),b=function(){var t=[],r=0,e={getBuffer:function(){return t},getAt:function(r){var e=Math.floor(r/8);return 1==(t[e]>>>7-r%8&1)},put:function(t,r){for(var n=0;n<r;n+=1)e.putBit(1==(t>>>r-n-1&1))},getLengthInBits:function(){return r},putBit:function(e){var n=Math.floor(r/8);t.length<=n&&t.push(0),e&&(t[n]|=128>>>r%8),r+=1}};return e},M=function(t){var r=a,e=t,n={getMode:function(){return r},getLength:function(t){return e.length},write:function(t){for(var r=e,n=0;n+2<r.length;)t.put(o(r.substring(n,n+3)),10),n+=3;n<r.length&&(r.length-n==1?t.put(o(r.substring(n,n+1)),4):r.length-n==2&&t.put(o(r.substring(n,n+2)),7))}},o=function(t){for(var r=0,e=0;e<t.length;e+=1)r=10*r+i(t.charAt(e));return r},i=function(t){if("0"<=t&&t<="9")return t.charCodeAt(0)-"0".charCodeAt(0);throw"illegal char :"+t};return n},x=function(t){var r=u,e=t,n={getMode:function(){return r},getLength:function(t){return e.length},write:function(t){for(var r=e,n=0;n+1<r.length;)t.put(45*o(r.charAt(n))+o(r.charAt(n+1)),11),n+=2;n<r.length&&t.put(o(r.charAt(n)),6)}},o=function(t){if("0"<=t&&t<="9")return t.charCodeAt(0)-"0".charCodeAt(0);if("A"<=t&&t<="Z")return t.charCodeAt(0)-"A".charCodeAt(0)+10;switch(t){case" ":return 36;case"$":return 37;case"%":return 38;case"*":return 39;case"+":return 40;case"-":return 41;case".":return 42;case"/":return 43;case":":return 44;default:throw"illegal char :"+t}};return n},m=function(r){var e=f,n=t.stringToBytes(r),o={getMode:function(){return e},getLength:function(t){return n.length},write:function(t){for(var r=0;r<n.length;r+=1)t.put(n[r],8)}};return o},L=function(r){var e=c,n=t.stringToBytesFuncs.SJIS;if(!n)throw"sjis not supported.";!function(){var t=n("友");if(2!=t.length||38726!=(t[0]<<8|t[1]))throw"sjis not supported."}();var o=n(r),i={getMode:function(){return e},getLength:function(t){return~~(o.length/2)},write:function(t){for(var r=o,e=0;e+1<r.length;){var n=(255&r[e])<<8|255&r[e+1];if(33088<=n&&n<=40956)n-=33088;else{if(!(57408<=n&&n<=60351))throw"illegal char at "+(e+1)+"/"+n;n-=49472}n=192*(n>>>8&255)+(255&n),t.put(n,13),e+=2}if(e<r.length)throw"illegal char at "+(e+1)}};return i},D=function(){var t=[],r={writeByte:function(r){t.push(255&r)},writeShort:function(t){r.writeByte(t),r.writeByte(t>>>8)},writeBytes:function(t,e,n){e=e||0,n=n||t.length;for(var o=0;o<n;o+=1)r.writeByte(t[o+e])},writeString:function(t){for(var e=0;e<t.length;e+=1)r.writeByte(t.charCodeAt(e))},toByteArray:function(){return t},toString:function(){var r="";r+="[";for(var e=0;e<t.length;e+=1)e>0&&(r+=","),r+=t[e];return r+="]"}};return r},S=function(t){var r=t,e=0,n=0,o=0,i={read:function(){for(;o<8;){if(e>=r.length){if(0==o)return-1;throw"unexpected end of file./"+o}var t=r.charAt(e);if(e+=1,"="==t)return o=0,-1;t.match(/^\s$/)||(n=n<<6|a(t.charCodeAt(0)),o+=6)}var i=n>>>o-8&255;return o-=8,i}},a=function(t){if(65<=t&&t<=90)return t-65;if(97<=t&&t<=122)return t-97+26;if(48<=t&&t<=57)return t-48+52;if(43==t)return 62;if(47==t)return 63;throw"c:"+t};return i},I=function(t,r,e){for(var n=function(t,r){var e=t,n=r,o=new Array(t*r),i={setPixel:function(t,r,n){o[r*e+t]=n},write:function(t){t.writeString("GIF87a"),t.writeShort(e),t.writeShort(n),t.writeByte(128),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(0),t.writeByte(255),t.writeByte(255),t.writeByte(255),t.writeString(","),t.writeShort(0),t.writeShort(0),t.writeShort(e),t.writeShort(n),t.writeByte(0);var r=a(2);t.writeByte(2);for(var o=0;r.length-o>255;)t.writeByte(255),t.writeBytes(r,o,255),o+=255;t.writeByte(r.length-o),t.writeBytes(r,o,r.length-o),t.writeByte(0),t.writeString(";")}},a=function(t){for(var r=1<<t,e=1+(1<<t),n=t+1,i=u(),a=0;a<r;a+=1)i.add(String.fromCharCode(a));i.add(String.fromCharCode(r)),i.add(String.fromCharCode(e));var f,c,g,l=D(),h=(f=l,c=0,g=0,{write:function(t,r){if(t>>>r!=0)throw"length over";for(;c+r>=8;)f.writeByte(255&(t<<c|g)),r-=8-c,t>>>=8-c,g=0,c=0;g|=t<<c,c+=r},flush:function(){c>0&&f.writeByte(g)}});h.write(r,n);var s=0,v=String.fromCharCode(o[s]);for(s+=1;s<o.length;){var d=String.fromCharCode(o[s]);s+=1,i.contains(v+d)?v+=d:(h.write(i.indexOf(v),n),i.size()<4095&&(i.size()==1<<n&&(n+=1),i.add(v+d)),v=d)}return h.write(i.indexOf(v),n),h.write(e,n),h.flush(),l.toByteArray()},u=function(){var t={},r=0,e={add:function(n){if(e.contains(n))throw"dup key:"+n;t[n]=r,r+=1},size:function(){return r},indexOf:function(r){return t[r]},contains:function(r){return void 0!==t[r]}};return e};return i}(t,r),o=0;o<r;o+=1)for(var i=0;i<t;i+=1)n.setPixel(i,o,e(i,o));var a=D();n.write(a);for(var u=function(){var t=0,r=0,e=0,n="",o={},i=function(t){n+=String.fromCharCode(a(63&t))},a=function(t){if(t<0);else{if(t<26)return 65+t;if(t<52)return t-26+97;if(t<62)return t-52+48;if(62==t)return 43;if(63==t)return 47}throw"n:"+t};return o.writeByte=function(n){for(t=t<<8|255&n,r+=8,e+=1;r>=6;)i(t>>>r-6),r-=6},o.flush=function(){if(r>0&&(i(t<<6-r),t=0,r=0),e%3!=0)for(var o=3-e%3,a=0;a<o;a+=1)n+="="},o.toString=function(){return n},o}(),f=a.toByteArray(),c=0;c<f.length;c+=1)u.writeByte(f[c]);return u.flush(),"data:image/gif;base64,"+u};return t}();qrcode.stringToBytesFuncs["UTF-8"]=function(t){return function(t){for(var r=[],e=0;e<t.length;e++){var n=t.charCodeAt(e);n<128?r.push(n):n<2048?r.push(192|n>>6,128|63&n):n<55296||n>=57344?r.push(224|n>>12,128|n>>6&63,128|63&n):(e++,n=65536+((1023&n)<<10|1023&t.charCodeAt(e)),r.push(240|n>>18,128|n>>12&63,128|n>>6&63,128|63&n))}return r}(t)},function(t){"function"==typeof define&&define.amd?define([],t):"object"==typeof exports&&(module.exports=t())}((function(){return qrcode}));
+//# sourceMappingURL=/sm/26b4b0d0b1e283d6b3ec9857ac597d7a60c76ac17be1ef4c965f03086de426bb.map</script>
+<script>
+/* ============================================================
+   数据：18 款软件 / 19 条官方直链
+   所有版本号、体积、地址均在 2026-11-21 实测
+   ============================================================ */
+const CHECKED_ALL = '2026-11-21';
+const ICONS = {"chrome": {"vb": "0 0 24 24", "d": "M12 0C8.21 0 4.831 1.757 2.632 4.501l3.953 6.848A5.454 5.454 0 0 1 12 6.545h10.691A12 12 0 0 0 12 0zM1.931 5.47A11.943 11.943 0 0 0 0 12c0 6.012 4.42 10.991 10.189 11.864l3.953-6.847a5.45 5.45 0 0 1-6.865-2.29zm13.342 2.166a5.446 5.446 0 0 1 1.45 7.09l.002.001h-.002l-5.344 9.257c.206.01.413.016.621.016 6.627 0 12-5.373 12-12 0-1.54-.29-3.011-.818-4.364zM12 16.364a4.364 4.364 0 1 1 0-8.728 4.364 4.364 0 0 1 0 8.728Z"}, "cib-visual-studio-code": {"vb": "0 0 32 32", "d": "M30.865 3.448L24.282.281a1.99 1.99 0 0 0-2.276.385L9.397 12.171L3.902 8.004a1.33 1.33 0 0 0-1.703.073L.439 9.681a1.33 1.33 0 0 0-.005 1.969L5.2 15.999L.434 20.348a1.33 1.33 0 0 0 .005 1.969l1.76 1.604a1.33 1.33 0 0 0 1.703.073l5.495-4.172l12.615 11.51a1.98 1.98 0 0 0 2.271.385l6.589-3.172a1.99 1.99 0 0 0 1.13-1.802V5.248c0-.766-.443-1.469-1.135-1.802zm-6.86 19.818L14.432 16l9.573-7.266z"}, "bilibili": {"vb": "0 0 24 24", "d": "M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373Z"}, "qbittorrent": {"vb": "0 0 24 24", "d": "M11.911 23.994c-1.31 0-2.605-.232-3.831-.705-3.4-1.024-6.2-3.865-7.433-7.58-1.23-3.708-.685-7.654 1.459-10.554C4.062 2.038 7.677.094 11.742.008c4.064-.079 7.758 1.703 9.882 4.785a12.066 12.066 0 0 1 2.369 7.145c.138 3.733-1.75 7.368-5.052 9.728-2.147 1.535-4.61 2.328-7.03 2.328zm.11-22.314c-.081 0-.162 0-.244.002-3.5.074-6.599 1.725-8.29 4.415-1.856 2.516-2.31 5.893-1.25 9.086 1.06 3.197 3.448 5.636 6.386 6.523 3.025 1.165 6.496.633 9.345-1.402 2.847-2.035 4.473-5.144 4.351-8.318v-.032c0-2.214-.73-4.41-2.055-6.185-1.78-2.58-4.84-4.09-8.243-4.09zM9.406 20.246v-4.578a2.663 2.663 0 0 1-.952.863 2.573 2.573 0 0 1-1.29.344c-1.016 0-1.893-.444-2.63-1.33-.731-.887-1.097-2.102-1.097-3.646 0-.939.148-1.781.444-2.527.301-.746.734-1.309 1.299-1.69A3.26 3.26 0 0 1 7.052 7.1c1.058 0 1.891.487 2.5 1.46v-1.25h1.306v12.935H9.406zm-4.477-8.285c0 1.203.232 2.108.694 2.711.463.6 1.016.9 1.662.9.619 0 1.15-.286 1.597-.855.446-.576.67-1.447.67-2.615 0-1.245-.237-2.18-.71-2.81-.468-.627-1.02-.941-1.654-.941-.63 0-1.164.293-1.605.88-.435.581-.654 1.491-.654 2.73m9.55 4.702h-1.346V3.755h1.452v4.604c.613-.84 1.395-1.258 2.347-1.258.526 0 1.024.117 1.492.351.464.222.864.558 1.161.978.307.416.546.922.718 1.514.172.593.258 1.227.258 1.902 0 1.603-.363 2.841-1.088 3.716-.727.874-1.598 1.312-2.614 1.312-1.011 0-1.804-.46-2.379-1.382v1.17m-.016-4.746c0 1.122.14 1.932.42 2.432.456.815 1.074 1.223 1.854 1.223.635 0 1.183-.3 1.646-.898.462-.604.693-1.503.693-2.695 0-1.22-.224-2.122-.67-2.703-.44-.58-.975-.872-1.605-.872-.634 0-1.182.303-1.645.907-.463.6-.694 1.468-.694 2.607"}, "zoom": {"vb": "0 0 24 24", "d": "M5.033 14.649H.743a.74.74 0 0 1-.686-.458.74.74 0 0 1 .16-.808L3.19 10.41H1.06A1.06 1.06 0 0 1 0 9.35h3.957c.301 0 .57.18.686.458a.74.74 0 0 1-.161.808L1.51 13.59h2.464c.585 0 1.06.475 1.06 1.06zM24 11.338c0-1.14-.927-2.066-2.066-2.066-.61 0-1.158.265-1.537.686a2.061 2.061 0 0 0-1.536-.686c-1.14 0-2.066.926-2.066 2.066v3.311a1.06 1.06 0 0 0 1.06-1.06v-2.251a1.004 1.004 0 0 1 2.013 0v2.251c0 .586.474 1.06 1.06 1.06v-3.311a1.004 1.004 0 0 1 2.012 0v2.251c0 .586.475 1.06 1.06 1.06zM16.265 12a2.728 2.728 0 1 1-5.457 0 2.728 2.728 0 0 1 5.457 0zm-1.06 0a1.669 1.669 0 1 0-3.338 0 1.669 1.669 0 0 0 3.338 0zm-4.82 0a2.728 2.728 0 1 1-5.458 0 2.728 2.728 0 0 1 5.457 0zm-1.06 0a1.669 1.669 0 1 0-3.338 0 1.669 1.669 0 0 0 3.338 0z"}, "audacity": {"vb": "0 0 24 24", "d": "M12 2.145c-2.487 0-4.755.776-6.428 2.08-1.673 1.303-2.76 3.169-2.76 5.244v.75C1.153 11.06 0 13.268 0 15.856c0 3.312 1.884 6 4.312 6V9.468c0-1.554.805-2.984 2.186-4.06C7.879 4.331 9.829 3.643 12 3.643c2.17 0 4.12.688 5.502 1.764 1.38 1.077 2.186 2.507 2.186 4.06v12.387c2.428 0 4.312-2.687 4.312-6 0-2.587-1.152-4.795-2.813-5.636v-.75c0-2.075-1.086-3.94-2.76-5.244-1.672-1.304-3.94-2.08-6.427-2.08zm0 6.153l-1.125 8.683L9.75 9.105l-.562 6.75-.376-.75-.375-4.5-.187 4.5-.563 1.313-.374-4.5-.376 3.562-.562-.937v2.625l-.563-2.11v-4.64a1.432 1.432 0 0 0-.937-.375v11.812c.375 0 .75-.187.937-.562v-3.375l.188.187.563 1.875.187-2.25.563 2.813v-3.562l.374.937.563 2.625v-3.562l.375.374.563 3.188.562-4.313 1.24 4.86.072-2.985.375-1.124.376 4.687 1.124-4.687.375 3.937.938-4.125.938 4.5.187-3.375.562-1.125.188 4.313.938-4.125.562 1.875.188-1.688.374.75v3.375c.188.375.563.562.938.562V10.043c-.375 0-.75.188-.938.375v4.813l-.374 1-.188-3.188-.375 2.437-.375-.75-.188-2.625-.937 3.563-.188-.75L15 9.293l-.562 4.875-.376 1.5-.75-5.062-.75 4.312-.375 1.125Z"}, "git": {"vb": "0 0 24 24", "d": "M23.546 10.93L13.067.452c-.604-.603-1.582-.603-2.188 0L8.708 2.627l2.76 2.76c.645-.215 1.379-.07 1.889.441.516.515.658 1.258.438 1.9l2.658 2.66c.645-.223 1.387-.078 1.9.435.721.72.721 1.884 0 2.604-.719.719-1.881.719-2.6 0-.539-.541-.674-1.337-.404-1.996L12.86 8.955v6.525c.176.086.342.203.488.348.713.721.713 1.883 0 2.6-.719.721-1.889.721-2.609 0-.719-.719-.719-1.879 0-2.598.182-.18.387-.316.605-.406V8.835c-.217-.091-.424-.222-.6-.401-.545-.545-.676-1.342-.396-2.009L7.636 3.7.45 10.881c-.6.605-.6 1.584 0 2.189l10.48 10.477c.604.604 1.582.604 2.186 0l10.43-10.43c.605-.603.605-1.582 0-2.187"}, "vlc": {"vb": "0 0 24 24", "d": "M12.0319 0c-.8823 0-1.0545.136-1.0545.136-.1738.056-.3556.255-.4105.43L9.683 3.3808c.4729.1729 1.3222.4266 2.2337.4266 1.0987 0 2.017-.3494 2.3763-.5075L13.4352.566c-.055-.1755-.237-.3707-.4067-.4374 0 0-.1142-.1286-.9966-.1286zm3.5645 7.455c-.3601.34-1.3276.9373-3.6797.9373-2.2929 0-3.189-.5678-3.5213-.9113l-1.3887 4.4227c.2272.3614 1.2539 1.5594 4.8847 1.5594 3.7569 0 4.8539-1.3467 5.0649-1.6737zm-8.5897 4.4487l-1.0025 3.1922H4.3428c-.2486 0-.5097.1932-.5826.4315l-2.334 7.6317a.3962.3962 0 0 0-.0169.1537c-.0008.0053-.002.0099-.002.016 0 .0839.0233.226.0233.226.0322.2456.2612.4452.5098.4452h20.1192c.2487 0 .4768-.1994.5098-.4453 0 0 .0234-.142.0234-.226a.0245.0245 0 0 0-.0025-.01.3201.3201 0 0 0 .0024-.0313.4096.4096 0 0 0-.019-.1282l-2.3339-7.6318c-.0729-.2383-.334-.4314-.5826-.4314h-1.6636l.2005.6391c-.2407.4854-1.4886 2.38-6.3027 2.38-4.6003 0-5.8288-1.73-6.1107-2.3072z"}, "sevenzip": {"vb": "0 0 24 24", "d": "M0 18.858h24V8.181H10.717V5.142H0ZM2.021 7.271h6.657v1.994c-1.74 2.09-2.84 4.502-2.948 7.404H3.477c.09-2.501.353-4.954 2.283-6.994l.033-.033H2.021Zm8.45 1.253h13.215v10.143H10.47Zm6.01 1.213v6.871h1.482v-6.87Zm2.755.043v6.912h1.616v-2.42h1.029c.43-.001.754-.29.969-.716.427-.848.429-2.257-.024-3.092-.227-.419-.571-.697-1.033-.684zm-7.924.002v1.596h2.217l-2.304 3.736v1.54h4.287V15.1h-2.698l2.786-3.909v-1.41Zm9.452 1.512h.595c.164-.006.287.081.371.217.17.273.172.736.004.99a.364.364 0 0 1-.373.176l-.55.047z"}, "sharex": {"vb": "0 0 24 24", "d": "M5.217 15.774v.054c.083 3.469 2.543 6.416 5.99 7.607h-.002c1.095.377 2.246.568 3.404.565 5.159 0 9.347-3.697 9.389-8.275a7.49 7.49 0 0 0-.563-2.668c-1.19 3.446-4.138 5.906-7.607 5.987h-.176c-2.01 0-3.854-.8-5.294-2.13-1.656-1.53-2.78-3.765-3.01-6.295-1.3 1.407-2.093 3.2-2.13 5.155Zm3.01-10.557H8.17c-3.36.08-6.23 2.39-7.49 5.669l-.117.32A10.408 10.408 0 0 0 0 14.608c0 5.159 3.697 9.347 8.275 9.389a7.49 7.49 0 0 0 2.668-.563c-3.446-1.19-5.906-4.138-5.987-7.607v-.176c0-2.01.8-3.854 2.13-5.296 1.53-1.656 3.765-2.78 6.296-3.01-1.407-1.3-3.2-2.093-5.155-2.129Zm7.601 13.566.324-.015c3.327-.223 6.129-2.636 7.283-5.974A10.36 10.36 0 0 0 24 9.392c0-5.16-3.697-9.347-8.275-9.39a7.49 7.49 0 0 0-2.668.563c3.446 1.19 5.906 4.14 5.987 7.607v.176c0 2.01-.8 3.854-2.13 5.294-1.53 1.656-3.765 2.78-6.295 3.01 1.407 1.3 3.2 2.094 5.155 2.13zM.002 8.275a7.49 7.49 0 0 0 .563 2.668c1.19-3.446 4.14-5.906 7.607-5.987h.176c2.01 0 3.854.8 5.294 2.13.334.31.643.643.925.999 1.146 1.436 1.9 3.27 2.085 5.297 1.3-1.407 2.094-3.2 2.13-5.155V8.17C18.7 4.703 16.24 1.756 12.795.564A10.408 10.408 0 0 0 9.393 0C4.23 0 .045 3.697.002 8.275Z"}, "netease": {"vb": "0 0 24 24", "d": "M13.046 9.388a3.919 3.919 0 0 0-.66.19c-.809.312-1.447.991-1.666 1.775a2.269 2.269 0 0 0-.074.81c.048.546.333 1.05.764 1.35a1.483 1.483 0 0 0 2.01-.286c.406-.531.355-1.183.24-1.636-.098-.387-.22-.816-.345-1.249a64.76 64.76 0 0 1-.269-.954zm-.82 10.07c-3.984 0-7.224-3.24-7.224-7.223 0-.98.226-3.02 1.884-4.822A7.188 7.188 0 0 1 9.502 5.6a.792.792 0 1 1 .587 1.472 5.619 5.619 0 0 0-2.795 2.462 5.538 5.538 0 0 0-.707 2.7 5.645 5.645 0 0 0 5.638 5.638c1.844 0 3.627-.953 4.542-2.428 1.042-1.68.772-3.931-.627-5.238a3.299 3.299 0 0 0-1.437-.777c.172.589.334 1.18.494 1.772.284 1.12.1 2.181-.519 2.989-.39.51-.956.888-1.592 1.064a3.038 3.038 0 0 1-2.58-.44 3.45 3.45 0 0 1-1.44-2.514c-.04-.467.002-.93.128-1.376.35-1.256 1.356-2.339 2.622-2.826a5.5 5.5 0 0 1 .823-.246l-.134-.505c-.37-1.371.25-2.579 1.547-3.007.329-.109.68-.145 1.025-.105.792.09 1.476.592 1.709 1.023.258.507-.096 1.153-.706 1.153a.788.788 0 0 1-.54-.213c-.088-.08-.163-.174-.259-.247a.825.825 0 0 0-.632-.166.807.807 0 0 0-.634.551c-.056.191-.031.406.02.595.07.256.159.597.217.82 1.11.098 2.162.54 2.97 1.296 1.974 1.844 2.35 4.886.892 7.233-1.197 1.93-3.509 3.177-5.889 3.177zM0 12c0 6.627 5.373 12 12 12s12-5.373 12-12S18.627 0 12 0 0 5.373 0 12Z"}, "baidu": {"vb": "0 0 24 24", "d": "M9.154 0C7.71 0 6.54 1.658 6.54 3.707c0 2.051 1.171 3.71 2.615 3.71 1.446 0 2.614-1.659 2.614-3.71C11.768 1.658 10.6 0 9.154 0zm7.025.594C14.86.58 13.347 2.589 13.2 3.927c-.187 1.745.25 3.487 2.179 3.735 1.933.25 3.175-1.806 3.422-3.364.252-1.555-.995-3.364-2.362-3.674a1.218 1.218 0 0 0-.261-.03zM3.582 5.535a2.811 2.811 0 0 0-.156.008c-2.118.19-2.428 3.24-2.428 3.24-.287 1.41.686 4.425 3.297 3.864 2.617-.561 2.262-3.68 2.183-4.362-.125-1.018-1.292-2.773-2.896-2.75zm16.534 1.753c-2.308 0-2.617 2.119-2.617 3.616 0 1.43.121 3.425 2.988 3.362 2.867-.063 2.553-3.238 2.553-3.988 0-.745-.62-2.99-2.924-2.99zm-8.264 2.478c-1.424.014-2.708.925-3.323 1.947-1.118 1.868-2.863 3.05-3.112 3.363-.25.309-3.61 2.116-2.864 5.42.746 3.301 3.365 3.237 3.365 3.237s1.93.19 4.171-.31c2.24-.495 4.17.123 4.17.123s5.233 1.748 6.665-1.616c1.43-3.364-.808-5.109-.808-5.109s-2.99-2.306-4.736-4.798c-1.072-1.665-2.348-2.268-3.528-2.257zm-2.234 3.84l1.542.024v8.197H7.758c-1.47-.291-2.055-1.292-2.13-1.462-.072-.173-.488-.976-.268-2.343.635-2.049 2.447-2.196 2.447-2.196h1.81zm3.964 2.39v3.881c.096.413.612.488.612.488h1.614v-4.343h1.689v5.782h-3.915c-1.517-.39-1.59-1.465-1.59-1.465v-4.317zm-5.458 1.147c-.66.197-.978.708-1.05.928-.076.22-.247.78-.1 1.269.294 1.095 1.248 1.144 1.248 1.144h1.37v-3.34z"}, "python": {"vb": "0 0 24 24", "d": "M14.25.18l.9.2.73.26.59.3.45.32.34.34.25.34.16.33.1.3.04.26.02.2-.01.13V8.5l-.05.63-.13.55-.21.46-.26.38-.3.31-.33.25-.35.19-.35.14-.33.1-.3.07-.26.04-.21.02H8.77l-.69.05-.59.14-.5.22-.41.27-.33.32-.27.35-.2.36-.15.37-.1.35-.07.32-.04.27-.02.21v3.06H3.17l-.21-.03-.28-.07-.32-.12-.35-.18-.36-.26-.36-.36-.35-.46-.32-.59-.28-.73-.21-.88-.14-1.05-.05-1.23.06-1.22.16-1.04.24-.87.32-.71.36-.57.4-.44.42-.33.42-.24.4-.16.36-.1.32-.05.24-.01h.16l.06.01h8.16v-.83H6.18l-.01-2.75-.02-.37.05-.34.11-.31.17-.28.25-.26.31-.23.38-.2.44-.18.51-.15.58-.12.64-.1.71-.06.77-.04.84-.02 1.27.05zm-6.3 1.98l-.23.33-.08.41.08.41.23.34.33.22.41.09.41-.09.33-.22.23-.34.08-.41-.08-.41-.23-.33-.33-.22-.41-.09-.41.09zm13.09 3.95l.28.06.32.12.35.18.36.27.36.35.35.47.32.59.28.73.21.88.14 1.04.05 1.23-.06 1.23-.16 1.04-.24.86-.32.71-.36.57-.4.45-.42.33-.42.24-.4.16-.36.09-.32.05-.24.02-.16-.01h-8.22v.82h5.84l.01 2.76.02.36-.05.34-.11.31-.17.29-.25.25-.31.24-.38.2-.44.17-.51.15-.58.13-.64.09-.71.07-.77.04-.84.01-1.27-.04-1.07-.14-.9-.2-.73-.25-.59-.3-.45-.33-.34-.34-.25-.34-.16-.33-.1-.3-.04-.25-.02-.2.01-.13v-5.34l.05-.64.13-.54.21-.46.26-.38.3-.32.33-.24.35-.2.35-.14.33-.1.3-.06.26-.04.21-.02.13-.01h5.84l.69-.05.59-.14.5-.21.41-.28.33-.32.27-.35.2-.36.15-.36.1-.35.07-.32.04-.28.02-.21V6.07h2.09l.14.01zm-6.47 14.25l-.23.33-.08.41.08.41.23.33.33.23.41.08.41-.08.33-.23.23-.33.08-.41-.08-.41-.23-.33-.33-.23-.41-.08-.41.08z"}, "npp": {"vb": "0 0 24 24", "d": "M14.443 2.285c-.305.005-.6.06-.853.248-.256.168-.546.32-.723.578a6.273 6.273 0 00-.71 2.463c-1.009-.413-2.08-.716-3.177-.676a8.602 8.602 0 00-1.93.604c-1.26.657-2.058 1.943-2.53 3.246a6.84 6.84 0 00-.604 1.805c-.107.568-.322 1.115-.357 1.695-.002.394.029.788.023 1.182-.422.263-.926.245-1.398.328-.34-.008-.67-.18-1.014-.07-.36.172-.75.269-1.111.437-.087.51-.166 1.225.457 1.424 1.064-.002 2.132.002 3.195.021.192.98.38 1.99.898 2.86.613.987 1.213 2.025 2.147 2.75.888.593 2.02.617 3.039.441.387-.043.656-.35 1.004-.492.212-.126.527-.156.607-.428.698-1.13.163-2.531-.47-3.56-.403-.707-1.275-.853-2.018-.82-.436.065-.712.44-1.063.667-.388.235-.761.735-.468 1.186.251.473.561 1.107 1.193 1.074.399-.046.932-.136 1.106-.553.077-.505-.519-.748-.92-.838.019.247.045.494.07.743-.207-.143-.415-.28-.625-.418.128-.667.87-.65 1.38-.854.52.81 1.068 1.852.645 2.815-.489.612-1.37.535-2.054.375-.894-.137-1.487-.933-1.881-1.682-.594-1.035-1.323-2.145-1.196-3.387.417-.021.834-.02 1.25.004.398.094.752.438 1.182.27.922-.252 1.881-.1 2.822-.11.74-.052 1.484-.062 2.225-.031.268.073.411.4.72.38.358.12.558-.246.827-.4a17.954 17.954 0 011.79.002c.283.494.706 1.022 1.31 1.092.734.027 1.356-.493 1.753-1.064.52.117 1.082.282 1.586.021 1.095-.464 2.3-.464 3.43-.785v-.322c-.907-.61-2.027-.441-3.043-.695-.775-.133-1.562-.012-2.34-.022-.345-.236-.683-.509-1.119-.537-.134.059-.27.113-.404.168.356.04.728.12.994.38-.336-.02-.684-.004-1.002-.126-.428.157-.835.4-.902.894-.182-.255.083-.493.189-.72-.24-.507-.826-.768-.994-1.315a.289.289 0 01.48-.008c.234.345.426.715.573 1.104.217.013.435.027.654.045v-.25c-.109.045-.216.09-.322.142-.189-.412-.351-.837-.485-1.271.258.062.506.155.766.207 1.176-.184 2.439-.412 3.36-1.232.194-.2.542-.37.484-.698-.057-.474-.402-.841-.573-1.277.267-.101.535-.2.793-.32.918-.899 1.377-2.185 1.477-3.448-.092-.673-.282-1.413-.803-1.886-.95-.48-2.07-.324-3.035.025-.437.174-.76.527-1.123.813-.296-.066-.477-.41-.672-.633-.375-.64-.89-1.235-1.596-1.51-.293-.011-.608-.055-.914-.05zm.395.516c.59.02 1.109.506 1.443.972.222.37.524.682.885.916a5.218 5.218 0 01-.277 3.791c-.167.375-.519.605-.864.795-.91.267-1.874-.133-2.521-.783l.012-.094c-.458-.214-.537-.767-.616-1.21-.39-.893-.293-1.916-.006-2.823.212-.71.756-1.39 1.526-1.498a1.12 1.12 0 01.418-.066zm5.592 1.025c.616.002 1.29.28 1.44.926.48 1.112-.052 2.344-.688 3.273-.368.345-.792.627-1.137 1-.425-.844-1.359-1.219-2.223-1.437.16-.808.04-1.628.022-2.44.468-.835 1.44-1.154 2.326-1.304.084-.011.172-.018.26-.018zm.775 1.62a7.73 7.73 0 01-.523.138c-.125.181-.252.363-.381.545.141.372.636.718.984.38a1.297 1.297 0 00-.08-1.064c-.178-.318 0 0 0 0zm-11.988.046c.9-.011 1.793.272 2.601.653.38.153.353.6.438.933.065.26.14.516.217.774.126.383.292.78.62 1.037.546.418 1.108.867 1.794 1.025a2.425 2.425 0 001.787-.303c.45-.404.668-1.007 1.137-1.396.44.215.927.318 1.351.568.44.278.653.777.912 1.207.09.194.164.392.242.588-.786.782-1.936.988-2.974 1.23-.43.128-.829-.096-1.186-.304-.184.101-.367.209-.552.309a3.718 3.718 0 01-2.145.45 32.773 32.773 0 01-.55-.072c.084-.376.182-.749.259-1.127-.092.008-.277.02-.37.026-.31.476-.325 1.052-.263 1.597.015.207.028.413.037.62a1.573 1.573 0 01-.408-.932c.016-.391.065-.778.1-1.168-.41-.177-.571.292-.647.596 0 .168.012.335.024.502-.714.163-1.48.246-2.188.011-.514-.168-1.075-.182-1.557-.445-.016-.2-.033-.398-.054-.596-.141-.026-.282-.051-.422-.08-.189.507-.452 1.021-.424 1.575.095.365.401.634.629.925-.335.098-.791.022-1.016.334-.135.601.413.948.772 1.319-.516-.19-1.089-.463-1.266-1.03.26-.302.554-.57.881-.797-.471-.698-.676-1.743-.066-2.421-.118-.143-.257-.39-.477-.268-.172.162-.318.35-.484.52-.7.533-.976 1.386-1.399 2.12-.205-.007-.41-.013-.615-.013l-.01-.254a4.621 4.621 0 01-.023-1.014c.153-.596.418-1.158.568-1.755l.051-.194.086-.293c.452-1.231 1.008-2.494 2.012-3.379.642-.636 1.563-.81 2.396-1.07.06-.003.122-.007.182-.008zm5.12.496c-.38-.012-.738.145-.675.596-.055.394.323.572.592.76.602-.003.872-.686.707-1.178a1.264 1.264 0 00-.623-.178zm-8.064 5.79a1.865 1.865 0 00.225 1.622c-.391.203-.826.213-1.256.211-.09-.648.318-1.202.621-1.736.137-.03.275-.062.41-.098zm1.213.544c.353.101.773.09 1.051.358-.042.174-.083.348-.113.525a5.16 5.16 0 00-.654.465 1.747 1.747 0 01-.284-1.348zm7.168.324c.211.023.262.279.4.407.236.306.573.512.852.775-.67.018-1.475.102-1.88-.562-.271.074-.543.183-.684.445l-.4-.217c-.005-.25.004-.502.025-.752h.457c.412.003.824-.028 1.23-.096zm-5.306.147c.02.336.18.73-.07 1.02-.246-.021-.492-.041-.733-.084.326-.195.567-.505.674-.87zm2.51.117c.315.24.445.634.591.986-.938.036-1.878.023-2.814-.039.064-.31.17-.61.252-.916.655-.02 1.313 0 1.97-.03zm.826.535c.152.184.318.355.498.512.24-.277.775-.727.998-.193-.363.174-.813.305-.934.742l-.012.053c.076.381.178.756.307 1.123-.773-.505-.391-1.548-.857-2.237zm-10.815.293c-.02.295-.422.42-.373.727.091.29.21.57.354.838-.491-.023-.989.003-1.475-.088-.046-.256-.161-.635.11-.805.259-.16.47-.389.615-.658.255.04.516.036.77-.014zm.66.153c-.208.362-.461.81-.138 1.191l-.176.078a2.664 2.664 0 01-.361-.676c.102-.184.195-.374.28-.566.132-.006.263-.015.395-.027zm.518.086l.033.08.11-.047c-.04.227-.205.391-.346.562.233.014.296.764-.041.557a10.992 10.992 0 01-.127-.225c.024-.227-.012-.48.181-.648l.055-.067.086-.095.049-.117zm3.943.074c.347.082.895-.121 1.11.166.31.05.603.197.92.205 1.122-.329 2.316-.154 3.47-.154.006.1.02.298.028.398-.869.033-1.737.036-2.604.014-.452-.003-.881-.307-1.338-.17-.2.018-.424.229-.6.043-.28-.003-.562-.012-.843-.018-.045-.17-.1-.34-.143-.484zm-2.428.017c.375.05.849-.096 1.131.225l-.12.27c-.74-.036-1.48-.043-2.221-.065.151-.495.8-.404 1.21-.43zm15.87.016c.502-.022.98.166 1.478.215.003.207.065.428-.035.623-.608.116-1.185.383-1.81.398.011-.168.02-.336.023-.506l.287-.187.057-.543zm-1.61.014c.102 0 .205.004.307.01.229.044.396.227.588.347-.552.275-1.181.207-1.772.127-.456-.062-.93.022-1.377-.115l.125-.225c.708-.06 1.416-.151 2.13-.144zm-3.761.097c.217.002.434.006.652.006.022.22-.071.326-.28.319-.517.014-1.034.012-1.55-.018-.05-.306.34-.249.525-.295.217-.013.435-.014.653-.012zm-.516.647c.542 0 1.083.051 1.615.152.744-.097 1.494-.005 2.235-.135.306.024.95-.115.876.371-.349.042-.674-.177-1.027-.14-.694.043-1.393.107-2.08-.045-.787.165-1.591.088-2.387.137a17.27 17.27 0 00-.021-.305c.268-.03.546-.024.789-.035zm-10.418.012c.6 0 1.203.111 1.803.132l.125.143c-.808-.002-1.622.062-2.426-.022a13.543 13.543 0 01-.104-.209c.2-.032.402-.044.602-.044zm3.426.119c.34.003.683.008 1.025.002 1.337.016 2.672.035 4.006.125a6.16 6.16 0 00-.098.168c-1.304.043-2.606.02-3.91.015l-.822-.029c-.067-.094-.134-.19-.201-.281zm8.642.39c.43.192.857.393 1.305.543.259-.104.615-.671.826-.26-.328.305-.791.614-1.26.51-.36-.17-.59-.52-.87-.793zm-11.984.07l.33.05c.363.841.38 1.81.873 2.599.284.467.518.96.793 1.432.287.492.762.824 1.207 1.162.955.702 2.52.596 3.197-.438.427-.922-.104-1.898-.474-2.74-.634-.996-2.29-.238-2.242.848.364.218.767.663 1.222.384a10.497 10.497 0 01-.013-.533c.108.12.19.261.296.383-.255.329-.67.314-1.045.262-.151-.168-.307-.331-.46-.496-.188-1.083 1.193-1.994 2.11-1.446.655.42.838 1.228 1.099 1.91.301.821-.144 1.793-.924 2.159-.601.388-1.346.234-2.018.234-.917-.044-1.515-.793-2.117-1.387-.58-.712-.958-1.557-1.41-2.351a7.712 7.712 0 01-.424-2.031z"}, "ant-design-dingtalk": {"vb": "0 0 1024 1024", "d": "M573.7 252.5C422.5 197.4 201.3 96.7 201.3 96.7c-15.7-4.1-17.9 11.1-17.9 11.1c-5 61.1 33.6 160.5 53.6 182.8c19.9 22.3 319.1 113.7 319.1 113.7S326 357.9 270.5 341.9c-55.6-16-37.9 17.8-37.9 17.8c11.4 61.7 64.9 131.8 107.2 138.4c42.2 6.6 220.1 4 220.1 4s-35.5 4.1-93.2 11.9c-42.7 5.8-97 12.5-111.1 17.8c-33.1 12.5 24 62.6 24 62.6c84.7 76.8 129.7 50.5 129.7 50.5c33.3-10.7 61.4-18.5 85.2-24.2L565 743.1h84.6L603 928l205.3-271.9H700.8l22.3-38.7c.3.5.4.8.4.8S799.8 496.1 829 433.8l.6-1h-.1c5-10.8 8.6-19.7 10-25.8c17-71.3-114.5-99.4-265.8-154.5"}, "obs": {"vb": "0 0 24 24", "d": "M12,24C5.383,24,0,18.617,0,12S5.383,0,12,0s12,5.383,12,12S18.617,24,12,24z M12,1.109 C5.995,1.109,1.11,5.995,1.11,12C1.11,18.005,5.995,22.89,12,22.89S22.89,18.005,22.89,12C22.89,5.995,18.005,1.109,12,1.109z M6.182,5.99c0.352-1.698,1.503-3.229,3.05-3.996c-0.269,0.273-0.595,0.483-0.844,0.78c-1.02,1.1-1.48,2.692-1.199,4.156 c0.355,2.235,2.455,4.06,4.732,4.028c1.765,0.079,3.485-0.937,4.348-2.468c1.848,0.063,3.645,1.017,4.7,2.548 c0.54,0.799,0.962,1.736,0.991,2.711c-0.342-1.295-1.202-2.446-2.375-3.095c-1.135-0.639-2.529-0.802-3.772-0.425 c-1.56,0.448-2.849,1.723-3.293,3.293c-0.377,1.25-0.216,2.628,0.377,3.772c-0.825,1.429-2.315,2.449-3.932,2.756 c-1.244,0.261-2.551,0.059-3.709-0.464c1.036,0.302,2.161,0.355,3.191-0.011c1.381-0.457,2.522-1.567,3.024-2.935 c0.556-1.49,0.345-3.261-0.591-4.54c-0.7-1.007-1.803-1.717-3.002-1.969c-0.38-0.068-0.764-0.098-1.148-0.134 c-0.611-1.231-0.834-2.66-0.528-3.996L6.182,5.99z"}, "wechat": {"vb": "0 0 24 24", "d": "M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 3.882-1.98 5.853-1.838-.576-3.583-4.196-6.348-8.596-6.348zM5.785 5.991c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178A1.17 1.17 0 0 1 4.623 7.17c0-.651.52-1.18 1.162-1.18zm5.813 0c.642 0 1.162.529 1.162 1.18a1.17 1.17 0 0 1-1.162 1.178 1.17 1.17 0 0 1-1.162-1.178c0-.651.52-1.18 1.162-1.18zm5.34 2.867c-1.797-.052-3.746.512-5.28 1.786-1.72 1.428-2.687 3.72-1.78 6.22.942 2.453 3.666 4.229 6.884 4.229.826 0 1.622-.12 2.361-.336a.722.722 0 0 1 .598.082l1.584.926a.272.272 0 0 0 .14.047c.134 0 .24-.111.24-.247 0-.06-.023-.12-.038-.177l-.327-1.233a.582.582 0 0 1-.023-.156.49.49 0 0 1 .201-.398C23.024 18.48 24 16.82 24 14.98c0-3.21-2.931-5.837-6.656-6.088V8.89c-.135-.01-.27-.027-.407-.03zm-2.53 3.274c.535 0 .969.44.969.982a.976.976 0 0 1-.969.983.976.976 0 0 1-.969-.983c0-.542.434-.982.97-.982zm4.844 0c.535 0 .969.44.969.982a.976.976 0 0 1-.969.983.976.976 0 0 1-.969-.983c0-.542.434-.982.969-.982z"}, "firefox": {"vb": "0 0 24 24", "d": "M20.452 3.445a11.002 11.002 0 00-2.482-1.908C16.944.997 15.098.093 12.477.032c-.734-.017-1.457.03-2.174.144-.72.114-1.398.292-2.118.56-1.017.377-1.996.975-2.574 1.554.583-.349 1.476-.733 2.55-.992a10.083 10.083 0 013.729-.167c2.341.34 4.178 1.381 5.48 2.625a8.066 8.066 0 011.298 1.587c1.468 2.382 1.33 5.376.184 7.142-.85 1.312-2.67 2.544-4.37 2.53-.583-.023-1.438-.152-2.25-.566-2.629-1.343-3.021-4.688-1.118-6.306-.632-.136-1.82.13-2.646 1.363-.742 1.107-.7 2.816-.242 4.028a6.473 6.473 0 01-.59-1.895 7.695 7.695 0 01.416-3.845A8.212 8.212 0 019.45 5.399c.896-1.069 1.908-1.72 2.75-2.005-.54-.471-1.411-.738-2.421-.767C8.31 2.583 6.327 3.061 4.7 4.41a8.148 8.148 0 00-1.976 2.414c-.455.836-.691 1.659-.697 1.678.122-1.445.704-2.994 1.248-4.055-.79.413-1.827 1.668-2.41 3.042C.095 9.37-.2 11.608.14 13.989c.966 5.668 5.9 9.982 11.843 9.982C18.62 23.971 24 18.591 24 11.956a11.93 11.93 0 00-3.548-8.511z"}, "node": {"vb": "0 0 24 24", "d": "M11.998,24c-0.321,0-0.641-0.084-0.922-0.247l-2.936-1.737c-0.438-0.245-0.224-0.332-0.08-0.383 c0.585-0.203,0.703-0.25,1.328-0.604c0.065-0.037,0.151-0.023,0.218,0.017l2.256,1.339c0.082,0.045,0.197,0.045,0.272,0l8.795-5.076 c0.082-0.047,0.134-0.141,0.134-0.238V6.921c0-0.099-0.053-0.192-0.137-0.242l-8.791-5.072c-0.081-0.047-0.189-0.047-0.271,0 L3.075,6.68C2.99,6.729,2.936,6.825,2.936,6.921v10.15c0,0.097,0.054,0.189,0.139,0.235l2.409,1.392 c1.307,0.654,2.108-0.116,2.108-0.89V7.787c0-0.142,0.114-0.253,0.256-0.253h1.115c0.139,0,0.255,0.112,0.255,0.253v10.021 c0,1.745-0.95,2.745-2.604,2.745c-0.508,0-0.909,0-2.026-0.551L2.28,18.675c-0.57-0.329-0.922-0.945-0.922-1.604V6.921 c0-0.659,0.353-1.275,0.922-1.603l8.795-5.082c0.557-0.315,1.296-0.315,1.848,0l8.794,5.082c0.57,0.329,0.924,0.944,0.924,1.603 v10.15c0,0.659-0.354,1.273-0.924,1.604l-8.794,5.078C12.643,23.916,12.324,24,11.998,24z M19.099,13.993 c0-1.9-1.284-2.406-3.987-2.763c-2.731-0.361-3.009-0.548-3.009-1.187c0-0.528,0.235-1.233,2.258-1.233 c1.807,0,2.473,0.389,2.747,1.607c0.024,0.115,0.129,0.199,0.247,0.199h1.141c0.071,0,0.138-0.031,0.186-0.081 c0.048-0.054,0.074-0.123,0.067-0.196c-0.177-2.098-1.571-3.076-4.388-3.076c-2.508,0-4.004,1.058-4.004,2.833 c0,1.925,1.488,2.457,3.895,2.695c2.88,0.282,3.103,0.703,3.103,1.269c0,0.983-0.789,1.402-2.642,1.402 c-2.327,0-2.839-0.584-3.011-1.742c-0.02-0.124-0.126-0.215-0.253-0.215h-1.137c-0.141,0-0.254,0.112-0.254,0.253 c0,1.482,0.806,3.248,4.655,3.248C17.501,17.007,19.099,15.91,19.099,13.993z"}};
+
+const APPS = [
+  {
+    id:'wechat', name:'微信', en:'WeChat', cat:'社交', color:'#07C160', glyph:'wechat',
+    tagline:'聊天、支付、小程序，一个应用全打通',
+    desc:'腾讯官方跨平台通讯工具，支持消息同步、语音视频通话、微信支付与小程序。Windows 版带独立窗口和文件传输助手，安卓版为官方 APK 直链。',
+    tags:['即时通讯','支付','小程序','国民应用'], site:'https://weixin.qq.com/', checked:'2026-11-21 14:02',
+    platforms:{
+      win:{v:'4.2.0',size:259805488,type:'EXE',file:'WeChatWin_4.2.0.exe',url:'https://dldir1v6.qq.com/weixin/Universal/Windows/WeChatWin_4.2.0.exe',src:'腾讯官方 CDN（dldir1v6.qq.com）',http:'206 Range / 200',ctype:'application/octet-stream'},
+      android:{v:'8.0.34',size:230383783,type:'APK',file:'weixin8034android2340_1.apk',url:'https://dldir1v6.qq.com/weixin/android/weixin8034android2340_1.apk',src:'腾讯官方 CDN（dldir1v6.qq.com）',http:'302 → 200',ctype:'application/vnd.android.package-archive'}
+    }
+  },
+  {
+    id:'chrome', name:'Chrome', en:'Google Chrome', cat:'浏览器', color:'#4285F4', glyph:'chrome',
+    tagline:'Google 官方浏览器，企业版离线安装包',
+    desc:'Chrome 稳定版，Google 官方 CDN 直链。Windows 提供企业版离线 MSI，适合批量部署或无法在线安装的环境。',
+    tags:['浏览器','Google','离线安装'], site:'https://www.google.com/chrome/', checked:'2026-11-21 14:05',
+    platforms:{
+      win:{v:'最新稳定版',size:175902720,type:'MSI',file:'googlechromestandaloneenterprise64.msi',url:'https://dl.google.com/dl/chrome/install/googlechromestandaloneenterprise64.msi',src:'Google 官方 CDN（dl.google.com）',http:'206 / 200',ctype:'application/x-msi'}
+    }
+  },
+  {
+    id:'vscode', name:'VS Code', en:'Visual Studio Code', cat:'开发', color:'#007ACC', glyph:'cib-visual-studio-code',
+    tagline:'微软开源编辑器，插件生态与内置终端',
+    desc:'Visual Studio Code 稳定版，官方下载服务器直链。Windows 为用户级安装包，装完即用，不需要管理员权限也能完成大部分配置。',
+    tags:['代码编辑器','插件','Git','微软'], site:'https://code.visualstudio.com/', checked:'2026-11-21 14:08',
+    platforms:{
+      win:{v:'1.147.0',size:289238600,type:'EXE',file:'VSCodeUserSetup-x64-1.147.0.exe',url:'https://vscode.download.prss.microsoft.com/dbazure/download/stable/8a14f0cc1b08d531eb83255ea3764ae22aa932b5/VSCodeUserSetup-x64-1.147.0.exe',src:'微软官方下载服务器（vscode.download.prss.microsoft.com）',http:'206 / 200',ctype:'application/octet-stream'}
+    }
+  },
+  {
+    id:'obs', name:'OBS Studio', en:'OBS Studio', cat:'影音', color:'#302E31', glyph:'obs',
+    tagline:'开源直播与录屏，多场景 + 硬件编码',
+    desc:'OBS Studio 是开源直播推流与录屏软件，支持多场景切换、窗口 / 游戏采集、硬件编码与虚拟摄像头。安装包来自官方 GitHub Releases。',
+    tags:['直播','录屏','推流','开源'], site:'https://obsproject.com/', checked:'2026-11-21 14:12', published:'2026-11-20',
+    live:{repo:'obsproject/obs-studio', assets:{win:/-Windows-x64-Installer\.exe$/}},
+    platforms:{
+      win:{v:'33.0.2',size:194122376,type:'EXE',file:'OBS-Studio-33.0.2-Windows-x64-Installer.exe',url:'https://github.com/obsproject/obs-studio/releases/download/33.0.2/OBS-Studio-33.0.2-Windows-x64-Installer.exe',src:'GitHub Releases（obsproject/obs-studio）',http:'200',ctype:'application/octet-stream'}
+    }
+  },
+  {
+    id:'netease', name:'网易云音乐', en:'NetEase Cloud Music', cat:'影音', color:'#D43C33', glyph:'netease',
+    tagline:'歌单、评论与高品质音质的桌面端',
+    desc:'网易云音乐 PC 客户端，官方接口直接取到的最新安装包。支持歌单、每日推荐、评论区与高品质音质播放。',
+    tags:['音乐','歌单','桌面端'], site:'https://music.163.com/', checked:'2026-11-21 14:15',
+    platforms:{
+      win:{v:'3.1.43',size:167072560,type:'EXE',file:'NeteaseCloudMusic_Music_official_3.1.43.205627_64.exe',url:'https://d8.music.126.net/dmusic2/NeteaseCloudMusic_Music_official_3.1.43.205627_64.exe',src:'网易官方 CDN（d8.music.126.net）',http:'206 / 200',ctype:'application/octet-stream'}
+    }
+  },
+  {
+    id:'sevenzip', name:'7-Zip', en:'7-Zip', cat:'系统工具', color:'#1E6BB8', glyph:'sevenzip',
+    tagline:'开源压缩工具，7z / ZIP / RAR 都能解',
+    desc:'7-Zip 是免费开源的压缩解压工具，支持 7z、ZIP、RAR、TAR 等格式，压缩率高、资源占用低。安装包来自 7-zip.org 官方直链。',
+    tags:['压缩','解压','开源','轻量'], site:'https://www.7-zip.org/', checked:'2026-11-21 14:18',
+    platforms:{
+      win:{v:'25.01',size:1643509,type:'EXE',file:'7z2501-x64.exe',url:'https://www.7-zip.org/a/7z2501-x64.exe',src:'7-zip.org 官方直链',http:'302 → 200',ctype:'application/octet-stream'}
+    }
+  },
+  {
+    id:'dingtalk', name:'钉钉', en:'DingTalk', cat:'办公', color:'#0089FF', glyph:'ant-design-dingtalk',
+    tagline:'消息、会议、考勤与审批的协同办公台',
+    desc:'阿里钉钉 Windows 客户端，官方安装包直链。覆盖即时消息、视频会议、考勤打卡、审批流与组织通讯录。',
+    tags:['协同办公','视频会议','审批','考勤'], site:'https://www.dingtalk.com/', checked:'2026-11-21 14:21',
+    platforms:{
+      win:{v:'8.2.0.260119001',size:460186048,type:'EXE',file:'DingTalk_v8.2.0.260119001.exe',url:'https://dtapp-cast.dingtalk.com/202908242023/4090273bee39319286ee77436ca0b845/dingtalk-desktop/win_installer/Release/DingTalk_v8.2.0.260119001.exe',src:'阿里官方 CDN（dtapp-cast.dingtalk.com）',http:'206（浏览器 UA）',ctype:'application/x-msdownload'}
+    }
+  },
+  {
+    id:'vlc', name:'VLC', en:'VLC media player', cat:'影音', color:'#FF8800', glyph:'vlc',
+    tagline:'开源全能播放器，几乎什么都能播',
+    desc:'VLC 是 VideoLAN 出品的开源播放器，内置绝大多数音视频解码器，不需要额外装解码包。官方镜像直链，安装包 44 MB。',
+    tags:['播放器','解码','开源','跨格式'], site:'https://www.videolan.org/vlc/', checked:'2026-11-21 14:24',
+    platforms:{
+      win:{v:'3.0.24',size:46269360,type:'EXE',file:'vlc-3.0.24-win64.exe',url:'https://download.videolan.org/vlc/3.0.24/win64/vlc-3.0.24-win64.exe',src:'VideoLAN 官方下载站（download.videolan.org）',http:'206',ctype:'application/octet-stream'}
+    }
+  },
+  {
+    id:'zoom', name:'Zoom', en:'Zoom Workplace', cat:'办公', color:'#0B5CFF', glyph:'zoom',
+    tagline:'视频会议、屏幕共享与云端录制',
+    desc:'Zoom 桌面客户端，官方 latest 地址会自动指向当前版本。支持高清会议、屏幕共享、虚拟背景与云录制。',
+    tags:['视频会议','屏幕共享','远程协作'], site:'https://zoom.us/download', checked:'2026-11-21 14:27',
+    platforms:{
+      win:{v:'6.6.11.23272',size:118232360,type:'EXE',file:'ZoomInstallerFull.exe',url:'https://zoom.us/client/latest/ZoomInstallerFull.exe',src:'Zoom 官方 CDN（cdn.zoom.us）',http:'302 → 200',ctype:'application/octet-stream'}
+    }
+  },
+  {
+    id:'python', name:'Python', en:'Python', cat:'开发', color:'#3776AB', glyph:'python',
+    tagline:'官方 Windows 安装包，解释器 + 标准库',
+    desc:'Python 官方 Windows 64 位安装包，包含解释器、pip 与标准库。安装时记得勾选 Add python.exe to PATH。',
+    tags:['编程语言','解释器','pip'], site:'https://www.python.org/downloads/windows/', checked:'2026-11-21 14:30',
+    platforms:{
+      win:{v:'3.14.0',size:29900480,type:'EXE',file:'python-3.14.0-amd64.exe',url:'https://www.python.org/ftp/python/3.14.0/python-3.14.0-amd64.exe',src:'Python 官方 FTP（python.org）',http:'206 / 200',ctype:'application/octet-stream'}
+    }
+  },
+  {
+    id:'node', name:'Node.js', en:'Node.js', cat:'开发', color:'#5FA04E', glyph:'node',
+    tagline:'LTS 最新版 MSI，自带 npm',
+    desc:'Node.js 当前最新版 Windows 64 位 MSI 安装包，来自 nodejs.org 官方 dist 目录，安装后可直接使用 node 与 npm。',
+    tags:['运行时','npm','JavaScript'], site:'https://nodejs.org/', checked:'2026-11-21 14:33',
+    platforms:{
+      win:{v:'26.13.1',size:36564992,type:'MSI',file:'node-v26.13.1-x64.msi',url:'https://nodejs.org/dist/latest/node-latest-x64.msi',src:'Node.js 官方 dist（nodejs.org）',http:'206 / 200',ctype:'application/x-msi'}
+    }
+  },
+  {
+    id:'git', name:'Git', en:'Git for Windows', cat:'开发', color:'#F05032', glyph:'git',
+    tagline:'Git for Windows 官方构建，含 Git Bash',
+    desc:'Git for Windows 官方 64 位安装包，包含 Git Bash、Git CMD 与凭据管理器。版本来自官方 GitHub Releases。',
+    tags:['版本控制','命令行','Git Bash'], site:'https://git-scm.com/', checked:'2026-11-21 14:36', published:'2026-11-10',
+    live:{repo:'git-for-windows/git', assets:{win:/Git-[\d.]+-64-bit\.exe$/}},
+    platforms:{
+      win:{v:'2.56.1',size:66870448,type:'EXE',file:'Git-2.56.1-64-bit.exe',url:'https://github.com/git-for-windows/git/releases/download/v2.56.1.windows.1/Git-2.56.1-64-bit.exe',src:'GitHub Releases（git-for-windows/git）',http:'302 → 200',ctype:'application/octet-stream'}
+    }
+  },
+  {
+    id:'npp', name:'Notepad++', en:'Notepad++', cat:'开发', color:'#90E59A', glyph:'npp',
+    tagline:'轻量文本编辑器，语法高亮 + 多标签',
+    desc:'Notepad++ 是 Windows 上的轻量文本编辑器，支持语法高亮、多标签、列编辑与大量插件。安装包来自官方 GitHub Releases。',
+    tags:['文本编辑','语法高亮','插件'], site:'https://notepad-plus-plus.org/', checked:'2026-11-21 14:39', published:'2026-11-12',
+    live:{repo:'notepad-plus-plus/notepad-plus-plus', assets:{win:/Installer\.x64\.exe$/}},
+    platforms:{
+      win:{v:'8.9.9.1',size:7048536,type:'EXE',file:'npp.8.9.9.1.Installer.x64.exe',url:'https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v8.9.9.1/npp.8.9.9.1.Installer.x64.exe',src:'GitHub Releases（notepad-plus-plus）',http:'302 → 200',ctype:'application/octet-stream'}
+    }
+  },
+  {
+    id:'qbt', name:'qBittorrent', en:'qBittorrent', cat:'系统工具', color:'#2F67B2', glyph:'qbittorrent',
+    tagline:'开源 BT 客户端，无广告、无捆绑',
+    desc:'qBittorrent 是开源 BitTorrent 客户端，界面干净、无广告，支持种子、磁力、RSS 与 Web UI。安装包来自官方 GitHub Releases。',
+    tags:['BT','下载','开源','无广告'], site:'https://www.qbittorrent.org/', checked:'2026-11-21 14:42', published:'2026-10-20',
+    live:{repo:'qbittorrent/qBittorrent', assets:{win:/^qbittorrent_[\d.]+_x64_setup\.exe$/}},
+    platforms:{
+      win:{v:'5.3.0',size:50030660,type:'EXE',file:'qbittorrent_5.3.0_x64_setup.exe',url:'https://github.com/qbittorrent/qBittorrent/releases/download/release-5.3.0/qbittorrent_5.3.0_x64_setup.exe',src:'GitHub Releases（qbittorrent/qBittorrent）',http:'302 → 200',ctype:'application/octet-stream'}
+    }
+  },
+  {
+    id:'sharex', name:'ShareX', en:'ShareX', cat:'效率', color:'#2885F1', glyph:'sharex',
+    tagline:'开源截图录屏，自带上传与自动化',
+    desc:'ShareX 是 Windows 上的开源截图与录屏工具，支持区域截图、滚动截图、GIF 录制、OCR 与自动上传工作流。',
+    tags:['截图','录屏','OCR','自动化'], site:'https://getsharex.com/', checked:'2026-11-21 14:45', published:'2026-11-08',
+    live:{repo:'ShareX/ShareX', assets:{win:/setup-x64\.exe$/}},
+    platforms:{
+      win:{v:'22.4.0',size:145391368,type:'EXE',file:'ShareX-22.4.0-setup-x64.exe',url:'https://github.com/ShareX/ShareX/releases/download/v22.4.0/ShareX-22.4.0-setup-x64.exe',src:'GitHub Releases（ShareX/ShareX）',http:'302 → 200',ctype:'application/octet-stream'}
+    }
+  },
+  {
+    id:'audacity', name:'Audacity', en:'Audacity', cat:'影音', color:'#0000CC', glyph:'audacity',
+    tagline:'开源音频录制与编辑，多轨处理',
+    desc:'Audacity 是开源音频编辑软件，支持录音、降噪、剪辑、多轨混音与多种格式导出。安装包来自官方 GitHub Releases。',
+    tags:['音频编辑','录音','降噪','多轨'], site:'https://www.audacityteam.org/', checked:'2026-11-21 14:48', published:'2026-11-02',
+    live:{repo:'audacity/audacity', assets:{win:/audacity-win-[\d.]+-x86_64\.msi$/}},
+    platforms:{
+      win:{v:'4.0.2',size:49823744,type:'MSI',file:'audacity-win-4.0.2-x86_64.msi',url:'https://github.com/audacity/audacity/releases/download/Audacity-4.0.2/audacity-win-4.0.2-x86_64.msi',src:'GitHub Releases（audacity/audacity）',http:'302 → 200',ctype:'application/octet-stream'}
+    }
+  },
+  {
+    id:'firefox', name:'Firefox', en:'Mozilla Firefox', cat:'浏览器', color:'#FF7139', glyph:'firefox',
+    tagline:'独立内核，注重隐私的开源浏览器',
+    desc:'Mozilla Firefox 官方简体中文 64 位安装包，来自 Mozilla 官方发布 CDN。独立内核，支持扩展、隐私保护与跨设备同步。',
+    tags:['浏览器','隐私','开源','扩展'], site:'https://www.mozilla.org/firefox/', checked:'2026-11-21 14:51',
+    platforms:{
+      win:{v:'160.0.1',size:95819520,type:'EXE',file:'Firefox Setup 160.0.1.exe',url:'https://download-installer.cdn.mozilla.net/pub/firefox/releases/160.0.1/win64/zh-CN/Firefox%20Setup%20160.0.1.exe',src:'Mozilla 官方 CDN（download-installer.cdn.mozilla.net）',http:'206 / 200',ctype:'application/x-msdos-program'}
+    }
+  },
+  {
+    id:'bilibili', name:'哔哩哔哩', en:'bilibili', cat:'影音', color:'#00A1D6', glyph:'bilibili',
+    tagline:'B 站官方安卓客户端 APK 直链',
+    desc:'哔哩哔哩官方安卓客户端，来自 B 站自有 CDN（dl.hdslb.com）的 APK 直链，非第三方应用市场转包。',
+    tags:['视频','弹幕','二次元','APK'], site:'https://app.bilibili.com/', checked:'2026-11-21 14:54',
+    platforms:{
+      android:{v:'最新版',size:257273718,type:'APK',file:'iBiliPlayer-bili.apk',url:'https://dl.hdslb.com/mobile/latest/android64/iBiliPlayer-bili.apk',src:'B 站官方 CDN（dl.hdslb.com）',http:'206 / 200',ctype:'application/vnd.android.package-archive'}
+    }
+  }
+];
+
+/* ============================================================
+   工具函数
+   ============================================================ */
+const $ = (s,el=document)=>el.querySelector(s);
+const $$ = (s,el=document)=>[...el.querySelectorAll(s)];
+const PLAT_LABEL = {win:'Windows', mac:'macOS', android:'安卓'};
+const PLAT_SHORT = {win:'WIN', mac:'MAC', android:'APK'};
+const PLAT_ORDER = ['win','mac','android'];
+const CAT_ORDER = ['社交','办公','影音','开发','浏览器','系统工具','效率'];
+
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function escRe(s){return String(s).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
+function fmtSize(bytes){
+  if(!bytes && bytes!==0) return '—';
+  if(bytes>=1073741824) return (bytes/1073741824).toFixed(2).replace(/\.00$/,'')+' GB';
+  if(bytes>=1048576) return (bytes/1048576).toFixed(1)+' MB';
+  if(bytes>=1024) return (bytes/1024).toFixed(0)+' KB';
+  return bytes+' B';
+}
+function fmtNum(n){return String(n).replace(/\B(?=(\d{3})+(?!\d))/g,',');}
+function verLabel(v){ return /^\d/.test(v) ? 'v'+v : v; }
+function detectDevice(){
+  const ua = navigator.userAgent || '';
+  if(/android/i.test(ua)) return 'android';
+  if(/windows|win32|win64|wow64/i.test(ua)) return 'win';
+  if(/macintosh|mac os x/i.test(ua)) return null; // 本站暂不提供 macOS 直链
+  return null;
+}
+const DEVICE = detectDevice();
+function prefPlatform(app){
+  if(DEVICE && app.platforms[DEVICE]) return DEVICE;
+  return PLAT_ORDER.find(p=>app.platforms[p]) || Object.keys(app.platforms)[0];
+}
+function platformsOf(app){ return PLAT_ORDER.filter(p=>app.platforms[p]); }
+function hl(text){
+  const t = esc(text);
+  if(!state.q) return t;
+  try{ return t.replace(new RegExp('('+escRe(esc(state.q))+')','gi'),'<mark>$1</mark>'); }
+  catch(e){ return t; }
+}
+</script>
+<script>
+const ICONS_SVG = (name, size)=>{
+  const ic = ICONS[name];
+  if(!ic) return '';
+  return `<svg viewBox="${ic.vb}" aria-hidden="true"><path d="${ic.d}"/></svg>`;
+};
+const ICON_DL = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v10m0 0l-4-4m4 4l4-4M5 18h14"/></svg>`;
+const ICON_STAR = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></svg>`;
+const ICON_ARROW = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13m0 0l-5-5m5 5l-5 5"/></svg>`;
+const ICON_COPY = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a1 1 0 0 1 1-1h9"/></svg>`;
+const ICON_CHECK = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>`;
+const ICON_WIN = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.6l8-1.1v7.1H3zM12.4 4.4L21 3v8.6h-8.6zM3 12.8h8v7.1l-8-1.1zM12.4 12.8H21V21l-8.6-1.4z"/></svg>`;
+const ICON_ANDROID = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="9" width="12" height="9" rx="2"/><path d="M8 9l1.6-3M16 9l-1.6-3M9.5 18v3M14.5 18v3M3 12v3M21 12v3"/></svg>`;
+const PLAT_ICON = {win:ICON_WIN, android:ICON_ANDROID};
+
+/* ============================================================
+   状态与持久化
+   ============================================================ */
+const LS_KEY = 'softdock.v1';
+function readLS(){ try{ return JSON.parse(localStorage.getItem(LS_KEY)||'{}'); }catch(e){ return {}; } }
+const saved = readLS();
+const state = {
+  q:'', plat:'all', cat:'全部', sort:'rec', favOnly:false,
+  favs:new Set(Array.isArray(saved.favs)?saved.favs:[]),
+  theme: saved.theme==='light' ? 'light' : 'dark'
+};
+function persist(){
+  try{ localStorage.setItem(LS_KEY, JSON.stringify({favs:[...state.favs], theme:state.theme})); }catch(e){}
+}
+
+/* ============================================================
+   主题
+   ============================================================ */
+function applyTheme(t){
+  state.theme = t;
+  document.documentElement.setAttribute('data-theme', t);
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if(meta) meta.setAttribute('content', t==='light' ? '#f2f5fa' : '#06070a');
+  const icon = $('#themeIcon');
+  if(icon){
+    icon.innerHTML = t==='light'
+      ? '<path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6L17 7M7 17L5.6 18.4"/><circle cx="12" cy="12" r="4.2"/>'
+      : '<path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8z"/>';
+  }
+  persist();
+}
+applyTheme(state.theme);
+$('#themeBtn').addEventListener('click',()=>applyTheme(state.theme==='dark'?'light':'dark'));
+
+/* ============================================================
+   筛选与排序
+   ============================================================ */
+function matches(app){
+  if(state.plat!=='all' && !app.platforms[state.plat]) return false;
+  if(state.cat!=='全部' && app.cat!==state.cat) return false;
+  if(state.favOnly && !state.favs.has(app.id)) return false;
+  if(!state.q) return true;
+  const q = state.q.toLowerCase();
+  const hay = [app.name, app.en, app.tagline, app.desc, app.cat, ...(app.tags||[])].join(' ').toLowerCase();
+  return hay.includes(q);
+}
+function filtered(){
+  let list = APPS.filter(matches);
+  if(state.sort==='name') list.sort((a,b)=>a.name.localeCompare(b.name,'zh-Hans-CN'));
+  else if(state.sort==='size'){
+    list.sort((a,b)=>{
+      const A=Math.min(...Object.values(a.platforms).map(p=>p.size||0));
+      const B=Math.min(...Object.values(b.platforms).map(p=>p.size||0));
+      return A-B;
+    });
+  } else if(state.sort==='fresh'){
+    list.sort((a,b)=>String(b.published||b.checked).localeCompare(String(a.published||a.checked)));
+  }
+  return list;
+}
+
+/* ============================================================
+   渲染：工具栏
+   ============================================================ */
+function countsByPlat(){
+  const c={all:APPS.length};
+  PLAT_ORDER.forEach(p=>c[p]=APPS.filter(a=>a.platforms[p]).length);
+  return c;
+}
+function renderSeg(){
+  const c = countsByPlat();
+  $('#platSeg').innerHTML = [['all','全部'],['win','Windows'],['android','安卓']].map(([k,label])=>
+    `<button type="button" data-plat="${k}" class="${state.plat===k?'on':''}" aria-pressed="${state.plat===k}">${label}<em>${c[k]||0}</em></button>`
+  ).join('');
+}
+function renderCats(){
+  const counts={};
+  APPS.forEach(a=>counts[a.cat]=(counts[a.cat]||0)+1);
+  $('#cats').innerHTML = ['全部',...CAT_ORDER].map(cat=>
+    `<button type="button" data-cat="${cat}" class="${state.cat===cat?'on':''}">${cat}${cat==='全部'?`<em>${APPS.length}</em>`:`<em>${counts[cat]||0}</em>`}</button>`
+  ).join('');
+}
+function renderResult(list){
+  const total = APPS.length;
+  const txt = state.q || state.plat!=='all' || state.cat!=='全部' || state.favOnly
+    ? `筛选出 <b>${list.length}</b> 款 · 共 ${total} 款`
+    : `共 <b>${total}</b> 款软件 · <b>${APPS.reduce((n,a)=>n+Object.keys(a.platforms).length,0)}</b> 条官方直链`;
+  $('#resultText').innerHTML = txt;
+  const hasFilter = state.q || state.plat!=='all' || state.cat!=='全部' || state.favOnly || state.sort!=='rec';
+  $('#resetBtn').hidden = !hasFilter;
+  $('#favCount').textContent = state.favs.size;
+  $('#favBtn').classList.toggle('on', state.favOnly);
+  $('#favBtn').setAttribute('aria-pressed', String(state.favOnly));
+}
+
+/* ============================================================
+   渲染：卡片
+   ============================================================ */
+function cardHTML(app,i){
+  const pref = prefPlatform(app);
+  const p = app.platforms[pref];
+  const fav = state.favs.has(app.id);
+  const plats = platformsOf(app);
+  const canDirect = DEVICE && app.platforms[DEVICE];
+  return `
+  <article class="card" data-id="${app.id}" style="--i:${Math.min(i,14)}" tabindex="0" role="article" aria-label="${esc(app.name)}">
+    <div class="card-top">
+      <div class="tile" style="--c:${app.color}">${ICONS_SVG(app.glyph)}</div>
+      <button class="fav ${fav?'on':''}" type="button" data-fav="${app.id}" aria-label="${fav?'取消收藏':'收藏 '+esc(app.name)}" aria-pressed="${fav}">${ICON_STAR}</button>
+    </div>
+    <h3>${hl(app.name)} <span class="en">${esc(app.en)}</span></h3>
+    <p class="tag">${hl(app.tagline)}</p>
+    <div class="meta">
+      <span class="pill ver">${esc(verLabel(p.v))}</span>
+      <span class="pill">${fmtSize(p.size)}</span>
+      <span class="plats">${plats.map(x=>`<i class="pt ${x}">${PLAT_SHORT[x]}</i>`).join('')}</span>
+    </div>
+    <div class="actions">
+      <button class="dl" type="button" data-dl="${app.id}">
+        <span class="ico">${ICON_DL}</span>
+        <em>${canDirect ? `下载 ${PLAT_LABEL[DEVICE]} 版` : '查看下载选项'}</em>
+      </button>
+      <button class="info" type="button" data-info="${app.id}" aria-label="查看 ${esc(app.name)} 详情">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
+      </button>
+    </div>
+  </article>`;
+}
+
+let inited = false;
+function renderGrid(list){
+  const grid = $('#grid');
+  grid.classList.toggle('anim', !inited);
+  grid.innerHTML = list.map(cardHTML).join('');
+  $('#empty').hidden = list.length !== 0;
+  inited = true;
+}
+function renderAll(){
+  renderSeg(); renderCats();
+  const list = filtered();
+  renderResult(list);
+  renderGrid(list);
+}
+
+/* ============================================================
+   交互：筛选
+   ============================================================ */
+$('#platSeg').addEventListener('click',e=>{
+  const b=e.target.closest('[data-plat]'); if(!b) return;
+  state.plat=b.dataset.plat; renderAll();
+});
+$('#cats').addEventListener('click',e=>{
+  const b=e.target.closest('[data-cat]'); if(!b) return;
+  state.cat=b.dataset.cat; renderAll();
+});
+$('#sort').addEventListener('change',e=>{ state.sort=e.target.value; renderAll(); });
+$('#favBtn').addEventListener('click',()=>{
+  state.favOnly=!state.favOnly;
+  if(state.favOnly && state.favs.size===0){ toast('还没有收藏的软件，点卡片右上角的星标即可收藏'); state.favOnly=false; renderAll(); return; }
+  renderAll();
+});
+$('#resetBtn').addEventListener('click',resetFilters);
+$('#emptyReset').addEventListener('click',resetFilters);
+function resetFilters(){
+  state.q=''; state.plat='all'; state.cat='全部'; state.favOnly=false; state.sort='rec';
+  const input=$('#q'); input.value=''; $('#searchWrap').classList.remove('hasq');
+  $('#sort').value='rec';
+  renderAll();
+}
+
+/* 搜索 */
+let searchTimer=null;
+$('#q').addEventListener('input',e=>{
+  const v=e.target.value.trim();
+  $('#searchWrap').classList.toggle('hasq', v.length>0);
+  clearTimeout(searchTimer);
+  searchTimer=setTimeout(()=>{ state.q=v; renderAll(); highlightResults(); }, 120);
+});
+$('#clearQ').addEventListener('click',()=>{
+  $('#q').value=''; state.q=''; $('#searchWrap').classList.remove('hasq'); renderAll(); $('#q').focus();
+});
+function highlightResults(){ /* 由 hl() 在渲染时完成 */ }
+$('#headerSearch').addEventListener('click',()=>{
+  const input=$('#q');
+  input.scrollIntoView({behavior:'smooth',block:'center'});
+  setTimeout(()=>input.focus({preventScroll:true}),350);
+});
+document.addEventListener('keydown',e=>{
+  const isTyping = /INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
+  if(e.key==='/' && !isTyping){ e.preventDefault(); $('#q').focus(); }
+  if(e.key==='Escape'){
+    if($('#drawer').classList.contains('open')) closeDrawer();
+    else if($('#modal').classList.contains('open')) closeModal();
+  }
+});
+
+/* 收藏 / 卡片点击 */
+$('#grid').addEventListener('click',e=>{
+  const fav=e.target.closest('[data-fav]');
+  if(fav){
+    const id=fav.dataset.fav;
+    if(state.favs.has(id)) state.favs.delete(id); else state.favs.add(id);
+    persist(); renderAll();
+    toast(state.favs.has(id) ? `已收藏 ${nameOf(id)}` : `已取消收藏 ${nameOf(id)}`);
+    return;
+  }
+  const dl=e.target.closest('[data-dl]');
+  if(dl){
+    const app=appById(dl.dataset.dl);
+    if(DEVICE && app.platforms[DEVICE]) doDownload(app, DEVICE);
+    else openDrawer(app, prefPlatform(app));
+    return;
+  }
+  const info=e.target.closest('[data-info]');
+  if(info){ openDrawer(appById(info.dataset.info)); return; }
+  const card=e.target.closest('.card');
+  if(card) openDrawer(appById(card.dataset.id));
+});
+$('#grid').addEventListener('pointermove',e=>{
+  const card=e.target.closest('.card'); if(!card) return;
+  const r=card.getBoundingClientRect();
+  card.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');
+  card.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%');
+});
+$('#grid').addEventListener('keydown',e=>{
+  if(e.key==='Enter' || e.key===' '){
+    const card=e.target.closest('.card');
+    if(card && e.target===card){ e.preventDefault(); openDrawer(appById(card.dataset.id)); }
+  }
+});
+function appById(id){ return APPS.find(a=>a.id===id); }
+function nameOf(id){ const a=appById(id); return a?a.name:''; }
+
+/* ============================================================
+   下载
+   ============================================================ */
+function doDownload(app, plat){
+  const p=app.platforms[plat];
+  if(!p) return;
+  toast(`正在打开 <b>${esc(app.name)}</b> 的官方下载源 · ${fmtSize(p.size)}`, p.url, '没反应？点这里');
+  window.open(p.url,'_blank','noopener');
+}
+
+/* ============================================================
+   详情抽屉
+   ============================================================ */
+const drawer=$('#drawer'), scrim=$('#scrim'), body=$('#drawerBody');
+let lastFocus=null, current=null;
+
+function openDrawer(app, plat){
+  current={app, plat: plat || prefPlatform(app)};
+  lastFocus=document.activeElement;
+  renderDrawer();
+  drawer.classList.add('open'); scrim.classList.add('open'); document.body.classList.add('locked');
+  setTimeout(()=>$('#drawerX').focus({preventScroll:true}),80);
+}
+function closeDrawer(){
+  drawer.classList.remove('open'); scrim.classList.remove('open'); document.body.classList.remove('locked');
+  if(lastFocus && lastFocus.focus) lastFocus.focus({preventScroll:true});
+  current=null;
+}
+$('#drawerX').addEventListener('click',closeDrawer);
+scrim.addEventListener('click',closeDrawer);
+$('#drawerPanel').addEventListener('click',e=>{
+  if(e.target.closest('[data-close]')) closeDrawer();
+});
+
+function renderDrawer(){
+  const {app,plat}=current;
+  const p=app.platforms[plat];
+  const plats=platformsOf(app);
+  const dHead=ICONS_SVG(app.glyph);
+  body.innerHTML=`
+    <div class="d-head">
+      <div class="tile" style="--c:${app.color}">${dHead}</div>
+      <div class="d-title">
+        <h2>${esc(app.name)} <span>${esc(app.en)}</span></h2>
+        <div class="d-sub"><b class="cat">${esc(app.cat)}</b><i></i><span>${fmtSize(p.size)}</span><i></i><span>${esc(p.type)}</span><i></i><span>校验 ${esc(app.checked.split(' ')[0])}</span></div>
+      </div>
+    </div>
+    <p class="d-desc">${esc(app.desc)}</p>
+
+    ${plats.length>1?`
+    <div class="d-plats" role="tablist" aria-label="平台">
+      ${plats.map(k=>`<button type="button" role="tab" data-dplat="${k}" class="${k===plat?'on':''}" aria-selected="${k===plat}">${PLAT_ICON[k]||''}${PLAT_LABEL[k]}</button>`).join('')}
+    </div>`:''}
+
+    <div class="d-grid">
+      <div class="d-cell"><span>版本</span><b>${esc(p.v)}</b></div>
+      <div class="d-cell"><span>文件体积</span><b>${fmtSize(p.size)}</b></div>
+      <div class="d-cell"><span>文件格式</span><b>${esc(p.type)}</b></div>
+      <div class="d-cell"><span>适用平台</span><b>${PLAT_LABEL[plat]}</b></div>
+    </div>
+
+    <div class="d-file">
+      <code title="${esc(p.file)}">${esc(p.file)}</code>
+      <button type="button" data-copy="${esc(p.url)}" aria-label="复制下载链接">${ICON_COPY}</button>
+    </div>
+
+    <a class="d-dl" href="${esc(p.url)}" target="_blank" rel="noopener" data-go>
+      <span class="big">${ICON_DL}</span>
+      <span class="txt"><b>下载 ${PLAT_LABEL[plat]} 版</b><span>跳转官方源 · 无捆绑下载器</span></span>
+      <span class="sz">${fmtSize(p.size)}</span>
+    </a>
+    <div class="d-actions">
+      <button type="button" data-copy="${esc(p.url)}">${ICON_COPY}<span>复制直链</span></button>
+      <a href="${esc(app.site)}" target="_blank" rel="noopener">${ICON_ARROW}<span>官方页面</span></a>
+    </div>
+
+    <div class="block">
+      <div class="block-h">扫码下载 <i></i></div>
+      <div class="qr-wrap">
+        <div class="qr" id="qrBox"></div>
+        <div class="qr-cap">
+          <b>手机扫码，直达官方源</b>
+          <p>二维码内容就是这条下载直链本身，不经过本站中转。扫码后请在浏览器中确认域名。</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="block">
+      <div class="block-h">校验记录 <i></i></div>
+      <div class="verify-box">
+        <div class="v-row"><span>校验时间</span><b>${esc(app.checked)}</b></div>
+        <div class="v-row"><span>HTTP 响应</span><b class="ok">${esc(p.http)}</b></div>
+        <div class="v-row"><span>Content-Type</span><b>${esc(p.ctype)}</b></div>
+        <div class="v-row"><span>Content-Length</span><b>${fmtNum(p.size)} B</b></div>
+        <div class="v-row"><span>文件头校验</span><b>${p.type==='MSI'?'OLE / MSI 头':p.type==='APK'?'ZIP / APK 头':'PE / EXE 头'}</b></div>
+        <div class="v-row"><span>来源域名</span><b>${esc(p.src)}</b></div>
+      </div>
+    </div>
+
+    ${app.live?`
+    <div class="block">
+      <div class="block-h">版本追踪 <i></i></div>
+      <div class="live-box">
+        <div class="live-top">
+          <button class="live-btn" type="button" data-live="${app.id}">${ICON_CHECK}<span>检查 GitHub 最新版</span></button>
+        </div>
+        <div class="live-status" id="liveStatus">当前收录 ${esc(verLabel(p.v))}${app.published?` · 发布于 ${esc(app.published)}`:''} · 数据来自 ${esc(app.live.repo)}</div>
+      </div>
+    </div>`:''}
+  `;
+
+  renderQR(p.url);
+  $('#liveStatus') && ($('#liveStatus').dataset.base = $('#liveStatus').textContent);
+
+  $$('[data-dplat]',body).forEach(btn=>{
+    btn.addEventListener('click',()=>{ current.plat=btn.dataset.dplat; renderDrawer(); });
+  });
+  $$('[data-copy]',body).forEach(btn=>{
+    btn.addEventListener('click',()=>copyText(btn.dataset.copy));
+  });
+  $$('[data-live]',body).forEach(btn=>{
+    btn.addEventListener('click',()=>checkLive(app, btn));
+  });
+  const go=$('[data-go]',body);
+  if(go) go.addEventListener('click',()=>{
+    toast(`正在打开 <b>${esc(app.name)}</b> 官方源 · ${fmtSize(p.size)}`);
+  });
+}
+
+function renderQR(url){
+  const box=$('#qrBox');
+  if(!box) return;
+  try{
+    const qr = qrcode(0,'M');
+    qr.addData(url);
+    qr.make();
+    box.innerHTML = qr.createSvgTag({cellSize:4, margin:2, scalable:true});
+  }catch(e){
+    box.innerHTML = '<span style="font-size:10px;color:#333;word-break:break-all">'+esc(url)+'</span>';
+  }
+}
+
+/* 复制 */
+async function copyText(t){
+  try{
+    await navigator.clipboard.writeText(t);
+    toast('下载直链已复制到剪贴板');
+  }catch(e){
+    const ta=document.createElement('textarea');
+    ta.value=t; ta.style.position='fixed'; ta.style.opacity='0';
+    document.body.appendChild(ta); ta.select();
+    try{ document.execCommand('copy'); toast('下载直链已复制到剪贴板'); }
+    catch(err){ toast('复制失败，请长按文件地址手动复制'); }
+    ta.remove();
+  }
+}
+
+/* ============================================================
+   GitHub 实时版本检查（按需，一次一个请求）
+   ============================================================ */
+function cmpVersion(a,b){
+  const na=String(a).match(/\d+(?:\.\d+)*/); const nb=String(b).match(/\d+(?:\.\d+)*/);
+  if(!na||!nb) return 0;
+  const pa=na[0].split('.').map(Number), pb=nb[0].split('.').map(Number);
+  for(let i=0;i<Math.max(pa.length,pb.length);i++){
+    const x=pa[i]||0, y=pb[i]||0;
+    if(x!==y) return x-y;
+  }
+  return 0;
+}
+async function checkLive(app, btn){
+  const st=$('#liveStatus');
+  if(!st) return;
+  btn.disabled=true;
+  const oldLabel=btn.querySelector('span').textContent;
+  btn.querySelector('span').textContent='查询中…';
+  st.className='live-status';
+  st.innerHTML='<span class="spin"></span>正在向 GitHub Releases 查询最新版本…';
+  try{
+    const res=await fetch(`https://api.github.com/repos/${app.live.repo}/releases/latest`,{headers:{'Accept':'application/vnd.github+json'}});
+    if(!res.ok) throw new Error(res.status===403?'GitHub 接口触发限流，请稍后再试':'GitHub 接口返回 '+res.status);
+    const rel=await res.json();
+    let updated=0, latest='';
+    for(const k of ['win','mac']){
+      const rx=app.live.assets[k]; if(!rx) continue;
+      const asset=(rel.assets||[]).find(a=>rx.test(a.name));
+      if(!asset) continue;
+      if(cmpVersion(rel.tag_name, app.platforms[k].v)>0){
+        app.platforms[k]=Object.assign({}, app.platforms[k], {
+          v:String(rel.tag_name).replace(/^v/,''), size:asset.size, url:asset.browser_download_url, file:asset.name,
+          http:'200', ctype:'application/octet-stream', checked:CHECKED_ALL+' 刚刚'
+        });
+        updated++; latest=String(rel.tag_name).replace(/^v/,'');
+      }
+    }
+    if(updated){
+      app.published=(rel.published_at||'').slice(0,10);
+      const okMsg=`已更新到 <b>${esc(verLabel(latest))}</b> · 下载地址已换成新的官方资产，可直接下载。`;
+      toast(`${app.name} 已更新到 ${verLabel(latest)}`);
+      renderAll();
+      renderDrawer();
+      const st2=$('#liveStatus');
+      if(st2){ st2.className='live-status ok'; st2.innerHTML=okMsg; }
+    }else{
+      st.className='live-status ok';
+      st.innerHTML=`已是最新版本 <b>${esc(verLabel(app.platforms.win?vOrFirst(app):''))}</b> · GitHub 上没有比当前收录更新的发布。`;
+      toast('当前已是最新版本');
+    }
+  }catch(err){
+    st.className='live-status err';
+    st.innerHTML='查询失败：'+esc(err.message||'网络错误')+'。官方直链不受影响，仍可正常下载。';
+  }finally{
+    btn.disabled=false;
+    const span=btn.querySelector('span'); if(span) span.textContent=oldLabel;
+  }
+}
+function vOrFirst(app){ const k=platformsOf(app)[0]; return app.platforms[k].v; }
+
+/* ============================================================
+   关于弹窗
+   ============================================================ */
+const modal=$('#modal');
+function openModal(){ modal.classList.add('open'); document.body.classList.add('locked'); setTimeout(()=>$('#modalX').focus(),60); }
+function closeModal(){ modal.classList.remove('open'); document.body.classList.remove('locked'); }
+$$('[data-about]').forEach(b=>b.addEventListener('click',openModal));
+$('#modalX').addEventListener('click',closeModal);
+modal.addEventListener('click',e=>{ if(e.target===modal) closeModal(); });
+
+/* ============================================================
+   Toast
+   ============================================================ */
+let toastTimer=null;
+function toast(msg, url, actLabel){
+  const t=$('#toast'), ico=$('#toastIco'), m=$('#toastMsg'), a=$('#toastAct');
+  m.innerHTML=msg;
+  ico.textContent='✓';
+  if(url){ a.hidden=false; a.href=url; a.target='_blank'; a.rel='noopener'; a.textContent=actLabel||'打开'; }
+  else { a.hidden=true; a.removeAttribute('href'); }
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>t.classList.remove('show'), url?6200:3200);
+}
+
+/* ============================================================
+   顶部滚动状态 / 进度 / 设备提示
+   ============================================================ */
+const header=$('#header'), progress=$('#progress');
+let ticking=false;
+function onScroll(){
+  const y=window.scrollY;
+  header.classList.toggle('scrolled', y>8);
+  const h=document.documentElement.scrollHeight-window.innerHeight;
+  progress.style.width=(h>0?Math.min(100,y/h*100):0)+'%';
+  ticking=false;
+}
+window.addEventListener('scroll',()=>{ if(!ticking){ requestAnimationFrame(onScroll); ticking=true; } },{passive:true});
+onScroll();
+
+/* 设备按钮 */
+function renderDeviceBtn(){
+  const txt=$('#deviceText');
+  if(DEVICE==='win') txt.innerHTML='你的系统：<b>Windows</b>';
+  else if(DEVICE==='android') txt.innerHTML='你的设备：<b>安卓</b>';
+  else txt.innerHTML='选择平台：<b>全部软件</b>';
+}
+renderDeviceBtn();
+$('#deviceBtn').addEventListener('click',()=>{
+  if(DEVICE){ state.plat=DEVICE; renderAll(); }
+  document.getElementById('library').scrollIntoView({behavior:'smooth',block:'start'});
+  toast(DEVICE?`已切换到 ${PLAT_LABEL[DEVICE]} 软件`:'当前设备不在支持范围，已显示全部');
+});
+
+/* 统计数字 */
+(function(){
+  const links=APPS.reduce((n,a)=>n+Object.keys(a.platforms).length,0);
+  $('#statApps').textContent=APPS.length;
+  $('#statLinks').textContent=links;
+  $('#statPlats').textContent=PLAT_ORDER.filter(p=>APPS.some(a=>a.platforms[p])).length;
+})();
+
+/* 初始化 */
+renderAll();
+</script>
+</body>
+</html>
