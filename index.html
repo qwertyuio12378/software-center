@@ -1661,6 +1661,8 @@ renderAll();
 applyCopyOverrides();
 initCopyObserver();
 loadCloudConfig();
+window.addEventListener('focus',()=>{if(!document.hidden)loadCloudConfig();});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)loadCloudConfig();});
 let thumbTimer;
 window.addEventListener('resize',()=>{ clearTimeout(thumbTimer); thumbTimer=setTimeout(positionSegThumb,120); });
 if(document.fonts && document.fonts.ready) document.fonts.ready.then(()=>positionSegThumb()).catch(()=>{});
