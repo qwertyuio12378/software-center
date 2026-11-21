@@ -709,9 +709,9 @@ const APPS = [
     desc:'QXNET 2.1.5 覆盖安卓、苹果与 OS 三个平台，用于弱网模拟、延迟与丢包调试。当前先展示版本与平台信息，安装包暂未上架。',
     tags:['弱网模拟','网络调试','QXNET'], site:'', checked:'2026-11-21 22:45',
     platforms:{
-      android:{v:'2.1.5', pending:true, type:'APK'},
-      ios:{v:'2.1.5', pending:true, type:'IPA'},
-      os:{v:'2.1.5', pending:true, type:'EXE'}
+      android:{v:'2.1.5', pending:true},
+      ios:{v:'2.1.5', pending:true},
+      os:{v:'2.1.5', pending:true}
     }
   },
   {
@@ -1178,7 +1178,7 @@ function renderDrawer(){
       <div class="tile ${app.iconImg?'has-img':''}" style="--c:${app.color}">${dHead}</div>
       <div class="d-title">
         <h2>${esc(app.name)} <span>${esc(app.en)}</span></h2>
-        <div class="d-sub"><b class="cat">${esc(app.cat)}</b><i></i><span>${pending?'安装包待上架':fmtSize(p.size)}</span><i></i><span>${esc(p.type||'—')}</span><i></i><span>${pending?'收录 '+esc(app.checked.split(' ')[0]):'校验 '+esc(app.checked.split(' ')[0])}</span></div>
+        <div class="d-sub"><b class="cat">${esc(app.cat)}</b><i></i><span>${pending?'安装包待上架':fmtSize(p.size)}</span>${pending?'':`<i></i><span>${esc(p.type||'—')}</span>`}<i></i><span>${pending?'收录 '+esc(app.checked.split(' ')[0]):'校验 '+esc(app.checked.split(' ')[0])}</span></div>
       </div>
     </div>
     <p class="d-desc">${esc(app.desc)}</p>
@@ -1191,7 +1191,7 @@ function renderDrawer(){
     <div class="d-grid">
       <div class="d-cell"><span>版本</span><b>${esc(p.v)}</b></div>
       <div class="d-cell"><span>文件体积</span><b>${pending?'待上架':fmtSize(p.size)}</b></div>
-      <div class="d-cell"><span>文件格式</span><b>${esc(p.type||'—')}</b></div>
+      <div class="d-cell"><span>文件格式</span><b>${pending?'上架后公布':esc(p.type||'—')}</b></div>
       <div class="d-cell"><span>适用平台</span><b>${PLAT_LABEL[plat]}</b></div>
     </div>
 
