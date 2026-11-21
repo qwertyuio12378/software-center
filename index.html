@@ -862,6 +862,8 @@ async function loadCloudConfig(){
     }
     renderAll({anim:false});
     applyCopyOverrides();
+    renderStats();
+    renderDeviceBtn();
     return true;
   }catch(e){return false;}
 }
@@ -1643,7 +1645,7 @@ $('#deviceBtn').addEventListener('click',()=>{
 });
 
 /* 统计数字 */
-(function(){
+function renderStats(){
   const links=APPS.reduce((n,a)=>n+linkCount(a),0);
   $('#statApps').textContent=APPS.length;
   $('#statLinks').textContent=links;
@@ -1651,7 +1653,8 @@ $('#deviceBtn').addEventListener('click',()=>{
   const hw=$('#heroWin'), hl=$('#heroLinks');
   if(hw) hw.textContent=APPS.filter(a=>a.platforms.win).length;
   if(hl) hl.textContent=links;
-})();
+}
+renderStats();
 
 /* 初始化 */
 renderAll();
