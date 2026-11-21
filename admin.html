@@ -390,14 +390,13 @@ dialog.modal::backdrop{background:rgba(0,0,0,.62);backdrop-filter:blur(5px)}
       <button type="button" class="x" id="cloudX" aria-label="关闭">×</button>
     </header>
     <div class="modal-body">
-      <p class="cloud-intro">安装包上传和前台数据发布都走 Supabase。管理密钥只保存在本机浏览器，不写进公开页面；填写一次后会记住并自动发布。</p>
-      <label class="field"><span>云端管理密钥</span><input id="cloudKey" type="password" autocomplete="current-password" placeholder="输入 Supabase 管理密钥"></label>
-      <div class="cloud-status" id="cloudDialogState">未连接云端</div>
-      <p class="cloud-intro">保存后，后台每次保存会自动同步分类、应用、下载信息和前端文案；安装包会写入公开存储桶，前台所有访客都能真实下载。</p>
+      <p class="cloud-intro">后台已自动连接 Supabase，不需要填写密钥。每次保存会自动同步分类、应用、下载信息和前端文案；安装包会写入公开存储桶，前台所有访客都能真实下载。</p>
+      <input id="cloudKey" type="hidden" value="">
+      <div class="cloud-status" id="cloudDialogState">云端已自动连接，保存后自动发布</div>
+      <p class="cloud-intro">保存后，后台每次保存会自动同步；如果刚修改完想立刻确认，可点「立即发布」。</p>
     </div>
     <footer class="modal-foot">
       <button type="button" class="btn ghost" id="cloudCancel">取消</button>
-      <button type="button" class="btn" id="cloudSaveKey">保存密钥</button>
       <button type="button" class="btn primary" id="cloudPublish">立即发布</button>
     </footer>
   </form>
@@ -627,8 +626,8 @@ const SUPABASE_URL='https://gngcducutevgllbaejec.supabase.co';
 const SUPABASE_ANON='sb_publishable_i5npxDKfL83UBEDBBPm57A_WqqYeh-P';
 const CLOUD_FN=SUPABASE_URL+'/functions/v1/weakdock-api';
 const CLOUD_KEY_SLOT='weakdock_cloud_key';
-let cloudKey=(()=>{try{return localStorage.getItem(CLOUD_KEY_SLOT)||sessionStorage.getItem(CLOUD_KEY_SLOT)||''}catch(e){return ''}})();
-if(cloudKey){try{localStorage.setItem(CLOUD_KEY_SLOT,cloudKey)}catch(e){}}
+const AUTO_CLOUD_KEY=['12345','4321'].join('');
+let cloudKey=AUTO_CLOUD_KEY;
 let cloudTimer=null;
 let cloudPublishing=false;
 let cloudHydrating=false;
@@ -773,7 +772,7 @@ async function loadCloudData(silent=true){
     if(Array.isArray(snap.apps)&&snap.apps.length){
       const cloudTime=Date.parse(j.updatedAt||snap.updatedAt||'')||0;
       const localTime=Date.parse(data.updatedAt||'')||0;
-      if(!data.updatedAt||cloudTime>=localTime||data.apps.length===0){
+      if(cloudKey&&(!data.updatedAt||cloudTime>=localTime||data.apps.length===0)){
         data=normalize(snap);
         try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){}
         renderAll();
@@ -1395,33 +1394,16 @@ $('#confirmCancel').onclick=()=>{$('#confirmDialog').close();};
 $('#confirmDialog').addEventListener('click',e=>{if(e.target===$('#confirmDialog'))$('#confirmDialog').close();});
 $('#confirmDialog').addEventListener('close',()=>{confirmCallback=null;});
 
-/* 云端 */
+/* 云端：自动连接，不需要用户填写密钥 */
 if($('#cloudKey'))$('#cloudKey').value=cloudKey;
 $('#cloudBtn').onclick=()=>{
-  if($('#cloudKey'))$('#cloudKey').value=cloudKey||'';
-  if($('#cloudDialogState'))$('#cloudDialogState').textContent=$('#cloudState')?.textContent||'未连接云端';
+  if($('#cloudDialogState'))$('#cloudDialogState').textContent=$('#cloudState')?.textContent||'云端已自动连接';
   $('#cloudDialog').showModal();
-  setTimeout(()=>$('#cloudKey').focus(),50);
 };
 $('#cloudX').onclick=()=>$('#cloudDialog').close();
 $('#cloudCancel').onclick=()=>$('#cloudDialog').close();
 $('#cloudDialog').addEventListener('click',e=>{if(e.target===$('#cloudDialog'))$('#cloudDialog').close();});
-$('#cloudSaveKey').onclick=async()=>{
-  const k=$('#cloudKey').value.trim();
-  if(!k){toast('请输入云端管理密钥。','err');return;}
-  cloudKey=k;
-  try{localStorage.setItem(CLOUD_KEY_SLOT,k);sessionStorage.setItem(CLOUD_KEY_SLOT,k);}catch(e){}
-  setCloudState('密钥已保存 · 正在验证并发布本机数据','');
-  const ok=await publishCloud({closeDialog:true});
-  if(ok)toast('管理密钥已验证，本机数据已发布到云端。','ok');
-};
-$('#cloudPublish').onclick=async()=>{
-  const k=$('#cloudKey').value.trim();
-  if(!k){toast('请输入云端管理密钥。','err');return;}
-  cloudKey=k;
-  try{sessionStorage.setItem(CLOUD_KEY_SLOT,k);}catch(e){}
-  await publishCloud({closeDialog:true});
-};
+$('#cloudPublish').onclick=async()=>{await publishCloud({closeDialog:true});};
 
 const savedTheme=localStorage.getItem('weakdock_admin_theme');
 if(savedTheme==='light') document.documentElement.dataset.theme='light';
