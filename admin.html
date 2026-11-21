@@ -772,14 +772,16 @@ async function loadCloudData(silent=true){
     if(Array.isArray(snap.apps)&&snap.apps.length){
       const cloudTime=Date.parse(j.updatedAt||snap.updatedAt||'')||0;
       const localTime=Date.parse(data.updatedAt||'')||0;
-      if(cloudKey&&(!data.updatedAt||cloudTime>=localTime||data.apps.length===0)){
+      const localEdited=!!(data.updatedAt&&data.updatedAt!==SEED.updatedAt);
+      const useCloud=!localEdited&&(!data.updatedAt||cloudTime>=localTime||data.apps.length===0);
+      if(cloudKey&&useCloud){
         data=normalize(snap);
         try{localStorage.setItem(KEY,JSON.stringify(data));}catch(e){}
         renderAll();
       }
       if(cloudKey){
-        if(localTime>cloudTime&&data.apps.length){
-          setCloudState('本机有未发布修改 · 正在自动发布','');
+        if((localEdited||localTime>cloudTime)&&data.apps.length){
+          setCloudState('本机有修改 · 正在自动发布','');
           setTimeout(()=>publishCloud({silent:true}),0);
         }else{
           setCloudState('云端已连接 · '+(j.updatedAt||data.updatedAt||'已有配置'),'ok');
