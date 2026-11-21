@@ -233,13 +233,19 @@ img{max-width:100%}
 .seg button.on em{color:var(--accent)}
 .seg button:hover:not(.on){color:var(--ink)}
 .tool-right{display:flex;align-items:center;gap:8px;margin-left:auto;flex:0 0 auto}
-.select{height:46px;border-radius:12px;background:var(--panel-2);border:1px solid var(--line);padding:0 32px 0 13px;font-size:12.5px;font-weight:600;color:var(--muted);outline:none;cursor:pointer;appearance:none;
-  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2398a3b6' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 11px center;background-size:12px;
-}
-.select:hover{border-color:var(--line-strong);color:var(--ink)}
-.select option{background:#11151d;color:#f3f6fb}
-[data-theme="light"] .select option{background:#fff;color:#0b1220}
+.sort-wrap{position:relative;flex:0 0 auto}
+.sort-btn{height:46px;border-radius:12px;background:var(--panel-2);border:1px solid var(--line);padding:0 12px 0 13px;font-size:12.5px;font-weight:600;color:var(--muted);display:inline-flex;align-items:center;gap:9px;transition:border-color .2s,color .2s,background .2s}
+.sort-btn:hover,.sort-btn.open{border-color:var(--line-strong);color:var(--ink)}
+.sort-btn .chev{width:12px;height:12px;opacity:.75;transition:transform .25s var(--ease)}
+.sort-btn.open .chev{transform:rotate(180deg)}
+.sort-menu{position:absolute;top:calc(100% + 7px);left:0;z-index:30;min-width:158px;padding:6px;border-radius:12px;background:var(--bg-2);border:1px solid var(--line-strong);box-shadow:0 20px 48px -20px rgba(0,0,0,.9);opacity:0;visibility:hidden;transform:translateY(-5px);transition:opacity .18s var(--ease),transform .18s var(--ease),visibility .18s;pointer-events:none}
+.sort-menu.up{top:auto;bottom:calc(100% + 7px);transform:translateY(5px)}
+.sort-menu.show{opacity:1;visibility:visible;transform:none;pointer-events:auto}
+.sort-menu button{width:100%;height:38px;padding:0 10px;border-radius:8px;display:flex;align-items:center;justify-content:space-between;gap:16px;font-size:12.5px;font-weight:600;color:var(--muted);text-align:left;white-space:nowrap;transition:.18s}
+.sort-menu button:hover{background:var(--panel-2);color:var(--ink)}
+.sort-menu button.on{background:rgba(62,230,192,.10);color:var(--ink)}
+.sort-menu button .tick{opacity:0;color:var(--accent);font-size:12px;font-weight:800}
+.sort-menu button.on .tick{opacity:1}
 .chip{height:46px;padding:0 14px;border-radius:12px;background:var(--panel-2);border:1px solid var(--line);display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:600;color:var(--muted);transition:.2s}
 .chip svg{width:14px;height:14px}
 .chip em{font-style:normal;font-size:10.5px;color:var(--muted-2);font-weight:700}
@@ -261,13 +267,15 @@ img{max-width:100%}
   .seg button{flex:1 0 auto;justify-content:center;padding:0 6px;font-size:10.5px;gap:2px}
   .seg button em{font-size:9px}
   .tool-right{order:3;margin-left:auto}
-  .select{height:42px}
+  .sort-btn{height:42px}
   .chip{height:42px}
 }
 @media(max-width:700px){
   .search{flex:1 1 100%;height:44px}
   .tool-right{width:100%;justify-content:space-between}
-  .select{flex:1}
+  .sort-wrap{flex:1}
+  .sort-btn{width:100%;justify-content:space-between}
+  .sort-menu{left:0;right:0;min-width:0}
 }
 
 /* ---------- 结果区 ---------- */
@@ -600,12 +608,18 @@ mark{background:rgba(255,198,107,.22);color:var(--ink);border-radius:4px;padding
         </label>
         <div class="seg" id="platSeg" role="group" aria-label="平台筛选"></div>
         <div class="tool-right">
-          <select class="select" id="sort" aria-label="排序方式">
-            <option value="rec">推荐排序</option>
-            <option value="name">名称 A–Z</option>
-            <option value="size">体积从小到大</option>
-            <option value="fresh">最近校验</option>
-          </select>
+          <div class="sort-wrap" id="sortWrap">
+            <button class="sort-btn" id="sortBtn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="sortMenu">
+              <span id="sortLabel">推荐排序</span>
+              <svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
+            </button>
+            <div class="sort-menu" id="sortMenu" role="listbox" aria-label="排序方式">
+              <button type="button" role="option" data-sort="rec" aria-selected="true">推荐排序<span class="tick">✓</span></button>
+              <button type="button" role="option" data-sort="name" aria-selected="false">名称 A–Z<span class="tick">✓</span></button>
+              <button type="button" role="option" data-sort="size" aria-selected="false">体积从小到大<span class="tick">✓</span></button>
+              <button type="button" role="option" data-sort="fresh" aria-selected="false">最近校验<span class="tick">✓</span></button>
+            </div>
+          </div>
           <button class="chip" id="favBtn" type="button" aria-pressed="false">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8-4.3-4.1 5.9-.9z"/></svg>
             收藏 <em id="favCount">0</em>
@@ -1050,7 +1064,40 @@ $('#cats').addEventListener('click',e=>{
   const b=e.target.closest('[data-cat]'); if(!b) return;
   state.cat=b.dataset.cat; renderAll({anim:true});
 });
-$('#sort').addEventListener('change',e=>{ state.sort=e.target.value; renderAll({anim:true}); });
+const SORT_LABELS={rec:'推荐排序',name:'名称 A–Z',size:'体积从小到大',fresh:'最近校验'};
+function closeSortMenu(focusBtn){
+  const b=$('#sortBtn'), m=$('#sortMenu');
+  if(!b||!m) return;
+  b.classList.remove('open'); b.setAttribute('aria-expanded','false'); m.classList.remove('show');
+  if(focusBtn) b.focus();
+}
+function syncSortUI(){
+  const label=$('#sortLabel'); if(label) label.textContent=SORT_LABELS[state.sort]||SORT_LABELS.rec;
+  $$('#sortMenu [data-sort]').forEach(b=>{
+    const on=b.dataset.sort===state.sort;
+    b.classList.toggle('on',on); b.setAttribute('aria-selected',on?'true':'false');
+  });
+}
+$('#sortBtn').addEventListener('click',e=>{
+  e.stopPropagation();
+  const m=$('#sortMenu'), b=$('#sortBtn');
+  const open=!m.classList.contains('show');
+  if(open){
+    m.classList.remove('up');
+    const br=b.getBoundingClientRect(), mh=m.offsetHeight;
+    const spaceBelow=window.innerHeight-br.bottom, spaceAbove=br.top;
+    m.classList.toggle('up',spaceBelow<mh+14 && spaceAbove>mh+14);
+  }
+  m.classList.toggle('show',open); b.classList.toggle('open',open); b.setAttribute('aria-expanded',open?'true':'false');
+});
+$('#sortMenu').addEventListener('click',e=>{
+  const b=e.target.closest('[data-sort]'); if(!b) return;
+  state.sort=b.dataset.sort; syncSortUI(); closeSortMenu(); renderAll({anim:true});
+});
+document.addEventListener('click',e=>{ if(!e.target.closest('#sortWrap')) closeSortMenu(); });
+document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeSortMenu(true); });
+window.addEventListener('resize',()=>{ if($('#sortMenu').classList.contains('show')) closeSortMenu(); });
+syncSortUI();
 $('#favBtn').addEventListener('click',()=>{
   state.favOnly=!state.favOnly;
   if(state.favOnly && state.favs.size===0){ toast('还没有收藏的软件，点卡片右上角的星标即可收藏'); state.favOnly=false; renderAll(); return; }
@@ -1061,7 +1108,7 @@ $('#emptyReset').addEventListener('click',resetFilters);
 function resetFilters(){
   state.q=''; state.plat='all'; state.cat='全部'; state.favOnly=false; state.sort='rec';
   const input=$('#q'); input.value=''; $('#searchWrap').classList.remove('hasq');
-  $('#sort').value='rec';
+  syncSortUI(); closeSortMenu();
   renderAll({anim:true});
 }
 
