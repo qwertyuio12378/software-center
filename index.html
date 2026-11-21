@@ -1313,8 +1313,10 @@ async function checkLive(app, btn){
   btn.querySelector('span').textContent='查询中…';
   st.className='live-status';
   st.innerHTML='<span class="spin"></span>正在向 GitHub Releases 查询最新版本…';
+  const ctrl=new AbortController();
+  const timer=setTimeout(()=>ctrl.abort(),12000);
   try{
-    const res=await fetch(`https://api.github.com/repos/${app.live.repo}/releases/latest`,{headers:{'Accept':'application/vnd.github+json'}});
+    const res=await fetch(`https://api.github.com/repos/${app.live.repo}/releases/latest`,{headers:{'Accept':'application/vnd.github+json'},signal:ctrl.signal});
     if(!res.ok) throw new Error(res.status===403?'GitHub 接口触发限流，请稍后再试':'GitHub 接口返回 '+res.status);
     const rel=await res.json();
     let updated=0, latest='';
@@ -1345,8 +1347,12 @@ async function checkLive(app, btn){
     }
   }catch(err){
     st.className='live-status err';
-    st.innerHTML='查询失败：'+esc(err.message||'网络错误')+'。官方直链不受影响，仍可正常下载。';
+    const msg = err && err.name==='AbortError' ? '查询超时，当前网络访问 GitHub 较慢'
+      : err instanceof TypeError ? '当前网络无法访问 GitHub 接口'
+      : (err && err.message) || '网络错误';
+    st.innerHTML='查询失败：'+esc(msg)+'。官方直链不受影响，仍可正常下载。';
   }finally{
+    clearTimeout(timer);
     btn.disabled=false;
     const span=btn.querySelector('span'); if(span) span.textContent=oldLabel;
   }
