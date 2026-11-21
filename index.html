@@ -441,9 +441,10 @@ mark{background:rgba(255,198,107,.22);color:var(--ink);border-radius:4px;padding
 .d-file-soon p{margin:6px 0 0;font-size:11.5px;line-height:1.7;color:var(--muted)}
 [data-theme="light"] .d-file-soon{background:rgba(163,101,13,.05);border-color:rgba(163,101,13,.24)}
 [data-theme="light"] .d-file-soon b{color:#a3650d}
-.d-dl{display:flex;align-items:center;gap:12px;margin-top:18px;height:56px;padding:0 18px;border-radius:15px;
+.d-dl{display:flex;align-items:center;gap:12px;margin-top:18px;height:56px;padding:0 18px;border-radius:15px;width:100%;border:0;text-align:left;font-family:inherit;
   background:linear-gradient(135deg,#41e8c2,#4bb6ff);color:#04140f;font-weight:800;font-size:14px;
   box-shadow:0 20px 44px -16px rgba(62,230,192,.55),inset 0 1px 0 rgba(255,255,255,.45);transition:.25s var(--ease)}
+.local-tag{flex:0 0 auto;padding:4px 8px;border-radius:6px;border:1px solid rgba(62,230,192,.3);color:var(--accent);font-size:9.5px;font-weight:700;letter-spacing:.03em}
 .d-dl:hover{transform:translateY(-1px);box-shadow:0 26px 54px -16px rgba(62,230,192,.7),inset 0 1px 0 rgba(255,255,255,.45)}
 .d-dl .big{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:rgba(4,20,15,.14);flex:0 0 auto}
 .d-dl .big svg{width:17px;height:17px}
@@ -778,6 +779,33 @@ let APPS = [
    ============================================================ */
 const ADMIN_DATA_KEY = 'weakdock_admin_v1';
 let ADMIN_CATEGORIES = null;
+let COPY_OVERRIDES = {};
+const FILE_DB_NAME='weakdock_files';
+let fileDBPromise=null;
+function openFileDB(){
+  if(fileDBPromise) return fileDBPromise;
+  fileDBPromise=new Promise((resolve,reject)=>{
+    if(!('indexedDB' in window)){reject(new Error('当前浏览器不支持本机安装包存储'));return;}
+    const req=indexedDB.open(FILE_DB_NAME,1);
+    req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains('files'))req.result.createObjectStore('files',{keyPath:'id'});};
+    req.onsuccess=()=>resolve(req.result);
+    req.onerror=()=>reject(req.error||new Error('本机安装包存储打开失败'));
+  });
+  return fileDBPromise;
+}
+function getUploadedFile(id){
+  return openFileDB().then(db=>new Promise((resolve,reject)=>{
+    const tx=db.transaction('files','readonly');
+    const req=tx.objectStore('files').get(id);
+    req.onsuccess=()=>resolve(req.result||null);req.onerror=()=>reject(req.error||new Error('安装包读取失败'));
+  }));
+}
+function triggerBlobDownload(blob,name){
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=name||'installation';document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),10000);
+}
+function isUploadUrl(url){return typeof url==='string'&&/^upload:/i.test(url);}
 (function loadAdminData(){
   try{
     const raw = localStorage.getItem(ADMIN_DATA_KEY);
@@ -805,6 +833,9 @@ let ADMIN_CATEGORIES = null;
     });
     APPS = apps;
     ADMIN_CATEGORIES = allCats;
+    if(snap.copy && typeof snap.copy==='object' && !Array.isArray(snap.copy)){
+      COPY_OVERRIDES = Object.fromEntries(Object.entries(snap.copy).filter(([k,v])=>k && typeof v==='string' && v.trim()));
+    }
   }catch(e){}
 })();
 
@@ -1086,6 +1117,49 @@ function renderAll(opts){
   renderResult(list);
   renderGrid(list, !!(opts && opts.anim));
 }
+let copyObserver=null, copyApplying=false;
+function applyCopyOverrides(){
+  if(copyApplying) return;
+  const map=COPY_OVERRIDES;
+  if(!map || !Object.keys(map).length) return;
+  copyApplying=true;
+  if(copyObserver) copyObserver.disconnect();
+  try{
+    const skip=/^(SCRIPT|STYLE|TEXTAREA|INPUT|SELECT|OPTION|CODE)$/;
+    const walker=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT,{acceptNode(node){
+      const p=node.parentElement;
+      if(!p||skip.test(p.tagName)) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }});
+    const nodes=[]; let node;
+    while((node=walker.nextNode())) nodes.push(node);
+    nodes.forEach(n=>{
+      const raw=n.nodeValue||''; const key=raw.trim().replace(/\s+/g,' '); if(!key) return;
+      const val=map[key];
+      if(typeof val==='string' && val && val!==key){
+        const lead=(raw.match(/^\s*/)||[''])[0], trail=(raw.match(/\s*$/)||[''])[0];
+        n.nodeValue=lead+val+trail;
+      }
+    });
+    document.querySelectorAll('[placeholder],[aria-label],[title],[alt]').forEach(el=>{
+      ['placeholder','aria-label','title','alt'].forEach(attr=>{
+        const v=el.getAttribute(attr); if(!v) return;
+        const key=v.trim().replace(/\s+/g,' '), val=map[key];
+        if(typeof val==='string' && val && val!==key) el.setAttribute(attr,val);
+      });
+    });
+  }catch(e){}
+  if(copyObserver) copyObserver.observe(document.body,{childList:true,subtree:true,characterData:true});
+  copyApplying=false;
+}
+function initCopyObserver(){
+  if(copyObserver) return;
+  copyObserver=new MutationObserver(()=>{
+    clearTimeout(initCopyObserver.timer);
+    initCopyObserver.timer=setTimeout(()=>applyCopyOverrides(),60);
+  });
+  copyObserver.observe(document.body,{childList:true,subtree:true,characterData:true});
+}
 
 /* ============================================================
    交互：筛选
@@ -1211,12 +1285,24 @@ function nameOf(id){ const a=appById(id); return a?a.name:''; }
 /* ============================================================
    下载
    ============================================================ */
-function doDownload(app, plat){
+async function doDownload(app, plat){
   const p=app.platforms[plat];
   if(!p) return;
   if(p.pending || !p.url){
     openDrawer(app, plat);
     toast(`<b>${esc(app.name)}</b> 的 ${PLAT_LABEL[plat]} 安装包暂未上架，先看版本信息`);
+    return;
+  }
+  if(isUploadUrl(p.url)){
+    try{
+      const rec=await getUploadedFile(p.url.slice(7));
+      if(!rec||!rec.blob){
+        toast('这个安装包由后台上传到上传它的那台浏览器，本机没有这份文件。公开分发请使用官方直链。','err');
+        return;
+      }
+      triggerBlobDownload(rec.blob,p.file||rec.name);
+      toast(`正在从本机下载 <b>${esc(app.name)}</b> · ${fmtSize(p.size)}`,'','');
+    }catch(e){toast('本机安装包读取失败，请回到后台上传它的浏览器重试。','err');}
     return;
   }
   toast(`正在打开 <b>${esc(app.name)}</b> 的官方下载源 · ${fmtSize(p.size)}`, p.url, '没反应？点这里');
@@ -1245,6 +1331,8 @@ $('#drawerX').addEventListener('click',closeDrawer);
 scrim.addEventListener('click',closeDrawer);
 $('#drawerPanel').addEventListener('click',e=>{
   if(e.target.closest('[data-close]')) closeDrawer();
+  const localBtn=e.target.closest('[data-local-dl]');
+  if(localBtn){ const app=appById(localBtn.dataset.localDl); if(app) doDownload(app,localBtn.dataset.localPlat); }
 });
 
 function renderDrawer(){
@@ -1252,6 +1340,7 @@ function renderDrawer(){
   const p=app.platforms[plat];
   const plats=platformsOf(app);
   const pending=!!p.pending || !p.url;
+  const local=isUploadUrl(p.url);
   const dHead=app.iconImg
     ? `<img src="${app.iconImg}" alt="">`
     : (ICONS_SVG(app.glyph)||`<span class="tile-letter">${esc(app.name.slice(0,1))}</span>`);
@@ -1284,20 +1373,26 @@ function renderDrawer(){
     </div>`:`
     <div class="d-file">
       <code title="${esc(p.file)}">${esc(p.file)}</code>
-      <button type="button" data-copy="${esc(p.url)}" aria-label="复制下载链接">${ICON_COPY}</button>
+      ${local?'<span class="local-tag">本机安装包</span>':`<button type="button" data-copy="${esc(p.url)}" aria-label="复制下载链接">${ICON_COPY}</button>`}
     </div>
 
+    ${local?`
+    <button type="button" class="d-dl" data-local-dl="${app.id}" data-local-plat="${plat}">
+      <span class="big">${ICON_DL}</span>
+      <span class="txt"><b>${dlText(plat)}</b><span>从本浏览器安装包存储下载 · 不上传服务器</span></span>
+      <span class="sz">${fmtSize(p.size)}</span>
+    </button>`:`
     <a class="d-dl" href="${esc(p.url)}" target="_blank" rel="noopener" data-go>
       <span class="big">${ICON_DL}</span>
       <span class="txt"><b>${dlText(plat)}</b><span>跳转官方源 · 无捆绑下载器</span></span>
       <span class="sz">${fmtSize(p.size)}</span>
-    </a>
+    </a>`}
     <div class="d-actions">
-      <button type="button" data-copy="${esc(p.url)}">${ICON_COPY}<span>复制直链</span></button>
+      ${local?'':`<button type="button" data-copy="${esc(p.url)}">${ICON_COPY}<span>复制直链</span></button>`}
       ${app.site?`<a href="${esc(app.site)}" target="_blank" rel="noopener">${ICON_ARROW}<span>官方页面</span></a>`:''}
     </div>`}
 
-    ${!pending?`
+    ${!pending&&!local?`
     <div class="block">
       <div class="block-h">扫码下载 <i></i></div>
       <div class="qr-wrap">
@@ -1310,13 +1405,18 @@ function renderDrawer(){
     </div>`:''}
 
     <div class="block">
-      <div class="block-h">${pending?'上架信息':'校验记录'} <i></i></div>
+      <div class="block-h">${pending?'上架信息':local?'本机文件信息':'校验记录'} <i></i></div>
       <div class="verify-box">
         ${pending?`
         <div class="v-row"><span>上架状态</span><b class="soonv">安装包待上架</b></div>
         <div class="v-row"><span>收录版本</span><b>${esc(p.v)}</b></div>
         <div class="v-row"><span>适用平台</span><b>${PLAT_LABEL[plat]}</b></div>
-        <div class="v-row"><span>数据更新</span><b>${esc(app.checked)}</b></div>`:`
+        <div class="v-row"><span>数据更新</span><b>${esc(app.checked)}</b></div>`:local?`
+        <div class="v-row"><span>上架状态</span><b class="ok">本机安装包</b></div>
+        <div class="v-row"><span>版本</span><b>${esc(p.v)}</b></div>
+        <div class="v-row"><span>文件体积</span><b>${fmtSize(p.size)}</b></div>
+        <div class="v-row"><span>存储位置</span><b>当前浏览器 IndexedDB</b></div>
+        <div class="v-row"><span>来源</span><b>${esc(p.src||'后台上传')}</b></div>`:`
         <div class="v-row"><span>校验时间</span><b>${esc(app.checked)}</b></div>
         <div class="v-row"><span>HTTP 响应</span><b class="ok">${esc(p.http)}</b></div>
         <div class="v-row"><span>Content-Type</span><b>${esc(p.ctype)}</b></div>
@@ -1522,6 +1622,8 @@ $('#deviceBtn').addEventListener('click',()=>{
 
 /* 初始化 */
 renderAll();
+applyCopyOverrides();
+initCopyObserver();
 let thumbTimer;
 window.addEventListener('resize',()=>{ clearTimeout(thumbTimer); thumbTimer=setTimeout(positionSegThumb,120); });
 if(document.fonts && document.fonts.ready) document.fonts.ready.then(()=>positionSegThumb()).catch(()=>{});

@@ -123,6 +123,14 @@ select.mini option{background:var(--bg-2);color:var(--ink)}
 .seg button{flex:1;height:28px;border:0;border-radius:6px;background:transparent;color:var(--muted);font-size:10px;font-weight:700}
 .seg button.on{background:var(--accent);color:#07131a}
 .list{border:1px solid var(--line);border-radius:16px;background:var(--panel);overflow:hidden}
+.copy-list{border:1px solid var(--line);border-radius:14px;background:var(--panel);overflow:hidden;max-height:520px;overflow-y:auto}
+.copy-row{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) auto;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--line)}
+.copy-row:last-child{border-bottom:0}
+.copy-origin{font-size:11.5px;color:var(--muted);line-height:1.5;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.copy-input{height:34px;width:100%;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel-2);color:var(--ink);font-size:11.5px;outline:none}
+.copy-input:focus{border-color:rgba(62,230,192,.42)}
+.copy-manual{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:8px}
+.copy-manual input{height:34px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel-2);color:var(--ink);font-size:11.5px;outline:none}
 .row{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(190px,1fr) auto;align-items:center;gap:14px;padding:13px 16px;border-bottom:1px solid var(--line);transition:.18s}
 .row:last-child{border-bottom:0}
 .row:hover{background:rgba(62,230,192,.035)}
@@ -190,6 +198,8 @@ dialog.modal::backdrop{background:rgba(0,0,0,.62);backdrop-filter:blur(5px)}
 .file-label{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel-2);font-size:10.5px;font-weight:600;color:var(--muted);cursor:pointer}
 .file-label:hover{color:var(--ink);border-color:var(--line-strong)}
 .file-label input{display:none}
+.pkg-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pkg-name{font-size:10px;color:var(--muted);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .plat-checks{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:11px}
 .plat-check{display:flex;align-items:center;gap:6px;height:32px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);font-size:10.5px;font-weight:700;color:var(--muted);cursor:pointer}
 .plat-check input{width:13px;height:13px;accent-color:var(--accent);margin:0}
@@ -222,7 +232,7 @@ dialog.modal::backdrop{background:rgba(0,0,0,.62);backdrop-filter:blur(5px)}
   .brand{padding:0 2px}
   .brand-mark{width:32px;height:32px;border-radius:10px}
   .brand b{font-size:14px}
-  .nav{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:2px}
+  .nav{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-top:2px}
   .nav button{min-height:34px;justify-content:center;padding:0 8px;font-size:10.5px;gap:6px;border-radius:8px}
   .nav button svg{width:13px;height:13px}
   .main{padding:18px 14px 40px}
@@ -247,6 +257,9 @@ dialog.modal::backdrop{background:rgba(0,0,0,.62);backdrop-filter:blur(5px)}
   .modal-foot{padding:12px 16px}
   .field.wide{grid-column:auto}
   .p-grid .wide{grid-column:auto}
+  .copy-row{grid-template-columns:1fr;gap:6px}
+  .copy-row .btn{justify-self:start}
+  .copy-manual{grid-template-columns:1fr}
 }
 @media(max-width:380px){
   .top-actions .btn{padding:0 9px;font-size:10.5px}
@@ -279,6 +292,10 @@ dialog.modal::backdrop{background:rgba(0,0,0,.62);backdrop-filter:blur(5px)}
       <button type="button" data-view="apps">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9h.01M10 9h.01M7 12h7"/></svg>
         应用管理
+      </button>
+      <button type="button" data-view="copy">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M5 6h14M5 12h9M5 18h11"/><path d="M19 15l2 2-2 2"/></svg>
+        前端文案
       </button>
     </nav>
     <div class="side-spacer"></div>
@@ -313,6 +330,7 @@ dialog.modal::backdrop{background:rgba(0,0,0,.62);backdrop-filter:blur(5px)}
     <div id="viewOverview" class="view on"></div>
     <div id="viewCategories" class="view"></div>
     <div id="viewApps" class="view"></div>
+    <div id="viewCopy" class="view"></div>
   </main>
 </div>
 
@@ -581,14 +599,57 @@ let modalMode='app';
 let editingAppId=null;
 let editingCatId=null;
 let iconDraft='';
+let uploadDrafts={};
 let query='';
 let appCatFilter='all';
 let appPlatFilter='all';
+let copyScan=[];
+let copyQuery='';
 let toastTimer=null;
 
 function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function nowStr(){const d=new Date(),p=n=>String(n).padStart(2,'0');return `${d.getFullYear()}-${p(d.getMonth()+1)}-${p(d.getDate())} ${p(d.getHours())}:${p(d.getMinutes())}`;}
 function uid(prefix){return prefix+'_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);}
+const FILE_DB_NAME='weakdock_files';
+let fileDBPromise=null;
+function openFileDB(){
+  if(fileDBPromise) return fileDBPromise;
+  fileDBPromise=new Promise((resolve,reject)=>{
+    if(!('indexedDB' in window)){reject(new Error('当前浏览器不支持本机安装包存储'));return;}
+    const req=indexedDB.open(FILE_DB_NAME,1);
+    req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains('files'))req.result.createObjectStore('files',{keyPath:'id'});};
+    req.onsuccess=()=>resolve(req.result);
+    req.onerror=()=>reject(req.error||new Error('本机安装包存储打开失败'));
+  });
+  return fileDBPromise;
+}
+function putUploadedFile(id,file){
+  return openFileDB().then(db=>new Promise((resolve,reject)=>{
+    const tx=db.transaction('files','readwrite');
+    tx.objectStore('files').put({id,name:file.name,type:file.type||'',size:file.size,blob:file,uploadedAt:nowStr()});
+    tx.oncomplete=()=>resolve(true);tx.onerror=()=>reject(tx.error||new Error('安装包写入失败'));
+  }));
+}
+function getUploadedFile(id){
+  return openFileDB().then(db=>new Promise((resolve,reject)=>{
+    const tx=db.transaction('files','readonly');
+    const req=tx.objectStore('files').get(id);
+    req.onsuccess=()=>resolve(req.result||null);req.onerror=()=>reject(req.error||new Error('安装包读取失败'));
+  }));
+}
+function fmtFileSize(n){
+  n=Number(n)||0;
+  if(n>=1073741824) return (n/1073741824).toFixed(2)+' GB';
+  if(n>=1048576) return (n/1048576).toFixed(1)+' MB';
+  if(n>=1024) return (n/1024).toFixed(0)+' KB';
+  return n+' B';
+}
+function uploadFormat(name){
+  const m=/\.([a-z0-9]+)$/i.exec(String(name||''));
+  const ext=m?m[1].toUpperCase():'';
+  return ext||'BIN';
+}
+function isUploadUrl(url){return typeof url==='string'&&/^upload:/i.test(url);}
 function slugify(s){return String(s||'').toLowerCase().replace(/[^a-z0-9\u4e00-\u9fa5]+/g,'-').replace(/^-+|-+$/g,'').slice(0,24);}
 function normalize(raw){
   const src=raw&&typeof raw==='object'?raw:{};
@@ -612,7 +673,11 @@ function normalize(raw){
   });
   categories.sort((a,b)=>(a.order||999)-(b.order||999)||a.name.localeCompare(b.name,'zh-Hans-CN'));
   categories.forEach((c,i)=>c.order=i+1);
-  return {version:1,updatedAt:src.updatedAt||'',categories,apps};
+  const copy={};
+  if(src.copy && typeof src.copy==='object' && !Array.isArray(src.copy)){
+    Object.entries(src.copy).forEach(([k,v])=>{ if(k && typeof v==='string' && v.trim()) copy[k]=v; });
+  }
+  return {version:1,updatedAt:src.updatedAt||'',categories,apps,copy};
 }
 function loadData(){
   try{
@@ -683,13 +748,13 @@ function bindCSelect(root,onChange){
 function sortedCategories(){return [...data.categories].sort((a,b)=>(a.order||999)-(b.order||999)||a.name.localeCompare(b.name,'zh-Hans-CN'));}
 
 function renderAll(){
-  const labels={overview:['概览','管理台总览','维护分类、应用与官方下载信息。'],categories:['分类管理','分类管理','新增、排序和整理应用分类。'],apps:['应用管理','应用管理','添加应用并维护平台、版本与直链信息。']};
+  const labels={overview:['概览','管理台总览','维护分类、应用与官方下载信息。'],categories:['分类管理','分类管理','新增、排序和整理应用分类。'],apps:['应用管理','应用管理','添加应用并维护平台、版本与直链信息。'],copy:['前端文案','前端文案','修改前台静态文字，保存后同一浏览器生效。']};
   const l=labels[view]||labels.overview;
   $('#crumbView').textContent=l[0];$('#pageTitle').textContent=l[1];$('#pageSub').textContent=l[2];
   $$('.nav button').forEach(b=>b.classList.toggle('on',b.dataset.view===view));
   $$('.view').forEach(v=>v.classList.toggle('on',v.id==='view'+view[0].toUpperCase()+view.slice(1)));
   $('#sideUpdated').textContent=data.updatedAt?'已保存 · '+data.updatedAt:'尚未保存';
-  renderOverview();renderCategories();renderAppsView();
+  renderOverview();renderCategories();renderAppsView();renderCopy();
 }
 function renderOverview(){
   const links=data.apps.reduce((n,a)=>n+Object.values(a.platforms).filter(p=>p&&p.url&&!p.pending).length,0);
@@ -773,6 +838,81 @@ function filteredApps(){
     return [a.name,a.en,a.tagline,a.desc,a.cat,...(a.tags||[])].join(' ').toLowerCase().includes(q);
   });
 }
+function copyKey(s){return String(s||'').replace(/\s+/g,' ').trim();}
+function copyUseful(s){
+  const t=copyKey(s);
+  if(t.length<2||t.length>110) return false;
+  if(/^[\d\s.,%+\-/]+$/.test(t)) return false;
+  if(/^[\d.,]+\s*(MB|GB|KB|TB|B)$/i.test(t)) return false;
+  if(/^[·|—\-_/]+$/.test(t)) return false;
+  if(/^\s*(https?:\/\/|data:|javascript:)/i.test(t)) return false;
+  return true;
+}
+function copyKeys(){
+  const keys=[...new Set([...Object.keys(data.copy||{}),...copyScan])].sort((a,b)=>a.localeCompare(b,'zh-Hans-CN'));
+  const q=copyQuery.trim().toLowerCase();
+  return keys.filter(k=>copyUseful(k)&&(!q||k.toLowerCase().includes(q)));
+}
+function renderCopy(){
+  data.copy=data.copy&&typeof data.copy==='object'?data.copy:{};
+  const keys=copyKeys();
+  $('#viewCopy').innerHTML=`
+    <div class="notice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg><div>这里修改的是前台可见文字，不改应用数据。保存后同一域名下的前台刷新即可生效；数字、链接和过短符号不会进入清单。</div></div>
+    <div class="toolbar">
+      <div class="toolbar-left"><div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg><input id="copySearch" placeholder="搜索原文或替换文案" value="${esc(copyQuery)}"></div></div>
+      <div class="toolbar-right"><span class="status ok"><i></i>${keys.length} 条文案</span><button type="button" class="btn" id="copyScanBtn">扫描前台</button><button type="button" class="btn primary" id="copySaveBtn">保存文案</button></div>
+    </div>
+    <div class="panel"><div class="panel-head"><div><h2>文案清单</h2><p>左侧是原文，右侧留空表示保持原文。</p></div><button type="button" class="btn small ghost" id="copyClearBtn">清空全部替换</button></div>
+      <div class="copy-list">
+        ${keys.length?keys.map(k=>`<div class="copy-row"><div class="copy-origin" title="${esc(k)}">${esc(k)}</div><input class="copy-input" data-copy-key="${esc(k)}" value="${esc(data.copy[k]||'')}" placeholder="保持原文"><button type="button" class="btn small ghost" data-copy-reset="${esc(k)}">还原</button></div>`).join(''):'<div class="empty"><b>还没有扫描到文案</b>点右上角「扫描前台」读取当前前台文字，或手动添加。</div>'}
+      </div>
+    </div>
+    <div class="panel"><div class="panel-head"><div><h2>手动添加</h2><p>适合修改没有出现在静态页面里的动态文字。</p></div></div><div class="panel-body"><div class="copy-manual"><input id="copyNewKey" placeholder="前台原文，例如：安装包待上架"><input id="copyNewVal" placeholder="替换成，例如：安装包准备中"><button type="button" class="btn primary" id="copyAddBtn">添加并保存</button></div></div></div>`;
+  $('#copySearch').oninput=e=>{copyQuery=e.target.value;renderCopy();};
+  $('#copyScanBtn').onclick=scanFrontCopy;
+  $('#copySaveBtn').onclick=saveCopyEdits;
+  $('#copyClearBtn').onclick=()=>{data.copy={};if(saveData())toast('已清空全部文案替换。','ok');};
+  $$('#viewCopy [data-copy-reset]').forEach(b=>b.onclick=()=>{delete data.copy[b.dataset.copyReset];if(saveData())toast('已还原原文。','ok');});
+  $('#copyAddBtn').onclick=()=>{
+    const k=copyKey($('#copyNewKey').value),v=$('#copyNewVal').value.trim();
+    if(!k||!v){toast('原文和替换文案都要填写。','err');return;}
+    data.copy[k]=v;
+    if(saveData())toast('文案已添加。','ok');
+  };
+}
+async function scanFrontCopy(){
+  const btn=$('#copyScanBtn');if(btn){btn.disabled=true;btn.textContent='扫描中…';}
+  try{
+    const res=await fetch('./index.html?copy-scan='+Date.now(),{cache:'no-store'});
+    if(!res.ok) throw new Error('前台页面读取失败');
+    const html=await res.text();
+    const doc=new DOMParser().parseFromString(html,'text/html');
+    const skip=/^(SCRIPT|STYLE|TEXTAREA|INPUT|SELECT|OPTION|CODE)$/;
+    const found=[];
+    const walker=doc.createTreeWalker(doc.body,NodeFilter.SHOW_TEXT,{acceptNode(node){
+      const p=node.parentElement;
+      if(!p||skip.test(p.tagName)) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }});
+    let n;while((n=walker.nextNode())) found.push(n.nodeValue);
+    doc.querySelectorAll('[placeholder],[aria-label],[title],[alt]').forEach(el=>{
+      ['placeholder','aria-label','title','alt'].forEach(a=>{const v=el.getAttribute(a);if(v)found.push(v);});
+    });
+    copyScan=[...new Set(found.map(copyKey).filter(copyUseful))].sort((a,b)=>a.localeCompare(b,'zh-Hans-CN'));
+    renderCopy();
+    toast(`已扫描 ${copyScan.length} 条前台文案。`,'ok');
+  }catch(e){toast('扫描失败：'+(e.message||'无法读取前台页面'),'err');}
+  finally{if(btn){btn.disabled=false;btn.textContent='扫描前台';}}
+}
+function saveCopyEdits(){
+  const next={};
+  $$('#viewCopy [data-copy-key]').forEach(inp=>{
+    const k=inp.dataset.copyKey,v=inp.value.trim();
+    if(v&&v!==k) next[k]=v;
+  });
+  data.copy=next;
+  if(saveData())toast('前端文案已保存。','ok');
+}
 function renderAppList(){
   const list=filteredApps();
   $('#appList').innerHTML=list.length?`<div class="list">${list.map(a=>{const st=appStatus(a);const plats=PLAT_DEFS.filter(p=>a.platforms[p.key]);const vers=[...new Set(plats.map(p=>esc((a.platforms[p.key].v)||'—')))];return `
@@ -845,6 +985,8 @@ function openAppModal(id){
   const base=id?data.apps.find(a=>a.id===id):null;
   if(id&&!base)return;
   const app=base?{...base,platforms:{...base.platforms}}:appBlank();
+  uploadDrafts={};
+  Object.keys(app.platforms).forEach(k=>{const u=app.platforms[k]&&app.platforms[k].upload;if(u)uploadDrafts[k]={...u,existing:true};});
   iconDraft=app.iconImg||'';
   $('#modalKicker').textContent=base?'EDIT APP':'NEW APP';
   $('#modalTitle').textContent=base?base.name:'添加应用';
@@ -852,8 +994,12 @@ function openAppModal(id){
   const plats=PLAT_DEFS.map(p=>{const has=!!app.platforms[p.key];return `<label class="plat-check"><input type="checkbox" data-plat-check="${p.key}" ${has?'checked':''}>${p.label}</label>`}).join('');
   const panels=PLAT_DEFS.map(p=>{
     const cur=app.platforms[p.key]||{};
+    const draft=uploadDrafts[p.key];
     const mb=cur.size?String((cur.size/1048576).toFixed(cur.size>=10485760?0:1)):'';
-    const pending=cur.pending||!cur.url;
+    const pending=draft?false:(cur.pending||!cur.url);
+    const upName=draft?(draft.name+' · '+fmtFileSize(draft.size)):'未上传';
+    const displayUrl=isUploadUrl(cur.url)?'':(cur.url||'');
+    const urlPlaceholder=draft?'已上传安装包，保存后本机可下载':'https://…（待上架可留空）';
     return `<section class="plat-panel" data-panel="${p.key}" ${app.platforms[p.key]?'':'hidden'}>
       <div class="plat-panel-head"><b>${p.label} 安装包</b><i class="tag ${p.key}">${p.short}</i></div>
       <div class="p-grid">
@@ -861,13 +1007,14 @@ function openAppModal(id){
         <label class="field"><span>文件格式 *</span><input data-field="type" value="${esc(cur.type||p.type)}" placeholder="${p.type}"></label>
         <label class="field"><span>文件体积（MB）</span><input data-field="size" type="number" min="0" step="0.1" value="${esc(mb)}" placeholder="留空则显示待定"></label>
         <label class="field wide"><span>文件名</span><input data-field="file" value="${esc(cur.file||'')}" placeholder="例如 QXNET-2.1.5.apk"></label>
-        <label class="field wide"><span>官方直链</span><input data-field="url" type="url" value="${esc(cur.url||'')}" placeholder="https://…（待上架可留空）"></label>
+        <label class="field wide"><span>官方直链</span><input data-field="url" type="url" value="${esc(displayUrl)}" placeholder="${esc(urlPlaceholder)}"></label>
         <label class="field wide"><span>下载源说明</span><input data-field="src" value="${esc(cur.src||'')}" placeholder="例如：厂商官方服务器"></label>
         <div class="field"><span>状态</span><div class="seg" data-seg="pending"><input type="hidden" data-field="pending" value="${pending?'pending':'published'}"><button type="button" data-val="published" class="${pending?'':'on'}">已上架</button><button type="button" data-val="pending" class="${pending?'on':''}">待上架</button></div></div>
         <label class="field"><span>HTTP 状态</span><input data-field="http" value="${esc(cur.http||'')}" placeholder="例如 200"></label>
         <label class="field"><span>Content-Type</span><input data-field="ctype" value="${esc(cur.ctype||'')}" placeholder="例如 application/octet-stream"></label>
+        <div class="field wide"><span>安装包文件</span><div class="pkg-line"><label class="file-label">选择安装包<input type="file" data-pkg-input="${p.key}" hidden></label><span class="pkg-name" data-pkg-name="${p.key}">${esc(upName)}</span><button type="button" class="btn small ghost" data-pkg-clear="${p.key}">移除</button></div></div>
       </div>
-      <p class="plat-note">填好官方直链后，把状态切到「已上架」，前台才会显示下载按钮。</p></section>`;
+      <p class="plat-note">上传包保存在本浏览器（IndexedDB），同一浏览器的前台可直接下载；公开分发请同时填写官方直链。</p></section>`;
   }).join('');
   const catOpts=data.categories.map(c=>({value:c.name,label:c.name}));
   if(app.cat&&!catOpts.some(o=>o.value===app.cat)) catOpts.unshift({value:app.cat,label:app.cat});
@@ -895,6 +1042,33 @@ function openAppModal(id){
         seg.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b===btn));
       };
     });
+  });
+  $$('#modalBody [data-pkg-input]').forEach(inp=>{
+    inp.onchange=async e=>{
+      const file=e.target.files&&e.target.files[0]; if(!file) return;
+      const key=inp.dataset.pkgInput,panel=inp.closest('[data-panel]'),id=uid('pkg');
+      try{ await putUploadedFile(id,file); }
+      catch(err){toast('安装包存储失败：'+(err.message||'本机存储空间不足'),'err');e.target.value='';return;}
+      const fmt=uploadFormat(file.name);
+      uploadDrafts[key]={id,name:file.name,size:file.size,type:fmt};
+      const set=(name,value)=>{const el=panel.querySelector(`[data-field="${name}"]`);if(el)el.value=value;};
+      set('type',fmt);set('file',file.name);set('size',Math.max(0.1,Number((file.size/1048576).toFixed(1))));set('url','');
+      if(!panel.querySelector('[data-field="ctype"]').value)set('ctype',file.type||'application/octet-stream');
+      const seg=panel.querySelector('[data-seg="pending"]');if(seg){seg.querySelector('input').value='published';seg.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.val==='published'));}
+      const nameEl=panel.querySelector('[data-pkg-name]');if(nameEl)nameEl.textContent=file.name+' · '+fmtFileSize(file.size);
+      e.target.value='';
+      toast('安装包已暂存，保存应用后前台本机可下载。','ok');
+    };
+  });
+  $$('#modalBody [data-pkg-clear]').forEach(btn=>{
+    btn.onclick=()=>{
+      const key=btn.dataset.pkgClear,panel=btn.closest('[data-panel]');
+      uploadDrafts[key]={remove:true};
+      const set=(name,value)=>{const el=panel.querySelector(`[data-field="${name}"]`);if(el)el.value=value;};
+      set('url','');set('file','');set('size','');set('src','');set('ctype','');set('http','');
+      const seg=panel.querySelector('[data-seg="pending"]');if(seg){seg.querySelector('input').value='pending';seg.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.val==='pending'));}
+      const nameEl=panel.querySelector('[data-pkg-name]');if(nameEl)nameEl.textContent='未上传';
+    };
   });
   $('.plat-checks').addEventListener('change',e=>{
     const cb=e.target.closest('[data-plat-check]');if(!cb)return;
@@ -950,10 +1124,12 @@ function compressIcon(file){
 function collectPlatform(panel,key){
   const f=n=>panel.querySelector(`[data-field="${n}"]`)?.value.trim()||'';
   const v=f('v'),type=f('type'),size=f('size'),file=f('file'),url=f('url'),src=f('src'),http=f('http'),ctype=f('ctype'),status=f('pending');
+  const draft=uploadDrafts[key];
+  const hasPkg=!!(draft&&!draft.remove&&draft.id);
   if(!v) throw new Error(`${PLAT_BY_KEY[key].label} 需要填写版本号。`);
   if(!type) throw new Error(`${PLAT_BY_KEY[key].label} 需要填写安装包格式（例如 EXE、APK、IPA、HAP）。`);
   if(url&&!/^https?:\/\//i.test(url)) throw new Error(`${PLAT_BY_KEY[key].label} 的官方直链必须以 http:// 或 https:// 开头。`);
-  if(status==='published'&&!url) throw new Error(`${PLAT_BY_KEY[key].label} 已选择已上架，必须填写官方直链；没有直链请改成待上架。`);
+  if(status==='published'&&!url&&!hasPkg) throw new Error(`${PLAT_BY_KEY[key].label} 已选择已上架，必须填写官方直链或上传安装包。`);
   const obj={v};
   if(type)obj.type=type;
   if(size&&Number(size)>0)obj.size=Math.round(Number(size)*1048576);
@@ -962,7 +1138,15 @@ function collectPlatform(panel,key){
   if(src)obj.src=src;
   if(http)obj.http=http;
   if(ctype)obj.ctype=ctype;
-  if(status==='pending'||!url)obj.pending=true;
+  if(hasPkg){
+    obj.url=`upload:${draft.id}`;
+    obj.size=draft.size;
+    obj.upload={id:draft.id,name:draft.name,size:draft.size,type:draft.type||type,uploadedAt:draft.uploadedAt||nowStr()};
+    if(!obj.src)obj.src='后台上传 · 本机存储';
+  }else if(draft&&draft.remove&&obj.url&&isUploadUrl(obj.url)){
+    delete obj.url;
+  }
+  if(!hasPkg&&(status==='pending'||!obj.url))obj.pending=true;
   return obj;
 }
 function saveApp(){
