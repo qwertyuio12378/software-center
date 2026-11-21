@@ -221,10 +221,13 @@ img{max-width:100%}
 .search .clear{width:22px;height:22px;border-radius:50%;display:none;place-items:center;background:var(--panel-3);color:var(--muted);font-size:12px;line-height:1}
 .search.hasq .clear{display:grid}
 .search.hasq kbd{display:none}
-.seg{display:flex;align-items:center;gap:2px;padding:4px;border-radius:12px;background:var(--panel);border:1px solid var(--line);flex:0 0 auto}
-.seg button{height:36px;padding:0 13px;border-radius:9px;font-size:12.5px;font-weight:700;color:var(--muted);display:inline-flex;align-items:center;gap:6px;transition:.2s var(--ease)}
-.seg button em{font-style:normal;font-size:10.5px;color:var(--muted-2);font-weight:600;letter-spacing:.02em}
-.seg button.on{background:var(--panel-3);color:var(--ink);box-shadow:0 6px 14px -8px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.12)}
+.seg{display:flex;align-items:center;gap:2px;padding:4px;border-radius:12px;background:var(--panel);border:1px solid var(--line);flex:0 0 auto;position:relative;isolation:isolate}
+.seg-thumb{position:absolute;left:4px;top:4px;height:36px;border-radius:9px;background:var(--panel-3);z-index:0;pointer-events:none;will-change:transform,width;
+  box-shadow:0 6px 14px -8px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.12)}
+.seg.thumb-ready .seg-thumb{transition:transform .45s var(--ease),width .45s var(--ease)}
+.seg button{height:36px;padding:0 13px;border-radius:9px;font-size:12.5px;font-weight:700;color:var(--muted);display:inline-flex;align-items:center;gap:6px;transition:color .2s var(--ease);position:relative;z-index:1;background:transparent}
+.seg button em{font-style:normal;font-size:10.5px;color:var(--muted-2);font-weight:600;letter-spacing:.02em;transition:color .25s}
+.seg button.on{background:transparent;box-shadow:none;color:var(--ink)}
 .seg button.on em{color:var(--accent)}
 .seg button:hover:not(.on){color:var(--ink)}
 .tool-right{display:flex;align-items:center;gap:8px;margin-left:auto;flex:0 0 auto}
@@ -268,7 +271,14 @@ img{max-width:100%}
 .resultline{display:flex;align-items:center;gap:12px;margin:18px 2px 0;font-size:12px;color:var(--muted-2);letter-spacing:.02em}
 .resultline b{color:var(--ink);font-weight:700}
 .resultline .reset{margin-left:auto;font-size:11.5px;color:var(--accent);border-bottom:1px dashed rgba(62,230,192,.4);padding-bottom:1px}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:16px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:16px;transition:height .42s var(--ease)}
+.grid.is-swapping{animation:gridOut .2s var(--ease) both}
+.grid.is-entering{animation:gridIn .34s var(--ease) both}
+@keyframes gridOut{to{opacity:0;transform:translateY(9px)}}
+@keyframes gridIn{from{opacity:0;transform:translateY(9px)}to{opacity:1;transform:none}}
+.grid.is-swapping,.grid.is-entering{overflow:hidden}
+.grid.is-entering .card{animation:cardSwap .42s var(--ease) both;animation-delay:calc(var(--i,0) * 18ms)}
+@keyframes cardSwap{from{opacity:0;transform:translateY(11px) scale(.994)}to{opacity:1;transform:none}}
 @media(max-width:1080px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:680px){.grid{grid-template-columns:1fr;gap:14px}}
 
@@ -853,6 +863,8 @@ const $ = (s,el=document)=>el.querySelector(s);
 const $$ = (s,el=document)=>[...el.querySelectorAll(s)];
 const PLAT_LABEL = {win:'Windows', mac:'macOS', android:'安卓'};
 const PLAT_SHORT = {win:'WIN', mac:'MAC', android:'APK'};
+const dlText = k => k==='android' ? '下载安卓版' : `下载 ${PLAT_LABEL[k]} 版`;
+const platText = k => k==='android' ? '安卓软件' : `${PLAT_LABEL[k]} 软件`;
 const PLAT_ORDER = ['win','mac','android'];
 const CAT_ORDER = ['社交','办公','影音','开发','浏览器','系统工具','效率'];
 
@@ -876,6 +888,7 @@ function detectDevice(){
 }
 const DEVICE = detectDevice();
 function prefPlatform(app){
+  if(state.plat!=='all' && app.platforms[state.plat]) return state.plat;
   if(DEVICE && app.platforms[DEVICE]) return DEVICE;
   return PLAT_ORDER.find(p=>app.platforms[p]) || Object.keys(app.platforms)[0];
 }
@@ -982,9 +995,30 @@ function countsByPlat(){
 }
 function renderSeg(){
   const c = countsByPlat();
-  $('#platSeg').innerHTML = [['all','全部'],['win','Windows'],['android','安卓']].map(([k,label])=>
-    `<button type="button" data-plat="${k}" class="${state.plat===k?'on':''}" aria-pressed="${state.plat===k}">${label}<em>${c[k]||0}</em></button>`
-  ).join('');
+  const seg = $('#platSeg');
+  const defs = [['all','全部'],['win','Windows'],['android','安卓']];
+  if(!seg.querySelector('.seg-thumb')){
+    seg.innerHTML = '<span class="seg-thumb" aria-hidden="true"></span>' + defs.map(([k,label])=>
+      `<button type="button" data-plat="${k}" class="${state.plat===k?'on':''}" aria-pressed="${state.plat===k}">${label}<em>${c[k]||0}</em></button>`
+    ).join('');
+  } else {
+    defs.forEach(([k,label])=>{
+      const b=seg.querySelector(`[data-plat="${k}"]`); if(!b) return;
+      b.classList.toggle('on', state.plat===k);
+      b.setAttribute('aria-pressed', String(state.plat===k));
+      const em=b.querySelector('em'); if(em) em.textContent=c[k]||0;
+    });
+  }
+  positionSegThumb();
+}
+function positionSegThumb(){
+  const seg=$('#platSeg');
+  const thumb=seg.querySelector('.seg-thumb');
+  const btn=seg.querySelector('button.on');
+  if(!thumb||!btn) return;
+  thumb.style.width=btn.offsetWidth+'px';
+  thumb.style.transform=`translateX(${btn.offsetLeft-4}px)`;
+  if(!seg.classList.contains('thumb-ready')) requestAnimationFrame(()=>seg.classList.add('thumb-ready'));
 }
 function renderCats(){
   const pool = catPool();
@@ -1015,7 +1049,8 @@ function cardHTML(app,i){
   const p = app.platforms[pref];
   const fav = state.favs.has(app.id);
   const plats = platformsOf(app);
-  const canDirect = DEVICE && app.platforms[DEVICE];
+  const target = (state.plat!=='all' && app.platforms[state.plat]) ? state.plat
+    : (DEVICE && app.platforms[DEVICE]) ? DEVICE : null;
   return `
   <article class="card" data-id="${app.id}" style="--i:${Math.min(i,14)}" tabindex="0" role="article" aria-label="${esc(app.name)}">
     <div class="card-top">
@@ -1032,7 +1067,7 @@ function cardHTML(app,i){
     <div class="actions">
       <button class="dl" type="button" data-dl="${app.id}">
         <span class="ico">${ICON_DL}</span>
-        <em>${canDirect ? `下载 ${PLAT_LABEL[DEVICE]} 版` : '查看下载选项'}</em>
+        <em>${target ? dlText(target) : '查看下载选项'}</em>
       </button>
       <button class="info" type="button" data-info="${app.id}" aria-label="查看 ${esc(app.name)} 详情">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
@@ -1042,18 +1077,53 @@ function cardHTML(app,i){
 }
 
 let inited = false;
-function renderGrid(list){
+let gridToken = 0;
+function renderGrid(list, animate){
   const grid = $('#grid');
-  grid.classList.toggle('anim', !inited);
-  grid.innerHTML = list.map(cardHTML).join('');
-  $('#empty').hidden = list.length !== 0;
-  inited = true;
+  const token = ++gridToken;
+  clearTimeout(grid._t1); clearTimeout(grid._t2);
+  const paint = () => {
+    grid.classList.toggle('anim', !inited);
+    grid.innerHTML = list.map(cardHTML).join('');
+    $('#empty').hidden = list.length !== 0;
+    inited = true;
+  };
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!animate || reduced || !inited){
+    grid.classList.remove('is-swapping','is-entering');
+    grid.style.height = '';
+    paint();
+    return;
+  }
+  const h0 = grid.getBoundingClientRect().height;
+  grid.classList.remove('is-entering');
+  grid.style.height = h0 + 'px';
+  grid.classList.add('is-swapping');
+  grid._t1 = setTimeout(()=>{
+    if(token !== gridToken) return;
+    paint();
+    grid.style.height = 'auto';
+    const h1 = grid.getBoundingClientRect().height;
+    grid.style.height = h0 + 'px';
+    void grid.offsetHeight;
+    grid.classList.remove('is-swapping');
+    grid.classList.add('is-entering');
+    requestAnimationFrame(()=>{
+      if(token !== gridToken) return;
+      grid.style.height = h1 + 'px';
+    });
+    grid._t2 = setTimeout(()=>{
+      if(token !== gridToken) return;
+      grid.style.height = '';
+      grid.classList.remove('is-entering');
+    }, 640);
+  }, 210);
 }
-function renderAll(){
+function renderAll(opts){
   renderSeg(); renderCats();
   const list = filtered();
   renderResult(list);
-  renderGrid(list);
+  renderGrid(list, !!(opts && opts.anim));
 }
 
 /* ============================================================
@@ -1061,17 +1131,17 @@ function renderAll(){
    ============================================================ */
 $('#platSeg').addEventListener('click',e=>{
   const b=e.target.closest('[data-plat]'); if(!b) return;
-  state.plat=b.dataset.plat; renderAll();
+  state.plat=b.dataset.plat; renderAll({anim:true});
 });
 $('#cats').addEventListener('click',e=>{
   const b=e.target.closest('[data-cat]'); if(!b) return;
-  state.cat=b.dataset.cat; renderAll();
+  state.cat=b.dataset.cat; renderAll({anim:true});
 });
-$('#sort').addEventListener('change',e=>{ state.sort=e.target.value; renderAll(); });
+$('#sort').addEventListener('change',e=>{ state.sort=e.target.value; renderAll({anim:true}); });
 $('#favBtn').addEventListener('click',()=>{
   state.favOnly=!state.favOnly;
   if(state.favOnly && state.favs.size===0){ toast('还没有收藏的软件，点卡片右上角的星标即可收藏'); state.favOnly=false; renderAll(); return; }
-  renderAll();
+  renderAll({anim:true});
 });
 $('#resetBtn').addEventListener('click',resetFilters);
 $('#emptyReset').addEventListener('click',resetFilters);
@@ -1079,7 +1149,7 @@ function resetFilters(){
   state.q=''; state.plat='all'; state.cat='全部'; state.favOnly=false; state.sort='rec';
   const input=$('#q'); input.value=''; $('#searchWrap').classList.remove('hasq');
   $('#sort').value='rec';
-  renderAll();
+  renderAll({anim:true});
 }
 
 /* 搜索 */
@@ -1114,14 +1184,16 @@ $('#grid').addEventListener('click',e=>{
   if(fav){
     const id=fav.dataset.fav;
     if(state.favs.has(id)) state.favs.delete(id); else state.favs.add(id);
-    persist(); renderAll();
+    persist(); renderAll({anim: state.favOnly});
     toast(state.favs.has(id) ? `已收藏 ${nameOf(id)}` : `已取消收藏 ${nameOf(id)}`);
     return;
   }
   const dl=e.target.closest('[data-dl]');
   if(dl){
     const app=appById(dl.dataset.dl);
-    if(DEVICE && app.platforms[DEVICE]) doDownload(app, DEVICE);
+    const target = (state.plat!=='all' && app.platforms[state.plat]) ? state.plat
+      : (DEVICE && app.platforms[DEVICE]) ? DEVICE : null;
+    if(target) doDownload(app, target);
     else openDrawer(app, prefPlatform(app));
     return;
   }
@@ -1213,7 +1285,7 @@ function renderDrawer(){
 
     <a class="d-dl" href="${esc(p.url)}" target="_blank" rel="noopener" data-go>
       <span class="big">${ICON_DL}</span>
-      <span class="txt"><b>下载 ${PLAT_LABEL[plat]} 版</b><span>跳转官方源 · 无捆绑下载器</span></span>
+      <span class="txt"><b>${dlText(plat)}</b><span>跳转官方源 · 无捆绑下载器</span></span>
       <span class="sz">${fmtSize(p.size)}</span>
     </a>
     <div class="d-actions">
@@ -1418,9 +1490,9 @@ function renderDeviceBtn(){
 }
 renderDeviceBtn();
 $('#deviceBtn').addEventListener('click',()=>{
-  if(DEVICE){ state.plat=DEVICE; renderAll(); }
+  if(DEVICE){ state.plat=DEVICE; renderAll({anim:true}); }
   document.getElementById('library').scrollIntoView({behavior:'smooth',block:'start'});
-  toast(DEVICE?`已切换到 ${PLAT_LABEL[DEVICE]} 软件`:'当前设备不在支持范围，已显示全部');
+  toast(DEVICE?`已切换到${platText(DEVICE)}`:'当前设备不在支持范围，已显示全部');
 });
 
 /* 统计数字 */
@@ -1433,6 +1505,9 @@ $('#deviceBtn').addEventListener('click',()=>{
 
 /* 初始化 */
 renderAll();
+let thumbTimer;
+window.addEventListener('resize',()=>{ clearTimeout(thumbTimer); thumbTimer=setTimeout(positionSegThumb,120); });
+if(document.fonts && document.fonts.ready) document.fonts.ready.then(()=>positionSegThumb()).catch(()=>{});
 </script>
 </body>
 </html>
