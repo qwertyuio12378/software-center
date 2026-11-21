@@ -1,12 +1,12 @@
 # 软件坞 SoftDock
 
-只收录官方下载源的软件下载中心。QXNET 2.1.5 覆盖安卓、苹果与 OS 三个平台，安装包暂未上架；另有 5 款 Windows 开发工具、5 条官方直链，全部经过真实请求与文件头校验。
+只收录官方下载源的软件下载中心。QXNET 2.1.5 覆盖安卓、苹果与鸿蒙三个平台，安装包暂未上架；另有 5 款 Windows 开发工具、5 条官方直链，全部经过真实请求与文件头校验。
 
 - 在线访问：https://qxnetz.ccwu.cc/
 - 备用地址：https://qwertyuio12378.github.io/software-center/
-- 收录：QXNET 2.1.5（安卓 / 苹果 / OS）、VS Code、Python、Node.js、Git、Notepad++（Windows）
-- 平台：Windows 5 款 / 安卓 1 款 / 苹果 1 款 / OS 1 款
-- QXNET 安装包暂未上架，页面展示版本与三平台信息，下载按钮显示「安装包准备中」
+- 收录：QXNET 2.1.5（安卓 / 苹果 / 鸿蒙）、VS Code、Python、Node.js、Git、Notepad++（Windows）
+- 平台：Windows 5 款 / 安卓 1 款 / 苹果 1 款 / 鸿蒙 1 款
+- QXNET 安装包暂未上架，页面展示版本、三平台信息与文件格式（APK / IPA / HAP），下载按钮显示「安装包准备中」
 - 站点为单文件 HTML，不依赖构建工具；GitHub Releases 的最新版追踪为按需请求
 
 ## 说明
