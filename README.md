@@ -1,9 +1,10 @@
 # 软件坞 SoftDock
 
-只收录官方下载源的软件下载中心。18 款常用软件、19 条官方直链，全部经过真实请求与文件头校验。
+只收录官方下载源的开发工具下载中心。5 款开发工具、5 条官方直链，全部经过真实请求与文件头校验。
 
 - 在线访问：https://qwertyuio12378.github.io/software-center/
-- 平台：Windows 17 款 / Android 2 款
+- 收录：VS Code、Python、Node.js、Git、Notepad++
+- 平台：Windows 5 款
 - 站点为单文件 HTML，不依赖构建工具；GitHub Releases 的最新版追踪为按需请求
 
 ## 说明
