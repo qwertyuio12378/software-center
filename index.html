@@ -939,14 +939,23 @@ $('#themeBtn').addEventListener('click',()=>applyTheme(state.theme==='dark'?'lig
 /* ============================================================
    筛选与排序
    ============================================================ */
+function hayOf(app){
+  return [app.name, app.en, app.tagline, app.desc, app.cat, ...(app.tags||[])].join(' ').toLowerCase();
+}
 function matches(app){
   if(state.plat!=='all' && !app.platforms[state.plat]) return false;
   if(state.cat!=='全部' && app.cat!==state.cat) return false;
   if(state.favOnly && !state.favs.has(app.id)) return false;
   if(!state.q) return true;
-  const q = state.q.toLowerCase();
-  const hay = [app.name, app.en, app.tagline, app.desc, app.cat, ...(app.tags||[])].join(' ').toLowerCase();
-  return hay.includes(q);
+  return hayOf(app).includes(state.q.toLowerCase());
+}
+function catPool(){
+  return APPS.filter(app=>{
+    if(state.plat!=='all' && !app.platforms[state.plat]) return false;
+    if(state.favOnly && !state.favs.has(app.id)) return false;
+    if(!state.q) return true;
+    return hayOf(app).includes(state.q.toLowerCase());
+  });
 }
 function filtered(){
   let list = APPS.filter(matches);
@@ -978,10 +987,11 @@ function renderSeg(){
   ).join('');
 }
 function renderCats(){
+  const pool = catPool();
   const counts={};
-  APPS.forEach(a=>counts[a.cat]=(counts[a.cat]||0)+1);
+  pool.forEach(a=>counts[a.cat]=(counts[a.cat]||0)+1);
   $('#cats').innerHTML = ['全部',...CAT_ORDER].map(cat=>
-    `<button type="button" data-cat="${cat}" class="${state.cat===cat?'on':''}">${cat}${cat==='全部'?`<em>${APPS.length}</em>`:`<em>${counts[cat]||0}</em>`}</button>`
+    `<button type="button" data-cat="${cat}" class="${state.cat===cat?'on':''}" aria-pressed="${state.cat===cat}">${cat}<em>${cat==='全部'?pool.length:(counts[cat]||0)}</em></button>`
   ).join('');
 }
 function renderResult(list){
