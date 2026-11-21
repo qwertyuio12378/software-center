@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1, maximum-scale=5">
-<title>软件坞 SoftDock · 开发工具下载中心 — 官方直链，逐条实测</title>
-<meta name="description" content="软件坞是一个只收录官方下载源的开发工具下载中心：5 款开发工具、5 条官方直链，逐条实测真实可下载，不转存、不捆绑、不插下载器。">
+<title>软件坞 SoftDock · 软件下载中心 — 官方直链，逐条实测</title>
+<meta name="description" content="软件坞是一个只收录官方下载源的软件下载中心：QXNET 2.1.5 覆盖安卓、苹果与 OS 三平台，5 款开发工具、5 条官方直链逐条实测，不转存、不捆绑、不插下载器。">
 <meta name="theme-color" content="#06070a">
-<meta property="og:title" content="软件坞 SoftDock · 开发工具下载中心">
-<meta property="og:description" content="5 款开发工具、5 条官方直链，逐条实测。没有下载器，没有捆绑包。">
+<meta property="og:title" content="软件坞 SoftDock · 软件下载中心">
+<meta property="og:description" content="QXNET 2.1.5 安卓 / 苹果 / OS 三平台，5 款开发工具、5 条官方直链，逐条实测。">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://qwertyuio12378.github.io/software-center/">
 <meta property="og:site_name" content="软件坞 SoftDock">
@@ -309,6 +309,8 @@ img{max-width:100%}
 }
 .card:hover .tile{transform:translateY(-1px) scale(1.03)}
 .tile svg{width:28px;height:28px;color:#fff;filter:drop-shadow(0 2px 4px rgba(0,0,0,.35));opacity:.97}
+.tile.has-img{background:#0d74b8}
+.tile.has-img img{width:100%;height:100%;display:block;border-radius:inherit;object-fit:cover}
 .tile svg path{fill:currentColor}
 .fav{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;color:var(--muted-2);border:1px solid transparent;transition:.25s;flex:0 0 auto}
 .fav svg{width:16px;height:16px;transition:transform .3s var(--ease)}
@@ -322,12 +324,16 @@ mark{background:rgba(255,198,107,.22);color:var(--ink);border-radius:4px;padding
 .meta{display:flex;align-items:center;gap:6px;margin-top:14px;flex-wrap:wrap}
 .pill{font-size:10.5px;font-weight:600;letter-spacing:.02em;padding:4px 8px;border-radius:6px;background:var(--panel);border:1px solid var(--line);color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
 .pill.ver{color:var(--ink);border-color:var(--line-strong)}
+.pill.soon{color:#f0b35e;border-color:rgba(240,179,94,.32);background:rgba(240,179,94,.08)}
+[data-theme="light"] .pill.soon{color:#a3650d;border-color:rgba(163,101,13,.28);background:rgba(163,101,13,.07)}
 .plats{display:flex;gap:4px;margin-left:auto}
 .pt{font-style:normal;font-size:9px;font-weight:800;letter-spacing:.08em;padding:3px 5px;border-radius:5px;background:var(--panel);border:1px solid var(--line);color:var(--muted-2)}
-.pt.win{color:#8fd0ff;border-color:rgba(74,168,255,.28);background:rgba(74,168,255,.08)}
+.pt.os{color:#8fd0ff;border-color:rgba(74,168,255,.28);background:rgba(74,168,255,.08)}
 .pt.android{color:#b6f5c9;border-color:rgba(72,230,168,.28);background:rgba(72,230,168,.08)}
-[data-theme="light"] .pt.win{color:#1f6fd0;border-color:rgba(31,111,208,.26);background:rgba(31,111,208,.09)}
+.pt.ios{color:#f4c7ff;border-color:rgba(217,140,255,.28);background:rgba(217,140,255,.08)}
+[data-theme="light"] .pt.os{color:#1f6fd0;border-color:rgba(31,111,208,.26);background:rgba(31,111,208,.09)}
 [data-theme="light"] .pt.android{color:#0b8a5a;border-color:rgba(11,138,90,.26);background:rgba(11,138,90,.09)}
+[data-theme="light"] .pt.ios{color:#8a38a8;border-color:rgba(138,56,168,.25);background:rgba(138,56,168,.07)}
 [data-theme="light"] .hero h1 .grad{background:linear-gradient(96deg,#079b7e 0%,#1e6ad6 52%,#b26a12 100%);-webkit-background-clip:text;background-clip:text}
 .actions{display:flex;align-items:center;gap:8px;margin-top:16px}
 .dl{flex:1;height:42px;border-radius:12px;display:flex;align-items:center;gap:9px;padding:0 8px 0 12px;background:var(--panel-2);border:1px solid var(--line-strong);font-size:12.5px;font-weight:700;color:var(--ink);transition:.25s var(--ease);position:relative;overflow:hidden}
@@ -335,6 +341,10 @@ mark{background:rgba(255,198,107,.22);color:var(--ink);border-radius:4px;padding
 .dl .ico{width:26px;height:26px;border-radius:8px;display:grid;place-items:center;background:linear-gradient(135deg,#3ee6c0,#4aa8ff);color:#05130f;flex:0 0 auto;transition:.25s}
 .dl .ico svg{width:14px;height:14px}
 .dl:hover{border-color:rgba(62,230,192,.45);background:rgba(62,230,192,.08)}
+.dl.soon{color:var(--muted);border-style:dashed;border-color:rgba(240,179,94,.32);background:rgba(240,179,94,.06)}
+.dl.soon .ico{background:rgba(240,179,94,.16);color:#f0b35e}
+.dl.soon:hover{border-color:rgba(240,179,94,.5);background:rgba(240,179,94,.1);transform:none}
+.dl.soon:hover .ico{transform:none;box-shadow:none}
 .dl:hover .ico{transform:translateY(1px);box-shadow:0 6px 14px -6px rgba(62,230,192,.8)}
 .dl:active{transform:scale(.985)}
 .info{width:42px;height:42px;border-radius:12px;display:grid;place-items:center;background:var(--panel);border:1px solid var(--line);color:var(--muted);transition:.2s}
@@ -415,6 +425,12 @@ mark{background:rgba(255,198,107,.22);color:var(--ink);border-radius:4px;padding
 .d-file button{flex:0 0 auto;width:26px;height:26px;border-radius:7px;display:grid;place-items:center;color:var(--muted);background:var(--panel-2)}
 .d-file button:hover{color:var(--accent)}
 .d-file svg{width:13px;height:13px}
+.d-file-soon{display:flex;align-items:flex-start;gap:12px;margin-top:12px;padding:14px;border-radius:13px;background:rgba(240,179,94,.06);border:1px dashed rgba(240,179,94,.34)}
+.d-file-soon .soondot{width:9px;height:9px;border-radius:50%;background:#f0b35e;box-shadow:0 0 0 4px rgba(240,179,94,.12);margin-top:5px;flex:0 0 auto}
+.d-file-soon b{display:block;font-size:12.5px;color:#f0b35e}
+.d-file-soon p{margin:6px 0 0;font-size:11.5px;line-height:1.7;color:var(--muted)}
+[data-theme="light"] .d-file-soon{background:rgba(163,101,13,.05);border-color:rgba(163,101,13,.24)}
+[data-theme="light"] .d-file-soon b{color:#a3650d}
 .d-dl{display:flex;align-items:center;gap:12px;margin-top:18px;height:56px;padding:0 18px;border-radius:15px;
   background:linear-gradient(135deg,#41e8c2,#4bb6ff);color:#04140f;font-weight:800;font-size:14px;
   box-shadow:0 20px 44px -16px rgba(62,230,192,.55),inset 0 1px 0 rgba(255,255,255,.45);transition:.25s var(--ease)}
@@ -441,6 +457,7 @@ mark{background:rgba(255,198,107,.22);color:var(--ink);border-radius:4px;padding
 .verify-box{margin-top:12px;border-radius:14px;border:1px solid var(--line);overflow:hidden;background:var(--panel)}
 .v-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:11px 14px;font-size:11.5px;border-top:1px solid var(--line)}
 .v-row:first-child{border-top:0}
+.soonv{color:#f0b35e}
 .v-row span{color:var(--muted-2);letter-spacing:.04em}
 .v-row b{font-weight:700;font-variant-numeric:tabular-nums;color:var(--ink);text-align:right;word-break:break-all}
 .v-row b.ok{color:var(--ok)}
@@ -534,17 +551,16 @@ mark{background:rgba(255,198,107,.22);color:var(--ink);border-radius:4px;padding
   <!-- ================= Hero ================= -->
   <section class="hero wrap">
     <div class="hero-copy">
-      <div class="eyebrow"><span class="dot"></span>SoftDock · 开发工具官方直链</div>
+      <div class="eyebrow"><span class="dot"></span>SoftDock · 官方直链下载中心</div>
       <h1>好工具，<br><span class="grad">直接从官方装。</span></h1>
       <p class="lede">
-        <b>5 款开发工具、5 条官方下载直链。</b>每一条都在今天被真实请求验证过——
-        没有下载器、没有捆绑包、没有二次转存。点开就是厂商自己的服务器。
+        <b>QXNET 2.1.5 已覆盖安卓、苹果与 OS，安装包准备中。</b>另有 5 款开发工具、5 条官方直链，每一条都在今天被真实请求验证过——没有下载器、没有捆绑包、没有二次转存。
       </p>
       <ul class="stats" aria-label="站点数据">
-        <li class="stat"><b id="statApps">5</b><span>款工具</span></li>
+        <li class="stat"><b id="statApps">6</b><span>款工具</span></li>
         <li class="stat"><b id="statLinks">5</b><span>条直链</span></li>
-        <li class="stat"><b id="statPlats">1</b><span>个平台</span></li>
-        <li class="stat"><b>100<i>%</i></b><span>实测通过</span></li>
+        <li class="stat"><b id="statPlats">3</b><span>个平台</span></li>
+        <li class="stat"><b>100<i>%</i></b><span>直链实测</span></li>
       </ul>
       <div class="hero-actions">
         <a class="btn btn-primary" href="#library">
@@ -561,10 +577,10 @@ mark{background:rgba(255,198,107,.22);color:var(--ink);border-radius:4px;padding
     <aside class="verify-card glass" aria-label="最近校验记录">
       <header><span class="pulse"></span>今日校验 <b>2026-11-21</b></header>
       <ul class="verify-list">
-        <li><span class="vn">VS Code 1.147.0 <em>Windows</em></span><span class="vs">275.8 MB</span><span class="vok">✓</span></li>
-        <li><span class="vn">Git 2.56.1 <em>Windows</em></span><span class="vs">63.8 MB</span><span class="vok">✓</span></li>
-        <li><span class="vn">Node.js 26.13.1 <em>Windows · MSI</em></span><span class="vs">34.9 MB</span><span class="vok">✓</span></li>
-        <li><span class="vn">Python 3.14.0 <em>Windows</em></span><span class="vs">28.5 MB</span><span class="vok">✓</span></li>
+        <li><span class="vn">VS Code 1.147.0 <em>OS · Windows</em></span><span class="vs">275.8 MB</span><span class="vok">✓</span></li>
+        <li><span class="vn">Git 2.56.1 <em>OS · Windows</em></span><span class="vs">63.8 MB</span><span class="vok">✓</span></li>
+        <li><span class="vn">Node.js 26.13.1 <em>OS · Windows · MSI</em></span><span class="vs">34.9 MB</span><span class="vok">✓</span></li>
+        <li><span class="vn">Python 3.14.0 <em>OS · Windows</em></span><span class="vs">28.5 MB</span><span class="vok">✓</span></li>
       </ul>
       <footer>逐条发起真实请求，HTTP 状态、Content-Type、字节数全部留档在详情页。</footer>
     </aside>
@@ -576,7 +592,7 @@ mark{background:rgba(255,198,107,.22);color:var(--ink);border-radius:4px;padding
       <div class="tool-main">
         <label class="search" id="searchWrap">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
-          <input id="q" type="search" inputmode="search" placeholder="搜索开发工具，例如「编辑器」「终端」" autocomplete="off" spellcheck="false" aria-label="搜索软件">
+          <input id="q" type="search" inputmode="search" placeholder="搜索软件、分类或标签" autocomplete="off" spellcheck="false" aria-label="搜索软件">
           <kbd>/</kbd>
           <button class="clear" id="clearQ" type="button" aria-label="清空搜索">✕</button>
         </label>
@@ -598,7 +614,7 @@ mark{background:rgba(255,198,107,.22);color:var(--ink);border-radius:4px;padding
     </div>
 
     <div class="resultline">
-      <span id="resultText">共 5 款开发工具</span>
+      <span id="resultText">共 6 款工具</span>
       <button class="reset" id="resetBtn" type="button" hidden>清除筛选</button>
     </div>
 
@@ -624,7 +640,7 @@ mark{background:rgba(255,198,107,.22);color:var(--ink);border-radius:4px;padding
       <div><b>软件坞 SoftDock</b><span>官方直链 · 逐条实测 · 2026</span></div>
     </div>
     <p class="foot-note">
-      <b>本站不托管任何安装包。</b>所有下载按钮均跳转至软件厂商的官方域名；站内不提供破解、修改版或二次打包文件。
+      <b>本站不托管任何安装包。</b>所有可用下载按钮均跳转至软件厂商的官方域名；站内不提供破解、修改版或二次打包文件。
       软件商标归各自所有者，本站与厂商无从属关系。
     </p>
     <div class="foot-links">
@@ -654,8 +670,8 @@ mark{background:rgba(255,198,107,.22);color:var(--ink);border-radius:4px;padding
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
     </button>
     <h3 id="modalTitle">这个站是怎么做出来的</h3>
-    <p class="m-sub">软件坞不卖软件，也不做排行榜。它只做一件事：把开发工具的官方下载入口整理干净。</p>
-    <div class="m-item"><span class="n">01</span><div><b>只跳官方源</b><p>每款工具的下载地址都来自厂商自己的域名或官方 CDN。本站不转存安装包，不改包，不塞下载器。</p></div></div>
+    <p class="m-sub">软件坞不卖软件，也不做排行榜。它只做一件事：把软件与工具的官方下载入口整理干净。</p>
+    <div class="m-item"><span class="n">01</span><div><b>只跳官方源</b><p>所有已上架工具的下载地址都来自厂商自己的域名或官方 CDN。本站不转存安装包，不改包，不塞下载器。</p></div></div>
     <div class="m-item"><span class="n">02</span><div><b>链接逐条实测</b><p>收录时对每个地址发起真实请求，确认返回的是可执行文件而不是网页，并把 HTTP 状态、Content-Type、真实字节数写进详情页。</p></div></div>
     <div class="m-item"><span class="n">03</span><div><b>体积是真实字节</b><p>卡片上的文件大小来自服务器返回的 Content-Length，不是估算；下载前你就能知道要花多少流量。</p></div></div>
     <div class="m-item"><span class="n">04</span><div><b>无账号、无统计</b><p>站点没有登录、没有埋点 SDK。收藏和主题偏好只存在你自己的浏览器 localStorage 里，不会上传。</p></div></div>
@@ -679,7 +695,7 @@ var qrcode=function(){var t=function(t,r){var e=t,n=g[r],o=null,i=0,a=null,u=[],
 //# sourceMappingURL=/sm/26b4b0d0b1e283d6b3ec9857ac597d7a60c76ac17be1ef4c965f03086de426bb.map</script>
 <script>
 /* ============================================================
-   数据：5 款开发工具 / 5 条官方直链
+   数据：6 款工具 / 5 条官方直链 / 3 个平台
    所有版本号、体积、地址均在 2026-11-21 实测
    ============================================================ */
 const CHECKED_ALL = '2026-11-21';
@@ -687,12 +703,23 @@ const ICONS = {"cib-visual-studio-code" : {"vb" : "0 0 32 32", "d" : "M30.865 3.
 
 const APPS = [
   {
+    id:'qxnet', name:'QXNET 2.1.5', en:'WEAK NETWORK LAB', cat:'网络工具', color:'#12A6E8', iconImg:'data:image/webp;base64,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',
+    tagline:'弱网模拟与网络调试，安卓 / 苹果 / OS 三端同版',
+    desc:'QXNET 2.1.5 覆盖安卓、苹果与 OS 三个平台，用于弱网模拟、延迟与丢包调试。当前先展示版本与平台信息，安装包暂未上架。',
+    tags:['弱网模拟','网络调试','QXNET'], site:'', checked:'2026-11-21 22:45',
+    platforms:{
+      android:{v:'2.1.5', pending:true, type:'APK'},
+      ios:{v:'2.1.5', pending:true, type:'IPA'},
+      os:{v:'2.1.5', pending:true, type:'EXE'}
+    }
+  },
+  {
     id:'vscode', name:'VS Code', en:'Visual Studio Code', cat:'开发', color:'#007ACC', glyph:'cib-visual-studio-code',
     tagline:'微软开源编辑器，插件生态与内置终端',
     desc:'Visual Studio Code 稳定版，官方下载服务器直链。Windows 为用户级安装包，装完即用，不需要管理员权限也能完成大部分配置。',
     tags:['代码编辑器','插件','Git','微软'], site:'https://code.visualstudio.com/', checked:'2026-11-21 14:08',
     platforms:{
-      win:{v:'1.147.0',size:289238600,type:'EXE',file:'VSCodeUserSetup-x64-1.147.0.exe',url:'https://vscode.download.prss.microsoft.com/dbazure/download/stable/8a14f0cc1b08d531eb83255ea3764ae22aa932b5/VSCodeUserSetup-x64-1.147.0.exe',src:'微软官方下载服务器（vscode.download.prss.microsoft.com）',http:'206 / 200',ctype:'application/octet-stream'}
+      os:{v:'1.147.0',size:289238600,type:'EXE',file:'VSCodeUserSetup-x64-1.147.0.exe',url:'https://vscode.download.prss.microsoft.com/dbazure/download/stable/8a14f0cc1b08d531eb83255ea3764ae22aa932b5/VSCodeUserSetup-x64-1.147.0.exe',src:'微软官方下载服务器（vscode.download.prss.microsoft.com）',http:'206 / 200',ctype:'application/octet-stream'}
     }
   },
   {
@@ -701,7 +728,7 @@ const APPS = [
     desc:'Python 官方 Windows 64 位安装包，包含解释器、pip 与标准库。安装时记得勾选 Add python.exe to PATH。',
     tags:['编程语言','解释器','pip'], site:'https://www.python.org/downloads/windows/', checked:'2026-11-21 14:30',
     platforms:{
-      win:{v:'3.14.0',size:29900480,type:'EXE',file:'python-3.14.0-amd64.exe',url:'https://www.python.org/ftp/python/3.14.0/python-3.14.0-amd64.exe',src:'Python 官方 FTP（python.org）',http:'206 / 200',ctype:'application/octet-stream'}
+      os:{v:'3.14.0',size:29900480,type:'EXE',file:'python-3.14.0-amd64.exe',url:'https://www.python.org/ftp/python/3.14.0/python-3.14.0-amd64.exe',src:'Python 官方 FTP（python.org）',http:'206 / 200',ctype:'application/octet-stream'}
     }
   },
   {
@@ -710,7 +737,7 @@ const APPS = [
     desc:'Node.js 当前最新版 Windows 64 位 MSI 安装包，来自 nodejs.org 官方 dist 目录，安装后可直接使用 node 与 npm。',
     tags:['运行时','npm','JavaScript'], site:'https://nodejs.org/', checked:'2026-11-21 14:33',
     platforms:{
-      win:{v:'26.13.1',size:36564992,type:'MSI',file:'node-v26.13.1-x64.msi',url:'https://nodejs.org/dist/latest/node-latest-x64.msi',src:'Node.js 官方 dist（nodejs.org）',http:'206 / 200',ctype:'application/x-msi'}
+      os:{v:'26.13.1',size:36564992,type:'MSI',file:'node-v26.13.1-x64.msi',url:'https://nodejs.org/dist/latest/node-latest-x64.msi',src:'Node.js 官方 dist（nodejs.org）',http:'206 / 200',ctype:'application/x-msi'}
     }
   },
   {
@@ -718,9 +745,9 @@ const APPS = [
     tagline:'Git for Windows 官方构建，含 Git Bash',
     desc:'Git for Windows 官方 64 位安装包，包含 Git Bash、Git CMD 与凭据管理器。版本来自官方 GitHub Releases。',
     tags:['版本控制','命令行','Git Bash'], site:'https://git-scm.com/', checked:'2026-11-21 14:36', published:'2026-11-10',
-    live:{repo:'git-for-windows/git', assets:{win:/Git-[\d.]+-64-bit\.exe$/}},
+    live:{repo:'git-for-windows/git', assets:{os:/Git-[\d.]+-64-bit\.exe$/}},
     platforms:{
-      win:{v:'2.56.1',size:66870448,type:'EXE',file:'Git-2.56.1-64-bit.exe',url:'https://github.com/git-for-windows/git/releases/download/v2.56.1.windows.1/Git-2.56.1-64-bit.exe',src:'GitHub Releases（git-for-windows/git）',http:'302 → 200',ctype:'application/octet-stream'}
+      os:{v:'2.56.1',size:66870448,type:'EXE',file:'Git-2.56.1-64-bit.exe',url:'https://github.com/git-for-windows/git/releases/download/v2.56.1.windows.1/Git-2.56.1-64-bit.exe',src:'GitHub Releases（git-for-windows/git）',http:'302 → 200',ctype:'application/octet-stream'}
     }
   },
   {
@@ -728,9 +755,9 @@ const APPS = [
     tagline:'轻量文本编辑器，语法高亮 + 多标签',
     desc:'Notepad++ 是 Windows 上的轻量文本编辑器，支持语法高亮、多标签、列编辑与大量插件。安装包来自官方 GitHub Releases。',
     tags:['文本编辑','语法高亮','插件'], site:'https://notepad-plus-plus.org/', checked:'2026-11-21 14:39', published:'2026-11-12',
-    live:{repo:'notepad-plus-plus/notepad-plus-plus', assets:{win:/Installer\.x64\.exe$/}},
+    live:{repo:'notepad-plus-plus/notepad-plus-plus', assets:{os:/Installer\.x64\.exe$/}},
     platforms:{
-      win:{v:'8.9.9.1',size:7048536,type:'EXE',file:'npp.8.9.9.1.Installer.x64.exe',url:'https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v8.9.9.1/npp.8.9.9.1.Installer.x64.exe',src:'GitHub Releases（notepad-plus-plus）',http:'302 → 200',ctype:'application/octet-stream'}
+      os:{v:'8.9.9.1',size:7048536,type:'EXE',file:'npp.8.9.9.1.Installer.x64.exe',url:'https://github.com/notepad-plus-plus/notepad-plus-plus/releases/download/v8.9.9.1/npp.8.9.9.1.Installer.x64.exe',src:'GitHub Releases（notepad-plus-plus）',http:'302 → 200',ctype:'application/octet-stream'}
     }
   }
 ];
@@ -740,12 +767,11 @@ const APPS = [
    ============================================================ */
 const $ = (s,el=document)=>el.querySelector(s);
 const $$ = (s,el=document)=>[...el.querySelectorAll(s)];
-const PLAT_LABEL = {win:'Windows', mac:'macOS', android:'安卓'};
-const PLAT_SHORT = {win:'WIN', mac:'MAC', android:'APK'};
-const dlText = k => k==='android' ? '下载安卓版' : `下载 ${PLAT_LABEL[k]} 版`;
-const platText = k => k==='android' ? '安卓软件' : `${PLAT_LABEL[k]} 软件`;
-const PLAT_ORDER = ['win','mac','android'];
-const CAT_ORDER = ['开发'];
+const PLAT_LABEL = {android:'安卓', ios:'苹果', os:'OS'};
+const PLAT_SHORT = {android:'AND', ios:'iOS', os:'OS'};
+const dlText = k => k==='android' ? '下载安卓版' : k==='ios' ? '下载苹果版' : '下载 OS 版';
+const PLAT_ORDER = ['android','ios','os'];
+const CAT_ORDER = ['开发','网络工具'];
 const PLATS = PLAT_ORDER.filter(p=>APPS.some(a=>a.platforms[p]));
 
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
@@ -762,15 +788,17 @@ function verLabel(v){ return /^\d/.test(v) ? 'v'+v : v; }
 function detectDevice(){
   const ua = navigator.userAgent || '';
   if(/android/i.test(ua)) return 'android';
+  if(/iphone|ipad|ipod/i.test(ua)) return 'ios';
   if(/windows|win32|win64|wow64/i.test(ua)) return 'win';
-  if(/macintosh|mac os x/i.test(ua)) return null; // 本站暂不提供 macOS 直链
-  return null;
+  return null; // 其他设备不做平台假设
 }
 const DEVICE = detectDevice();
-const DEVICE_OK = !!(DEVICE && APPS.some(a=>a.platforms[DEVICE]));
+const DEVICE_PLAT = DEVICE==='win' ? 'os' : DEVICE;
+const DEVICE_OK = !!(DEVICE_PLAT && APPS.some(a=>a.platforms[DEVICE_PLAT]));
+function linkCount(app){ return Object.values(app.platforms).filter(p=>p.url).length; }
 function prefPlatform(app){
   if(state.plat!=='all' && app.platforms[state.plat]) return state.plat;
-  if(DEVICE && app.platforms[DEVICE]) return DEVICE;
+  if(DEVICE_PLAT && app.platforms[DEVICE_PLAT]) return DEVICE_PLAT;
   return PLAT_ORDER.find(p=>app.platforms[p]) || Object.keys(app.platforms)[0];
 }
 function platformsOf(app){ return PLAT_ORDER.filter(p=>app.platforms[p]); }
@@ -794,7 +822,8 @@ const ICON_COPY = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" st
 const ICON_CHECK = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13l4 4L19 7"/></svg>`;
 const ICON_WIN = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5.6l8-1.1v7.1H3zM12.4 4.4L21 3v8.6h-8.6zM3 12.8h8v7.1l-8-1.1zM12.4 12.8H21V21l-8.6-1.4z"/></svg>`;
 const ICON_ANDROID = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="9" width="12" height="9" rx="2"/><path d="M8 9l1.6-3M16 9l-1.6-3M9.5 18v3M14.5 18v3M3 12v3M21 12v3"/></svg>`;
-const PLAT_ICON = {win:ICON_WIN, android:ICON_ANDROID};
+const ICON_IOS = `<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 12.7c-.02-2.2 1.8-3.26 1.88-3.31-1.03-1.5-2.63-1.7-3.2-1.72-1.36-.08-2.66.8-3.35.8-.69 0-1.76-.78-2.9-.76-1.49.02-2.86.87-3.63 2.2-1.55 2.69-.4 6.67 1.1 8.85.74 1.07 1.62 2.27 2.78 2.23 1.12-.04 1.54-.72 2.9-.72 1.35 0 1.73.72 2.9.7 1.2-.02 1.96-1.09 2.69-2.16.85-1.23 1.2-2.42 1.22-2.48-.03-.01-2.34-.9-2.36-3.6zM14.94 5.4c.61-.74 1.02-1.77.91-2.8-.88.04-1.95.59-2.58 1.33-.56.65-1.05 1.69-.92 2.69.98.08 1.98-.5 2.59-1.22z"/></svg>`;
+const PLAT_ICON = {android:ICON_ANDROID, ios:ICON_IOS, os:ICON_WIN};
 
 /* ============================================================
    状态与持久化
@@ -855,11 +884,8 @@ function filtered(){
   let list = APPS.filter(matches);
   if(state.sort==='name') list.sort((a,b)=>a.name.localeCompare(b.name,'zh-Hans-CN'));
   else if(state.sort==='size'){
-    list.sort((a,b)=>{
-      const A=Math.min(...Object.values(a.platforms).map(p=>p.size||0));
-      const B=Math.min(...Object.values(b.platforms).map(p=>p.size||0));
-      return A-B;
-    });
+    const sz=a=>{const v=Object.values(a.platforms).filter(p=>p.url&&p.size).map(p=>p.size); return v.length?Math.min(...v):Infinity;};
+    list.sort((a,b)=>sz(a)-sz(b));
   } else if(state.sort==='fresh'){
     list.sort((a,b)=>String(b.published||b.checked).localeCompare(String(a.published||a.checked)));
   }
@@ -915,7 +941,7 @@ function renderResult(list){
   const total = APPS.length;
   const txt = state.q || state.plat!=='all' || state.cat!=='全部' || state.favOnly
     ? `筛选出 <b>${list.length}</b> 款 · 共 ${total} 款`
-    : `共 <b>${total}</b> 款工具 · <b>${APPS.reduce((n,a)=>n+Object.keys(a.platforms).length,0)}</b> 条官方直链`;
+    : `共 <b>${total}</b> 款工具 · <b>${APPS.reduce((n,a)=>n+linkCount(a),0)}</b> 条官方直链`;
   $('#resultText').innerHTML = txt;
   const hasFilter = state.q || state.plat!=='all' || state.cat!=='全部' || state.favOnly || state.sort!=='rec';
   $('#resetBtn').hidden = !hasFilter;
@@ -932,25 +958,25 @@ function cardHTML(app,i){
   const p = app.platforms[pref];
   const fav = state.favs.has(app.id);
   const plats = platformsOf(app);
-  const target = (state.plat!=='all' && app.platforms[state.plat]) ? state.plat
-    : (DEVICE && app.platforms[DEVICE]) ? DEVICE : platformsOf(app)[0];
+  const target = prefPlatform(app);
+  const pending = !!(target && app.platforms[target].pending);
   return `
   <article class="card" data-id="${app.id}" style="--i:${Math.min(i,14)}" tabindex="0" role="article" aria-label="${esc(app.name)}">
     <div class="card-top">
-      <div class="tile" style="--c:${app.color}">${ICONS_SVG(app.glyph)}</div>
+      <div class="tile ${app.iconImg?'has-img':''}" style="--c:${app.color}">${app.iconImg?`<img src="${app.iconImg}" alt="">`:ICONS_SVG(app.glyph)}</div>
       <button class="fav ${fav?'on':''}" type="button" data-fav="${app.id}" aria-label="${fav?'取消收藏':'收藏 '+esc(app.name)}" aria-pressed="${fav}">${ICON_STAR}</button>
     </div>
     <h3>${hl(app.name)} <span class="en">${esc(app.en)}</span></h3>
     <p class="tag">${hl(app.tagline)}</p>
     <div class="meta">
       <span class="pill ver">${esc(verLabel(p.v))}</span>
-      <span class="pill">${fmtSize(p.size)}</span>
+      ${p.pending ? '<span class="pill soon">待上架</span>' : `<span class="pill">${fmtSize(p.size)}</span>`}
       <span class="plats">${plats.map(x=>`<i class="pt ${x}">${PLAT_SHORT[x]}</i>`).join('')}</span>
     </div>
     <div class="actions">
-      <button class="dl" type="button" data-dl="${app.id}">
-        <span class="ico">${ICON_DL}</span>
-        <em>${target ? dlText(target) : '查看下载选项'}</em>
+      <button class="dl ${pending?'soon':''}" type="button" data-dl="${app.id}">
+        <span class="ico">${pending?'·':ICON_DL}</span>
+        <em>${pending?'安装包准备中':target ? dlText(target) : '查看下载选项'}</em>
       </button>
       <button class="info" type="button" data-info="${app.id}" aria-label="查看 ${esc(app.name)} 详情">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></svg>
@@ -1074,10 +1100,7 @@ $('#grid').addEventListener('click',e=>{
   const dl=e.target.closest('[data-dl]');
   if(dl){
     const app=appById(dl.dataset.dl);
-    const target = (state.plat!=='all' && app.platforms[state.plat]) ? state.plat
-      : (DEVICE && app.platforms[DEVICE]) ? DEVICE : platformsOf(app)[0];
-    if(target) doDownload(app, target);
-    else openDrawer(app, prefPlatform(app));
+    doDownload(app, prefPlatform(app));
     return;
   }
   const info=e.target.closest('[data-info]');
@@ -1106,6 +1129,11 @@ function nameOf(id){ const a=appById(id); return a?a.name:''; }
 function doDownload(app, plat){
   const p=app.platforms[plat];
   if(!p) return;
+  if(p.pending || !p.url){
+    openDrawer(app, plat);
+    toast(`<b>${esc(app.name)}</b> 的 ${PLAT_LABEL[plat]} 安装包暂未上架，先看版本信息`);
+    return;
+  }
   toast(`正在打开 <b>${esc(app.name)}</b> 的官方下载源 · ${fmtSize(p.size)}`, p.url, '没反应？点这里');
   window.open(p.url,'_blank','noopener');
 }
@@ -1138,13 +1166,16 @@ function renderDrawer(){
   const {app,plat}=current;
   const p=app.platforms[plat];
   const plats=platformsOf(app);
-  const dHead=ICONS_SVG(app.glyph);
+  const pending=!!p.pending || !p.url;
+  const dHead=app.iconImg
+    ? `<img src="${app.iconImg}" alt="">`
+    : ICONS_SVG(app.glyph);
   body.innerHTML=`
     <div class="d-head">
-      <div class="tile" style="--c:${app.color}">${dHead}</div>
+      <div class="tile ${app.iconImg?'has-img':''}" style="--c:${app.color}">${dHead}</div>
       <div class="d-title">
         <h2>${esc(app.name)} <span>${esc(app.en)}</span></h2>
-        <div class="d-sub"><b class="cat">${esc(app.cat)}</b><i></i><span>${fmtSize(p.size)}</span><i></i><span>${esc(p.type)}</span><i></i><span>校验 ${esc(app.checked.split(' ')[0])}</span></div>
+        <div class="d-sub"><b class="cat">${esc(app.cat)}</b><i></i><span>${pending?'安装包待上架':fmtSize(p.size)}</span><i></i><span>${esc(p.type||'—')}</span><i></i><span>${pending?'收录 '+esc(app.checked.split(' ')[0]):'校验 '+esc(app.checked.split(' ')[0])}</span></div>
       </div>
     </div>
     <p class="d-desc">${esc(app.desc)}</p>
@@ -1156,11 +1187,16 @@ function renderDrawer(){
 
     <div class="d-grid">
       <div class="d-cell"><span>版本</span><b>${esc(p.v)}</b></div>
-      <div class="d-cell"><span>文件体积</span><b>${fmtSize(p.size)}</b></div>
-      <div class="d-cell"><span>文件格式</span><b>${esc(p.type)}</b></div>
+      <div class="d-cell"><span>文件体积</span><b>${pending?'待上架':fmtSize(p.size)}</b></div>
+      <div class="d-cell"><span>文件格式</span><b>${esc(p.type||'—')}</b></div>
       <div class="d-cell"><span>适用平台</span><b>${PLAT_LABEL[plat]}</b></div>
     </div>
 
+    ${pending?`
+    <div class="d-file-soon">
+      <span class="soondot"></span>
+      <div><b>${PLAT_LABEL[plat]}安装包暂未上架</b><p>当前先展示 QXNET 2.1.5 的平台与版本信息。安装包准备好后，这里会换成可直接下载的官方直链。</p></div>
+    </div>`:`
     <div class="d-file">
       <code title="${esc(p.file)}">${esc(p.file)}</code>
       <button type="button" data-copy="${esc(p.url)}" aria-label="复制下载链接">${ICON_COPY}</button>
@@ -1173,9 +1209,10 @@ function renderDrawer(){
     </a>
     <div class="d-actions">
       <button type="button" data-copy="${esc(p.url)}">${ICON_COPY}<span>复制直链</span></button>
-      <a href="${esc(app.site)}" target="_blank" rel="noopener">${ICON_ARROW}<span>官方页面</span></a>
-    </div>
+      ${app.site?`<a href="${esc(app.site)}" target="_blank" rel="noopener">${ICON_ARROW}<span>官方页面</span></a>`:''}
+    </div>`}
 
+    ${!pending?`
     <div class="block">
       <div class="block-h">扫码下载 <i></i></div>
       <div class="qr-wrap">
@@ -1185,17 +1222,22 @@ function renderDrawer(){
           <p>二维码内容就是这条下载直链本身，不经过本站中转。扫码后请在浏览器中确认域名。</p>
         </div>
       </div>
-    </div>
+    </div>`:''}
 
     <div class="block">
-      <div class="block-h">校验记录 <i></i></div>
+      <div class="block-h">${pending?'上架信息':'校验记录'} <i></i></div>
       <div class="verify-box">
+        ${pending?`
+        <div class="v-row"><span>上架状态</span><b class="soonv">安装包待上架</b></div>
+        <div class="v-row"><span>收录版本</span><b>${esc(p.v)}</b></div>
+        <div class="v-row"><span>适用平台</span><b>${PLAT_LABEL[plat]}</b></div>
+        <div class="v-row"><span>数据更新</span><b>${esc(app.checked)}</b></div>`:`
         <div class="v-row"><span>校验时间</span><b>${esc(app.checked)}</b></div>
         <div class="v-row"><span>HTTP 响应</span><b class="ok">${esc(p.http)}</b></div>
         <div class="v-row"><span>Content-Type</span><b>${esc(p.ctype)}</b></div>
         <div class="v-row"><span>Content-Length</span><b>${fmtNum(p.size)} B</b></div>
         <div class="v-row"><span>文件头校验</span><b>${p.type==='MSI'?'OLE / MSI 头':p.type==='APK'?'ZIP / APK 头':'PE / EXE 头'}</b></div>
-        <div class="v-row"><span>来源域名</span><b>${esc(p.src)}</b></div>
+        <div class="v-row"><span>来源域名</span><b>${esc(p.src)}</b></div>`}
       </div>
     </div>
 
@@ -1211,7 +1253,7 @@ function renderDrawer(){
     </div>`:''}
   `;
 
-  renderQR(p.url);
+  if(p.url) renderQR(p.url);
   $('#liveStatus') && ($('#liveStatus').dataset.base = $('#liveStatus').textContent);
 
   $$('[data-dplat]',body).forEach(btn=>{
@@ -1285,8 +1327,8 @@ async function checkLive(app, btn){
     if(!res.ok) throw new Error(res.status===403?'GitHub 接口触发限流，请稍后再试':'GitHub 接口返回 '+res.status);
     const rel=await res.json();
     let updated=0, latest='';
-    for(const k of ['win','mac']){
-      const rx=app.live.assets[k]; if(!rx) continue;
+    for(const k of Object.keys(app.live.assets)){
+      const rx=app.live.assets[k]; if(!rx || !app.platforms[k]) continue;
       const asset=(rel.assets||[]).find(a=>rx.test(a.name));
       if(!asset) continue;
       if(cmpVersion(rel.tag_name, app.platforms[k].v)>0){
@@ -1369,18 +1411,19 @@ function renderDeviceBtn(){
   const txt=$('#deviceText');
   if(DEVICE_OK && DEVICE==='win') txt.innerHTML='你的系统：<b>Windows</b>';
   else if(DEVICE_OK && DEVICE==='android') txt.innerHTML='你的设备：<b>安卓</b>';
-  else txt.innerHTML='当前仅提供 <b>Windows</b> 版';
+  else if(DEVICE_OK && DEVICE==='ios') txt.innerHTML='你的设备：<b>苹果</b>';
+  else txt.innerHTML='当前提供 <b>安卓 / 苹果 / OS</b> 版';
 }
 renderDeviceBtn();
 $('#deviceBtn').addEventListener('click',()=>{
-  if(DEVICE_OK){ state.plat=DEVICE; renderAll({anim:true}); }
+  if(DEVICE_OK && DEVICE_PLAT){ state.plat=DEVICE_PLAT; renderAll({anim:true}); }
   document.getElementById('library').scrollIntoView({behavior:'smooth',block:'start'});
-  toast(DEVICE_OK?`已切换到${platText(DEVICE)}`:'当前仅提供 Windows 版本，已显示全部开发工具');
+  toast(DEVICE_OK?`已切换到 ${PLAT_LABEL[DEVICE_PLAT]} 平台`:'当前提供安卓 / 苹果 / OS 版本，已显示全部软件');
 });
 
 /* 统计数字 */
 (function(){
-  const links=APPS.reduce((n,a)=>n+Object.keys(a.platforms).length,0);
+  const links=APPS.reduce((n,a)=>n+linkCount(a),0);
   $('#statApps').textContent=APPS.length;
   $('#statLinks').textContent=links;
   $('#statPlats').textContent=PLAT_ORDER.filter(p=>APPS.some(a=>a.platforms[p])).length;
