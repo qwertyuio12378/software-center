@@ -445,6 +445,7 @@ mark{background:rgba(255,198,107,.22);color:var(--ink);border-radius:4px;padding
   background:linear-gradient(135deg,#41e8c2,#4bb6ff);color:#04140f;font-weight:800;font-size:14px;
   box-shadow:0 20px 44px -16px rgba(62,230,192,.55),inset 0 1px 0 rgba(255,255,255,.45);transition:.25s var(--ease)}
 .local-tag{flex:0 0 auto;padding:4px 8px;border-radius:6px;border:1px solid rgba(62,230,192,.3);color:var(--accent);font-size:9.5px;font-weight:700;letter-spacing:.03em}
+.cloud-tag{border-color:rgba(74,168,255,.36);color:#8fc7ff}
 .d-dl:hover{transform:translateY(-1px);box-shadow:0 26px 54px -16px rgba(62,230,192,.7),inset 0 1px 0 rgba(255,255,255,.45)}
 .d-dl .big{width:32px;height:32px;border-radius:10px;display:grid;place-items:center;background:rgba(4,20,15,.14);flex:0 0 auto}
 .d-dl .big svg{width:17px;height:17px}
@@ -806,38 +807,64 @@ function triggerBlobDownload(blob,name){
   setTimeout(()=>URL.revokeObjectURL(url),10000);
 }
 function isUploadUrl(url){return typeof url==='string'&&/^upload:/i.test(url);}
-(function loadAdminData(){
+const CLOUD_FN='https://gngcducutevgllbaejec.supabase.co/functions/v1/weakdock-api';
+const SUPABASE_ANON='sb_publishable_i5npxDKfL83UBEDBBPm57A_WqqYeh-P';
+function isCloudPackage(url){return typeof url==='string'&&/^https:\/\/gngcducutevgllbaejec\.supabase\.co\/storage\/v1\/object\/public\/weakdock\//i.test(url);}
+function applyAdminSnapshot(snap){
+  if(!snap || !Array.isArray(snap.apps)) return false;
+  const apps = snap.apps.filter(a=>a && a.id && a.name && a.cat && a.platforms && typeof a.platforms==='object');
+  if(!apps.length && snap.apps.length) return false;
+  const ordered = (Array.isArray(snap.categories)?snap.categories:[]).slice()
+    .map((c,i)=>typeof c==='string'?{name:c,order:i}:c)
+    .filter(c=>c && c.name)
+    .sort((a,b)=>(a.order??999)-(b.order??999));
+  const cats = ordered.map(c=>c.name);
+  const allCats = [...new Set([...cats,...apps.map(a=>a.cat)])];
+  apps.forEach(a=>{
+    if(a.live && a.live.assets){
+      Object.keys(a.live.assets).forEach(k=>{
+        const v = a.live.assets[k];
+        const src = typeof v==='string' ? v : (v && typeof v==='object' && typeof v.source==='string' ? v.source : null);
+        if(!src){ delete a.live.assets[k]; return; }
+        try{ a.live.assets[k]=new RegExp(src); }
+        catch(e){ delete a.live.assets[k]; }
+      });
+    }
+  });
+  APPS = apps;
+  ADMIN_CATEGORIES = allCats;
+  COPY_OVERRIDES = {};
+  if(snap.copy && typeof snap.copy==='object' && !Array.isArray(snap.copy)){
+    COPY_OVERRIDES = Object.fromEntries(Object.entries(snap.copy).filter(([k,v])=>k && typeof v==='string' && v.trim()));
+  }
+  return true;
+}
+(function loadLocalAdminData(){
   try{
     const raw = localStorage.getItem(ADMIN_DATA_KEY);
     if(!raw) return;
     const snap = JSON.parse(raw);
-    if(!snap || !Array.isArray(snap.apps)) return;
-    const apps = snap.apps.filter(a=>a && a.id && a.name && a.cat && a.platforms && typeof a.platforms==='object');
-    if(!apps.length && snap.apps.length) return;
-    const ordered = (Array.isArray(snap.categories)?snap.categories:[]).slice()
-      .map((c,i)=>typeof c==='string'?{name:c,order:i}:c)
-      .filter(c=>c && c.name)
-      .sort((a,b)=>(a.order??999)-(b.order??999));
-    const cats = ordered.map(c=>c.name);
-    const allCats = [...new Set([...cats,...apps.map(a=>a.cat)])];
-    apps.forEach(a=>{
-      if(a.live && a.live.assets){
-        Object.keys(a.live.assets).forEach(k=>{
-          const v = a.live.assets[k];
-          const src = typeof v==='string' ? v : (v && typeof v==='object' && typeof v.source==='string' ? v.source : null);
-          if(!src){ delete a.live.assets[k]; return; }
-          try{ a.live.assets[k]=new RegExp(src); }
-          catch(e){ delete a.live.assets[k]; }
-        });
-      }
-    });
-    APPS = apps;
-    ADMIN_CATEGORIES = allCats;
-    if(snap.copy && typeof snap.copy==='object' && !Array.isArray(snap.copy)){
-      COPY_OVERRIDES = Object.fromEntries(Object.entries(snap.copy).filter(([k,v])=>k && typeof v==='string' && v.trim()));
-    }
+    applyAdminSnapshot(snap);
   }catch(e){}
 })();
+async function loadCloudConfig(){
+  try{
+    const r=await fetch(CLOUD_FN+'/config?ts='+Date.now(),{headers:{apikey:SUPABASE_ANON,Authorization:'Bearer '+SUPABASE_ANON},cache:'no-store'});
+    if(!r.ok) return false;
+    const j=await r.json();
+    if(!j||!j.ok||!j.data||!Array.isArray(j.data.apps)) return false;
+    if(!applyAdminSnapshot(j.data)) return false;
+    if(typeof CAT_ORDER!=='undefined') CAT_ORDER=ADMIN_CATEGORIES||CAT_ORDER;
+    if(typeof PLATS!=='undefined') PLATS=PLAT_ORDER.filter(p=>APPS.some(a=>a.platforms[p]));
+    if(typeof state!=='undefined'){
+      if(state.cat!=='全部'&&!CAT_ORDER.includes(state.cat)) state.cat='全部';
+      if(state.plat!=='all'&&!PLATS.includes(state.plat)) state.plat='all';
+    }
+    renderAll({anim:false});
+    applyCopyOverrides();
+    return true;
+  }catch(e){return false;}
+}
 
 /* ============================================================
    工具函数
@@ -1305,7 +1332,7 @@ async function doDownload(app, plat){
     }catch(e){toast('本机安装包读取失败，请回到后台上传它的浏览器重试。','err');}
     return;
   }
-  toast(`正在打开 <b>${esc(app.name)}</b> 的官方下载源 · ${fmtSize(p.size)}`, p.url, '没反应？点这里');
+  toast(`正在打开 <b>${esc(app.name)}</b> 的${isCloudPackage(p.url)?'Supabase 公共存储':'官方下载源'} · ${fmtSize(p.size)}`, p.url, '没反应？点这里');
   window.open(p.url,'_blank','noopener');
 }
 
@@ -1341,6 +1368,7 @@ function renderDrawer(){
   const plats=platformsOf(app);
   const pending=!!p.pending || !p.url;
   const local=isUploadUrl(p.url);
+  const cloud=isCloudPackage(p.url);
   const dHead=app.iconImg
     ? `<img src="${app.iconImg}" alt="">`
     : (ICONS_SVG(app.glyph)||`<span class="tile-letter">${esc(app.name.slice(0,1))}</span>`);
@@ -1373,7 +1401,7 @@ function renderDrawer(){
     </div>`:`
     <div class="d-file">
       <code title="${esc(p.file)}">${esc(p.file)}</code>
-      ${local?'<span class="local-tag">本机安装包</span>':`<button type="button" data-copy="${esc(p.url)}" aria-label="复制下载链接">${ICON_COPY}</button>`}
+      ${local?'<span class="local-tag">本机安装包</span>':cloud?`<span class="local-tag cloud-tag">云端安装包</span><button type="button" data-copy="${esc(p.url)}" aria-label="复制下载链接">${ICON_COPY}</button>`:`<button type="button" data-copy="${esc(p.url)}" aria-label="复制下载链接">${ICON_COPY}</button>`}
     </div>
 
     ${local?`
@@ -1384,7 +1412,7 @@ function renderDrawer(){
     </button>`:`
     <a class="d-dl" href="${esc(p.url)}" target="_blank" rel="noopener" data-go>
       <span class="big">${ICON_DL}</span>
-      <span class="txt"><b>${dlText(plat)}</b><span>跳转官方源 · 无捆绑下载器</span></span>
+      <span class="txt"><b>${cloud?'从 Supabase 下载':dlText(plat)}</b><span>${cloud?'公开存储 · 所有访客可下载':'跳转官方源 · 无捆绑下载器'}</span></span>
       <span class="sz">${fmtSize(p.size)}</span>
     </a>`}
     <div class="d-actions">
@@ -1398,14 +1426,14 @@ function renderDrawer(){
       <div class="qr-wrap">
         <div class="qr" id="qrBox"></div>
         <div class="qr-cap">
-          <b>手机扫码，直达官方源</b>
+          <b>${cloud?'手机扫码，直达 Supabase 公共存储':'手机扫码，直达官方源'}</b>
           <p>二维码内容就是这条下载直链本身，不经过本站中转。扫码后请在浏览器中确认域名。</p>
         </div>
       </div>
     </div>`:''}
 
     <div class="block">
-      <div class="block-h">${pending?'上架信息':local?'本机文件信息':'校验记录'} <i></i></div>
+      <div class="block-h">${pending?'上架信息':local?'本机文件信息':cloud?'公共存储信息':'校验记录'} <i></i></div>
       <div class="verify-box">
         ${pending?`
         <div class="v-row"><span>上架状态</span><b class="soonv">安装包待上架</b></div>
@@ -1416,7 +1444,12 @@ function renderDrawer(){
         <div class="v-row"><span>版本</span><b>${esc(p.v)}</b></div>
         <div class="v-row"><span>文件体积</span><b>${fmtSize(p.size)}</b></div>
         <div class="v-row"><span>存储位置</span><b>当前浏览器 IndexedDB</b></div>
-        <div class="v-row"><span>来源</span><b>${esc(p.src||'后台上传')}</b></div>`:`
+        <div class="v-row"><span>来源</span><b>${esc(p.src||'后台上传')}</b></div>`:cloud?`
+        <div class="v-row"><span>上架状态</span><b class="ok">Supabase 公共存储</b></div>
+        <div class="v-row"><span>版本</span><b>${esc(p.v)}</b></div>
+        <div class="v-row"><span>文件体积</span><b>${fmtSize(p.size)}</b></div>
+        <div class="v-row"><span>存储位置</span><b>Supabase Storage · weakdock</b></div>
+        <div class="v-row"><span>来源</span><b>${esc(p.src||'后台云端上传')}</b></div>`:`
         <div class="v-row"><span>校验时间</span><b>${esc(app.checked)}</b></div>
         <div class="v-row"><span>HTTP 响应</span><b class="ok">${esc(p.http)}</b></div>
         <div class="v-row"><span>Content-Type</span><b>${esc(p.ctype)}</b></div>
@@ -1452,7 +1485,7 @@ function renderDrawer(){
   });
   const go=$('[data-go]',body);
   if(go) go.addEventListener('click',()=>{
-    toast(`正在打开 <b>${esc(app.name)}</b> 官方源 · ${fmtSize(p.size)}`);
+    toast(`正在打开 <b>${esc(app.name)}</b> ${isCloudPackage(p.url)?'Supabase 公共存储':'官方源'} · ${fmtSize(p.size)}`);
   });
 }
 
@@ -1624,6 +1657,7 @@ $('#deviceBtn').addEventListener('click',()=>{
 renderAll();
 applyCopyOverrides();
 initCopyObserver();
+loadCloudConfig();
 let thumbTimer;
 window.addEventListener('resize',()=>{ clearTimeout(thumbTimer); thumbTimer=setTimeout(positionSegThumb,120); });
 if(document.fonts && document.fonts.ready) document.fonts.ready.then(()=>positionSegThumb()).catch(()=>{});
