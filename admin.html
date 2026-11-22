@@ -1508,7 +1508,7 @@ $('#cloudPublish').onclick=async()=>{await publishCloud({closeDialog:true});};
 const savedTheme=localStorage.getItem('weakdock_admin_theme');
 if(savedTheme==='light') document.documentElement.dataset.theme='light';
 renderAll();
-setCloudState(cloudKey?'密钥已载入，保存后自动发布':'未连接云端');
+setCloudState(cloudKey?'云端自动连接中…':'未连接云端');
 loadCloudData(true);
 </script>
 </body>
