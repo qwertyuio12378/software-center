@@ -703,6 +703,11 @@ function uploadFormat(name){
 function isUploadUrl(url){return typeof url==='string'&&/^upload:/i.test(url);}
 
 /* 安装包自动检测：体积 + 加固状态（不依赖外部库） */
+const SELF_PACKER_SIGNATURES=[
+  {name:'自研加固（secureguard）',terms:['libsecureguard.so','libsecureguardso.so','secureguardso','assets/secureguard','com.secureguard','dex2c','java2c']},
+  {name:'自研加固（QXNET）',terms:['libqxnetguard.so','libqxnet.so','assets/qxnet-guard','qxnet-guard']}
+];
+const SELF_PACKER_MARKERS=['meta-inf/weakdock-harden.json','assets/weakdock-harden.json','meta-inf/qxnet-harden.json','assets/qxnet-harden.json'];
 const PACKER_SIGNATURES=[
   {name:'360加固',terms:['libjiagu.so','libjiagu_art.so','libjiagu_x86.so','assets/jiagu','com.qihoo.util']},
   {name:'腾讯乐固',terms:['libshella.so','libshellx.so','libshell-super.2019.so','com.tencent.stubshell','assets/0oo00l111l1l']},
@@ -718,6 +723,7 @@ const PACKER_SIGNATURES=[
   {name:'Virbox',terms:['libvirbox.so','com.virbox']}
 ];
 const PE_PACKER_SIGNATURES=[
+  {name:'自研加固（secureguard）',terms:['secureguardso','secureguard','qxnet-guard']},
   {name:'UPX',terms:['upx!','upx0','upx1']},
   {name:'VMProtect',terms:['vmprotect','.vmp0','.vmp1']},
   {name:'Themida / WinLicense',terms:['themida','winlicense','.themida']},
@@ -762,10 +768,15 @@ async function detectHardening(file,format){
     const names=await zipEntryNames(file);
     if(!names||!names.length) return format==='APK'?'无法读取 APK 目录':'未检测到加固';
     const lower=names.map(x=>x.toLowerCase());
+    if(lower.some(n=>SELF_PACKER_MARKERS.includes(n)||n.endsWith('/hardening.json'))){
+      return '已加固 · 自研加固（标记）';
+    }
+    const selfHit=SELF_PACKER_SIGNATURES.find(p=>p.terms.some(t=>lower.some(n=>n.includes(t))));
+    if(selfHit) return '已加固 · '+selfHit.name;
     const hit=PACKER_SIGNATURES.find(p=>p.terms.some(t=>lower.some(n=>n.includes(t))));
     if(hit) return '已加固 · '+hit.name;
-    if(format==='APK'&&!lower.some(n=>n.endsWith('.dex'))&&lower.some(n=>n.startsWith('lib/'))){
-      return '疑似加固 · 无 classes.dex';
+    if(format==='APK'&&!lower.some(n=>n.endsWith('.dex'))&&lower.some(n=>n.startsWith('lib/')||n.startsWith('assets/'))){
+      return '疑似加固 · 自研/未知壳（无 DEX）';
     }
     return '未检测到加固';
   }
@@ -1239,7 +1250,7 @@ function openAppModal(id){
         <label class="field"><span>版本 *</span><input data-field="v" value="${esc(cur.v||'')}" placeholder="例如 2.1.5"></label>
         <label class="field"><span>文件格式 *</span><input data-field="type" value="${esc(cur.type||p.type)}" placeholder="${p.type}"></label>
         <label class="field"><span>文件体积（MB）</span><input data-field="size" type="number" min="0" step="0.1" value="${esc(mb)}" placeholder="留空则显示待定"></label>
-        <label class="field"><span>加固状态</span><input data-field="harden" value="${esc(cur.harden||'')}" placeholder="上传安装包后自动检测"></label>
+        <label class="field"><span>加固状态</span><input data-field="harden" value="${esc(cur.harden||'')}" placeholder="上传后自动检测；自研加固可识别标记"></label>
         <label class="field wide"><span>文件名</span><input data-field="file" value="${esc(cur.file||'')}" placeholder="例如 QXNET-2.1.5.apk"></label>
         <label class="field wide"><span>官方直链</span><input data-field="url" type="url" value="${esc(displayUrl)}" placeholder="${esc(urlPlaceholder)}"></label>
         <label class="field wide"><span>下载源说明</span><input data-field="src" value="${esc(cur.src||'')}" placeholder="例如：厂商官方服务器"></label>
