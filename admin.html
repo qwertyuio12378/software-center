@@ -141,6 +141,24 @@ select.mini option{background:var(--bg-2);color:var(--ink)}
 .copy-input:focus{border-color:rgba(62,230,192,.42)}
 .copy-manual{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) auto;gap:8px}
 .copy-manual input{height:34px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel-2);color:var(--ink);font-size:11.5px;outline:none}
+
+.copy-previews{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.copy-preview{min-width:0;border:1px solid var(--line);border-radius:14px;background:var(--panel);overflow:hidden}
+.copy-preview-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-bottom:1px solid var(--line)}
+.copy-preview-head b{font-size:11.5px;color:var(--ink)}
+.copy-preview-head span{font-size:9px;color:var(--muted-2)}
+.copy-frame-wrap{position:relative;width:100%;height:520px;overflow:hidden;background:#0d141b;border-bottom:1px solid var(--line)}
+.copy-frame{display:block;width:390px;height:844px;border:0;transform-origin:top left;background:#0d141b}
+.copy-preview-note{display:flex;align-items:center;gap:7px;padding:9px 12px;color:var(--muted-2);font-size:9.5px;line-height:1.5}
+.copy-preview-note svg{width:13px;height:13px;color:var(--accent);flex:0 0 auto}
+.copy-advanced{margin-top:14px;border:1px solid var(--line);border-radius:14px;background:var(--panel);overflow:hidden}
+.copy-advanced summary{cursor:pointer;padding:12px 14px;color:var(--muted);font-size:11px;font-weight:700;list-style:none}
+.copy-advanced summary::-webkit-details-marker{display:none}
+.copy-advanced summary:before{content:'＋';display:inline-block;width:16px;color:var(--accent)}
+.copy-advanced[open] summary:before{content:'－'}
+.copy-edit-modal .modal-card{max-width:540px}
+.copy-edit-original{margin:0 0 12px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel-2);color:var(--muted);font-size:10.5px;line-height:1.7;word-break:break-word}
+.copy-edit-original b{display:block;margin-bottom:5px;color:var(--muted-2);font-size:9px;letter-spacing:.08em}
 .row{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(190px,1fr) auto;align-items:center;gap:14px;padding:13px 16px;border-bottom:1px solid var(--line);transition:.18s}
 .row:last-child{border-bottom:0}
 .row:hover{background:rgba(62,230,192,.035)}
@@ -278,6 +296,11 @@ dialog.modal::backdrop{background:rgba(0,0,0,.62);backdrop-filter:blur(5px)}
   .stat{padding:13px}
   .stat b{font-size:24px}
 }
+
+@media (max-width: 760px){
+  .copy-previews{grid-template-columns:1fr;gap:10px}
+  .copy-frame-wrap{height:520px}
+}
 </style>
 </head>
 <body>
@@ -378,6 +401,29 @@ dialog.modal::backdrop{background:rgba(0,0,0,.62);backdrop-filter:blur(5px)}
       <button type="button" class="btn danger" id="confirmYes">确认</button>
     </footer>
   </div>
+</dialog>
+
+
+<dialog id="copyEditDialog" class="modal copy-edit-modal">
+  <form class="modal-card" id="copyEditForm">
+    <header class="modal-head">
+      <div>
+        <small>COPY</small>
+        <h2>修改页面文字</h2>
+      </div>
+      <button type="button" class="x" id="copyEditX" aria-label="关闭">×</button>
+    </header>
+    <div class="modal-body">
+      <div class="copy-edit-original"><b>页面原文</b><span id="copyEditOriginal"></span></div>
+      <label class="field"><span>替换成</span><input id="copyEditInput" maxlength="200" placeholder="输入新的显示文字"></label>
+      <p class="hint" style="margin:8px 0 0;color:var(--muted-2);font-size:9.5px;line-height:1.6">留空或与原文相同表示还原原文；保存后自动同步到前台。</p>
+    </div>
+    <footer class="modal-foot">
+      <button type="button" class="btn ghost" id="copyEditReset">还原原文</button>
+      <button type="button" class="btn" id="copyEditCancel">取消</button>
+      <button type="submit" class="btn primary" id="copyEditSave">保存文字</button>
+    </footer>
+  </form>
 </dialog>
 
 <dialog id="cloudDialog" class="modal cloud-modal">
@@ -812,6 +858,18 @@ function normalize(raw){
   });
   const apps=(Array.isArray(src.apps)?src.apps:[]).filter(a=>a&&a.id&&a.name&&a.cat&&a.platforms&&typeof a.platforms==='object').map(a=>{
     const cp={...a, tags:Array.isArray(a.tags)?a.tags.filter(Boolean):[] , platforms:{...a.platforms}};
+    if(cp.id==='qxnet'){
+      if(cp.tagline==='弱网模拟与网络调试，安卓 / 苹果 / 鸿蒙 三端同版'){
+        cp.tagline='弱网模拟与网络调试，Windows / 安卓 / 苹果 / 鸿蒙 四端同版';
+      }
+      if(cp.desc && (cp.desc.includes('三个平台') || cp.desc.includes('鸿蒙与win四个平台'))){
+        cp.desc='QXNET 2.1.5 覆盖 Windows、安卓、苹果与鸿蒙四个平台，用于弱网模拟、延迟与丢包调试。当前先展示版本、平台与文件格式，安装包暂未上架。';
+      }
+      if(!cp.platforms.win){
+        const base=cp.platforms.android||cp.platforms.ios||cp.platforms.os||{};
+        cp.platforms.win={v:base.v||'2.1.5',type:'EXE',pending:true};
+      }
+    }
     if(!seen.has(cp.cat)){seen.add(cp.cat);categories.push({id:slugify(cp.cat)||uid('cat'),name:cp.cat,desc:'',order:categories.length+1});}
     return cp;
   });
@@ -1097,22 +1155,124 @@ function copyKeys(){
   const q=copyQuery.trim().toLowerCase();
   return keys.filter(k=>copyUseful(k)&&(!q||k.toLowerCase().includes(q)));
 }
+let visualCopyEdit=null;
+function fitCopyFrame(frame){
+  const wrap=frame.closest('.copy-frame-wrap'); if(!wrap) return;
+  const s=Math.min(1,Math.max(.45,wrap.clientWidth/390));
+  frame.style.transform='scale('+s+')';
+  wrap.style.height=Math.round(844*s)+'px';
+}
+function copyPreviewCard(id,title,sub){
+  return `<article class="copy-preview">
+    <div class="copy-preview-head"><b>${title}</b><span>${sub}</span></div>
+    <div class="copy-frame-wrap"><iframe class="copy-frame" id="copyFrame-${id}" src="./index.html?copy-preview=${id}&t=${Date.now()}" title="${title}" loading="eager"></iframe></div>
+    <div class="copy-preview-note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M5 5h6M8 5v14M5 19h6M15 5h4v14h-4"/></svg><span>点击图中文字直接修改</span></div>
+  </article>`;
+}
+function setupCopyPreview(id){
+  const frame=document.getElementById('copyFrame-'+id); if(!frame) return;
+  const fit=()=>fitCopyFrame(frame); fit();
+  if(window.ResizeObserver) new ResizeObserver(fit).observe(frame.closest('.copy-frame-wrap'));
+  frame.addEventListener('load',()=>{
+    fit();
+    let doc=null,win=null;
+    try{doc=frame.contentDocument;win=frame.contentWindow;}catch(e){}
+    if(!doc||!win) return;
+    try{
+      const st=doc.createElement('style');
+      st.textContent='html{scroll-behavior:auto!important} *{cursor:text!important}';
+      doc.head.appendChild(st);
+    }catch(e){}
+    const findText=(e)=>{
+      try{const r=doc.caretRangeFromPoint(e.clientX,e.clientY);if(r&&r.startContainer&&r.startContainer.nodeType===3)return r.startContainer;}catch(err){}
+      let el=e.target; if(el&&el.closest) el=el.closest('button,a,h1,h2,h3,p,span,div')||el;
+      if(!el) return null;
+      const w=doc.createTreeWalker(el,NodeFilter.SHOW_TEXT); return w.nextNode();
+    };
+    // 让每张图停在不同位置
+    setTimeout(()=>{
+      if(id==='list'){
+        const g=doc.getElementById('grid');
+        if(g) win.scrollTo(0,Math.max(0,g.getBoundingClientRect().top+win.scrollY-100));
+      }else if(id==='detail'){
+        let tries=0;
+        const open=()=>{
+          if(tries++>12) return;
+          const app=win.appById&&win.appById('qxnet');
+          if(app&&win.openDrawer){win.openDrawer(app,'android');}
+          else setTimeout(open,220);
+        };
+        open();
+      }else{ win.scrollTo(0,0); }
+    },id==='home'?120:650);
+    doc.addEventListener('click',e=>{
+      const tn=findText(e); if(!tn) return;
+      const current=copyKey(tn.nodeValue||''); if(!current||!copyUseful(current)) return;
+      e.preventDefault(); e.stopImmediatePropagation();
+      let base=current;
+      const map=data.copy||{};
+      for(const [k,v] of Object.entries(map)){ if(String(v)===current){base=k;break;} }
+      openCopyVisualEdit(base,current,id);
+    },true);
+  });
+}
+function openCopyVisualEdit(base,current,section){
+  visualCopyEdit={base,current,section};
+  const d=$('#copyEditDialog'); if(!d) return;
+  $('#copyEditOriginal').textContent=base;
+  const inp=$('#copyEditInput'); inp.value=current;
+  if(!d.open) d.showModal();
+  setTimeout(()=>{inp.focus();inp.select();},80);
+}
+function saveCopyVisualEdit(){
+  if(!visualCopyEdit) return false;
+  const base=visualCopyEdit.base, val=copyKey($('#copyEditInput').value);
+  if(!val||val===base) delete data.copy[base];
+  else data.copy[base]=val;
+  const d=$('#copyEditDialog'); if(d&&d.open)d.close();
+  visualCopyEdit=null;
+  if(saveData()) toast('页面文字已保存并自动发布。','ok');
+}
+function resetCopyVisualEdit(){
+  if(!visualCopyEdit) return;
+  delete data.copy[visualCopyEdit.base];
+  const d=$('#copyEditDialog'); if(d&&d.open)d.close();
+  visualCopyEdit=null;
+  if(saveData()) toast('已还原原文。','ok');
+}
 function renderCopy(){
   data.copy=data.copy&&typeof data.copy==='object'?data.copy:{};
   const keys=copyKeys();
   $('#viewCopy').innerHTML=`
-    <div class="notice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg><div>这里修改的是前台可见文字，不改应用数据。保存并发布后所有访客刷新即可生效；数字、链接和过短符号不会进入清单。</div></div>
+    <div class="notice"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4M12 16h.01"/></svg><div>点击下面页面图里的任意文字即可修改。这里改的是前台显示文字，不改应用数据、链接和数字；保存后自动发布，所有访客刷新即可看到。</div></div>
     <div class="toolbar">
-      <div class="toolbar-left"><div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg><input id="copySearch" placeholder="搜索原文或替换文案" value="${esc(copyQuery)}"></div></div>
-      <div class="toolbar-right"><span class="status ok"><i></i>${keys.length} 条文案</span><button type="button" class="btn" id="copyScanBtn">扫描前台</button><button type="button" class="btn primary" id="copySaveBtn">保存文案</button></div>
+      <div class="toolbar-left"><span class="status ok"><i></i>${keys.length} 条可编辑文案</span></div>
+      <div class="toolbar-right"><button type="button" class="btn" id="copyScanBtn">扫描前台</button><button type="button" class="btn primary" id="copySaveBtn">保存清单修改</button></div>
     </div>
-    <div class="panel"><div class="panel-head"><div><h2>文案清单</h2><p>左侧是原文，右侧留空表示保持原文。</p></div><button type="button" class="btn small ghost" id="copyClearBtn">清空全部替换</button></div>
-      <div class="copy-list">
-        ${keys.length?keys.map(k=>`<div class="copy-row"><div class="copy-origin" title="${esc(k)}">${esc(k)}</div><input class="copy-input" data-copy-key="${esc(k)}" value="${esc(data.copy[k]||'')}" placeholder="保持原文"><button type="button" class="btn small ghost" data-copy-reset="${esc(k)}">还原</button></div>`).join(''):'<div class="empty"><b>还没有扫描到文案</b>点右上角「扫描前台」读取当前前台文字，或手动添加。</div>'}
+    <div class="copy-previews">
+      ${copyPreviewCard('home','首页首屏','Hero / 统计 / 入口')}
+      ${copyPreviewCard('list','工具列表','平台 / 分类 / 卡片')}
+      ${copyPreviewCard('detail','QXNET 详情','版本 / 平台 / 下载')}
+    </div>
+    <details class="copy-advanced">
+      <summary>高级：文本清单、搜索与手动添加</summary>
+      <div class="panel"><div class="panel-head"><div><h2>文案清单</h2><p>左侧原文，右侧留空表示保持原文。</p></div><button type="button" class="btn small ghost" id="copyClearBtn">清空全部替换</button></div>
+        <div class="panel-body"><div class="search" style="margin-bottom:10px"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="11" cy="11" r="6.5"/><path d="M16 16l4 4"/></svg><input id="copySearch" placeholder="搜索原文" value="${esc(copyQuery)}"></div>
+        <div class="copy-list">
+          ${keys.length?keys.map(k=>`<div class="copy-row"><div class="copy-origin" title="${esc(k)}">${esc(k)}</div><input class="copy-input" data-copy-key="${esc(k)}" value="${esc(data.copy[k]||'')}" placeholder="保持原文"><button type="button" class="btn small ghost" data-copy-reset="${esc(k)}">还原</button></div>`).join(''):'<div class="empty"><b>还没有扫描到文案</b>点右上角「扫描前台」读取当前前台文字，或手动添加。</div>'}
+        </div></div>
       </div>
-    </div>
-    <div class="panel"><div class="panel-head"><div><h2>手动添加</h2><p>适合修改没有出现在静态页面里的动态文字。</p></div></div><div class="panel-body"><div class="copy-manual"><input id="copyNewKey" placeholder="前台原文，例如：安装包待上架"><input id="copyNewVal" placeholder="替换成，例如：安装包准备中"><button type="button" class="btn primary" id="copyAddBtn">添加并保存</button></div></div></div>`;
-  $('#copySearch').oninput=e=>{copyQuery=e.target.value;renderCopy();};
+      <div class="panel"><div class="panel-head"><div><h2>手动添加</h2><p>适合修改没有出现在页面图里的动态文字。</p></div></div><div class="panel-body"><div class="copy-manual"><input id="copyNewKey" placeholder="前台原文，例如：安装包待上架"><input id="copyNewVal" placeholder="替换成，例如：安装包准备中"><button type="button" class="btn primary" id="copyAddBtn">添加并保存</button></div></div></div>
+    </details>`;
+  const search=$('#copySearch');
+  if(search) search.oninput=e=>{
+    copyQuery=e.target.value;
+    const q=copyQuery.trim().toLowerCase();
+    $$('#viewCopy [data-copy-key]').forEach(inp=>{
+      const row=inp.closest('.copy-row');
+      if(row) row.hidden=!!q&&!inp.dataset.copyKey.toLowerCase().includes(q);
+    });
+  };
   $('#copyScanBtn').onclick=scanFrontCopy;
   $('#copySaveBtn').onclick=saveCopyEdits;
   $('#copyClearBtn').onclick=()=>{data.copy={};if(saveData())toast('已清空全部文案替换。','ok');};
@@ -1123,6 +1283,16 @@ function renderCopy(){
     data.copy[k]=v;
     if(saveData())toast('文案已添加。','ok');
   };
+  ['home','list','detail'].forEach(setupCopyPreview);
+}
+
+const copyEditDialogEl=$('#copyEditDialog');
+if(copyEditDialogEl){
+  copyEditDialogEl.addEventListener('close',()=>{visualCopyEdit=null;});
+  $('#copyEditForm').addEventListener('submit',e=>{e.preventDefault();saveCopyVisualEdit();});
+  $('#copyEditX').onclick=()=>copyEditDialogEl.close();
+  $('#copyEditCancel').onclick=()=>copyEditDialogEl.close();
+  $('#copyEditReset').onclick=resetCopyVisualEdit;
 }
 async function scanFrontCopy(){
   const btn=$('#copyScanBtn');if(btn){btn.disabled=true;btn.textContent='扫描中…';}
