@@ -227,6 +227,16 @@ dialog.modal::backdrop{background:rgba(0,0,0,.62);backdrop-filter:blur(5px)}
 .file-label:hover{color:var(--ink);border-color:var(--line-strong)}
 .file-label input{display:none}
 .pkg-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+
+.preview-editor{display:grid;gap:8px;padding:10px;border:1px dashed var(--line-strong);border-radius:10px;background:var(--panel)}
+.preview-thumbs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:7px}
+.preview-thumb{position:relative;aspect-ratio:16/10;overflow:hidden;border:1px solid var(--line);border-radius:8px;background:var(--panel-3)}
+.preview-thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.preview-thumb .no{position:absolute;left:5px;bottom:5px;min-width:18px;height:18px;display:grid;place-items:center;border-radius:5px;background:rgba(0,0,0,.55);color:#fff;font-size:9px;font-weight:800}
+.preview-thumb button{position:absolute;right:4px;top:4px;width:21px;height:21px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.2);border-radius:50%;background:rgba(0,0,0,.6);color:#fff;font-size:14px;line-height:1}
+.preview-thumb button:hover{background:#b03a3a}
+.preview-empty{grid-column:1/-1;min-height:64px;display:grid;place-items:center;border:1px dashed var(--line);border-radius:8px;color:var(--muted-2);font-size:10px;text-align:center;line-height:1.6}
+.preview-file-row{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
 .pkg-name{font-size:10px;color:var(--muted);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .plat-checks{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:11px}
 .plat-check{display:flex;align-items:center;gap:6px;height:32px;padding:0 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);font-size:10.5px;font-weight:700;color:var(--muted);cursor:pointer}
@@ -300,6 +310,7 @@ dialog.modal::backdrop{background:rgba(0,0,0,.62);backdrop-filter:blur(5px)}
 @media (max-width: 760px){
   .copy-previews{grid-template-columns:1fr;gap:10px}
   .copy-frame-wrap{height:520px}
+  .preview-thumbs{grid-template-columns:repeat(2,minmax(0,1fr))}
 }
 </style>
 </head>
@@ -696,6 +707,7 @@ let modalMode='app';
 let editingAppId=null;
 let editingCatId=null;
 let iconDraft='';
+let previewDraft=[];
 let uploadDrafts={};
 let query='';
 let appCatFilter='all';
@@ -993,16 +1005,20 @@ async function publishCloud(opts={}){
     return false;
   }finally{cloudPublishing=false;}
 }
-async function uploadPackageToCloud(file){
-  if(!cloudKey)throw new Error('请先在右上角「云端」里填写管理密钥。');
+async function uploadFileToCloud(file){
+  if(!cloudKey)throw new Error('云端未连接，无法上传文件。');
   const fd=new FormData();
   fd.append('key',cloudKey);
   fd.append('file',file,file.name);
   const r=await fetch(CLOUD_FN+'/upload',{method:'POST',headers:cloudHeaders(),body:fd});
   const j=await r.json().catch(()=>({}));
   if(!r.ok||!j.ok||!j.file) throw new Error(j.error||('上传失败 HTTP '+r.status));
-  setCloudState('安装包已上传 Supabase · '+file.name,'ok');
   return j.file;
+}
+async function uploadPackageToCloud(file){
+  const meta=await uploadFileToCloud(file);
+  setCloudState('安装包已上传 Supabase · '+file.name,'ok');
+  return meta;
 }
 function iconOf(app,size='38'){
   if(app.iconImg) return `<div class="app-icon" style="background:${esc(app.color||'#12A6E8')}"><img src="${esc(app.iconImg)}" alt=""></div>`;
@@ -1391,8 +1407,43 @@ function askConfirm(message,fn){
   $('#confirmDialog').showModal();
 }
 
+function normalizePreviewList(list){
+  return (Array.isArray(list)?list:[]).map(x=>{
+    if(typeof x==='string') return {url:x,name:'',size:0};
+    if(x&&typeof x.url==='string') return {url:x.url,name:x.name||'',size:Number(x.size)||0};
+    return null;
+  }).filter(Boolean);
+}
+function renderPreviewThumbs(){
+  const box=$('#previewThumbs');if(!box)return;
+  box.innerHTML=previewDraft.length?previewDraft.map((p,i)=>`<div class="preview-thumb"><img src="${esc(p.url)}" alt="预览图 ${i+1}" loading="lazy"><span class="no">${i+1}</span><button type="button" data-preview-del="${i}" aria-label="移除预览图 ${i+1}">×</button></div>`).join(''):'<div class="preview-empty">还没有预览图<br>选择几张应用截图上传</div>';
+  $$('#previewThumbs [data-preview-del]').forEach(btn=>btn.onclick=()=>{previewDraft.splice(Number(btn.dataset.previewDel),1);renderPreviewThumbs();});
+}
+function compressPreviewImage(file){
+  return new Promise(resolve=>{
+    if(!file.type||!file.type.startsWith('image/')) return resolve(file);
+    const url=URL.createObjectURL(file),img=new Image();
+    img.onload=()=>{
+      try{
+        const max=1600,scale=Math.min(1,max/Math.max(img.width||1,img.height||1));
+        const canvas=document.createElement('canvas');
+        canvas.width=Math.max(1,Math.round(img.width*scale));
+        canvas.height=Math.max(1,Math.round(img.height*scale));
+        canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+        canvas.toBlob(blob=>{
+          URL.revokeObjectURL(url);
+          if(!blob) return resolve(file);
+          const base=(file.name||'preview').replace(/\.[^.]+$/,'')||'preview';
+          resolve(new File([blob],base+'.webp',{type:'image/webp'}));
+        },'image/webp',.84);
+      }catch(e){URL.revokeObjectURL(url);resolve(file);}
+    };
+    img.onerror=()=>{URL.revokeObjectURL(url);resolve(file);};
+    img.src=url;
+  });
+}
 function appBlank(){
-  return {id:'',name:'',en:'',cat:data.categories[0]?.name||'',color:'#12A6E8',tagline:'',desc:'',tags:[],site:'',iconImg:'',platforms:{win:{v:'',type:'EXE'}}};
+  return {id:'',name:'',en:'',cat:data.categories[0]?.name||'',color:'#12A6E8',tagline:'',desc:'',tags:[],site:'',iconImg:'',previews:[],platforms:{win:{v:'',type:'EXE'}}};
 }
 function openAppModal(id){
   modalMode='app';editingAppId=id||null;
@@ -1402,6 +1453,7 @@ function openAppModal(id){
   uploadDrafts={};
   Object.keys(app.platforms).forEach(k=>{const u=app.platforms[k]&&app.platforms[k].upload;if(u)uploadDrafts[k]={...u,existing:true};});
   iconDraft=app.iconImg||'';
+  previewDraft=normalizePreviewList(app.previews);
   $('#modalKicker').textContent=base?'EDIT APP':'NEW APP';
   $('#modalTitle').textContent=base?base.name:'添加应用';
   $('#modalSave').textContent='保存应用';
@@ -1445,6 +1497,10 @@ function openAppModal(id){
       <label class="field"><span>标签（逗号分隔）</span><input id="appTags" value="${esc((app.tags||[]).join('，'))}" placeholder="弱网模拟，网络调试"></label>
       <label class="field"><span>主题色</span><div class="color-line"><input id="appColor" type="color" value="${esc(app.color||'#12A6E8')}"><input id="appColorText" type="text" value="${esc(app.color||'#12A6E8')}" maxlength="7"></div></label>
       <label class="field wide"><span>图标</span><div class="icon-editor"><span class="icon-preview" id="iconPreview"></span><label class="file-label">选择图片<input id="appIconFile" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml"></label><button type="button" class="btn small ghost" id="iconClear">移除</button><span class="hint">不上传则用名称首字 + 主题色，上传图片自动压到 160px。</span></div></label>
+      <label class="field wide"><span>应用预览图</span><div class="preview-editor">
+        <div class="preview-thumbs" id="previewThumbs"></div>
+        <div class="preview-file-row"><label class="file-label">添加图片<input id="previewFile" type="file" accept="image/*" multiple></label><span class="hint" id="previewStatus">建议 3–6 张，显示在详情页，点击可左右滑动。</span></div>
+      </div></label>
     </div></div>
     <div class="form-section"><div class="form-section-title"><b>平台与安装包</b><span>至少选一个平台</span></div><div class="plat-checks">${plats}</div>${panels}</div>`;
   paintIcon(app);
@@ -1518,6 +1574,23 @@ function openAppModal(id){
     e.target.value='';
   });
   $('#iconClear').onclick=()=>{iconDraft='';paintIcon({...app,iconImg:'',color:$('#appColor').value});};
+  renderPreviewThumbs();
+  $('#previewFile').addEventListener('change',async e=>{
+    const files=[...(e.target.files||[])]; e.target.value='';
+    for(const f of files){
+      if(!f.type||!f.type.startsWith('image/')){toast('请选择图片文件。','err');continue;}
+      if(f.size>12000000){toast('单张预览图建议不超过 12 MB。','err');continue;}
+      const status=$('#previewStatus'); if(status)status.textContent='正在压缩并上传 '+f.name+'…';
+      try{
+        const upload=await compressPreviewImage(f);
+        const meta=await uploadFileToCloud(upload);
+        previewDraft.push({url:meta.url,name:meta.name,size:meta.size});
+        renderPreviewThumbs();
+        toast('预览图已上传。','ok');
+      }catch(err){toast('预览图上传失败：'+(err.message||'请检查网络'),'err');}
+      if(status)status.textContent='建议 3–6 张，显示在详情页，点击可左右滑动。';
+    }
+  });
   $('#appColor').oninput=e=>{$('#appColorText').value=e.target.value;paintIcon({...app,iconImg:iconDraft,color:e.target.value,name:$('#appName')?.value||app.name});};
   $('#appColorText').oninput=e=>{const v=e.target.value.trim();if(/^#[0-9a-f]{6}$/i.test(v)){$('#appColor').value=v;}paintIcon({...app,iconImg:iconDraft,color:$('#appColor').value,name:$('#appName')?.value||app.name});};
   $('#appName').oninput=()=>paintIcon({...app,iconImg:iconDraft,color:$('#appColor').value,name:$('#appName').value});
@@ -1612,6 +1685,7 @@ function saveApp(){
       tagline:$('#appTagline').value.trim(),
       desc:$('#appDesc').value.trim(),
       tags,site:$('#appSite').value.trim(),
+      previews:previewDraft.slice(),
       checked:now,platforms
     };
     if(iconDraft)app.iconImg=iconDraft;
