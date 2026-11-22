@@ -1371,6 +1371,7 @@ function renderDrawer(){
   const pending=!!p.pending || !p.url;
   const local=isUploadUrl(p.url);
   const cloud=isCloudPackage(p.url);
+  const hardenRow=p.harden?`<div class="v-row"><span>加固状态</span><b>${esc(p.harden)}</b></div>`:'';
   const dHead=app.iconImg
     ? `<img src="${app.iconImg}" alt="">`
     : (ICONS_SVG(app.glyph)||`<span class="tile-letter">${esc(app.name.slice(0,1))}</span>`);
@@ -1394,6 +1395,7 @@ function renderDrawer(){
       <div class="d-cell"><span>文件体积</span><b>${pending?'待上架':fmtSize(p.size)}</b></div>
       <div class="d-cell"><span>文件格式</span><b>${esc(p.type||'未定')}</b></div>
       <div class="d-cell"><span>适用平台</span><b>${PLAT_LABEL[plat]}</b></div>
+      ${p.harden?`<div class="d-cell"><span>加固状态</span><b>${esc(p.harden)}</b></div>`:''}
     </div>
 
     ${pending?`
@@ -1441,15 +1443,18 @@ function renderDrawer(){
         <div class="v-row"><span>上架状态</span><b class="soonv">安装包待上架</b></div>
         <div class="v-row"><span>收录版本</span><b>${esc(p.v)}</b></div>
         <div class="v-row"><span>适用平台</span><b>${PLAT_LABEL[plat]}</b></div>
+        ${hardenRow}
         <div class="v-row"><span>数据更新</span><b>${esc(app.checked)}</b></div>`:local?`
         <div class="v-row"><span>上架状态</span><b class="ok">本机安装包</b></div>
         <div class="v-row"><span>版本</span><b>${esc(p.v)}</b></div>
         <div class="v-row"><span>文件体积</span><b>${fmtSize(p.size)}</b></div>
+        ${hardenRow}
         <div class="v-row"><span>存储位置</span><b>当前浏览器 IndexedDB</b></div>
         <div class="v-row"><span>来源</span><b>${esc(p.src||'后台上传')}</b></div>`:cloud?`
         <div class="v-row"><span>上架状态</span><b class="ok">Supabase 公共存储</b></div>
         <div class="v-row"><span>版本</span><b>${esc(p.v)}</b></div>
         <div class="v-row"><span>文件体积</span><b>${fmtSize(p.size)}</b></div>
+        ${hardenRow}
         <div class="v-row"><span>存储位置</span><b>Supabase Storage · weakdock</b></div>
         <div class="v-row"><span>来源</span><b>${esc(p.src||'后台云端上传')}</b></div>`:`
         <div class="v-row"><span>校验时间</span><b>${esc(app.checked)}</b></div>
