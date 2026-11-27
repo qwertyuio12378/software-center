@@ -217,6 +217,7 @@ dialog.modal::backdrop{background:rgba(0,0,0,.62);backdrop-filter:blur(5px)}
 .field input::placeholder,.field textarea::placeholder{color:var(--muted-2);opacity:.65}
 .field select option{background:var(--bg-2);color:var(--ink)}
 .field .hint{font-size:9px;color:var(--muted-2);line-height:1.5}
+.field .hint.warn{color:#f0b35e}
 .color-line{display:flex;gap:7px;align-items:center}
 .color-line input[type=color]{width:42px;height:38px;padding:3px;cursor:pointer;flex:0 0 auto}
 .color-line input[type=text]{flex:1;min-width:0}
@@ -861,10 +862,12 @@ function normalize(raw){
     const name=typeof c==='string'?c:(c&&c.name);
     if(!name||seen.has(name)) return;
     seen.add(name);
+    const cps=Array.isArray(c&&c.platforms)?c.platforms.filter(k=>PLAT_BY_KEY[k]):[];
     categories.push({
       id:(c&&c.id)||slugify(name)||uid('cat'),
       name,
       desc:(c&&c.desc)||'',
+      platforms:cps.length?cps:PLAT_DEFS.map(p=>p.key),
       order:Number.isFinite(+((c&&c.order))) ? +c.order : i+1
     });
   });
@@ -882,7 +885,7 @@ function normalize(raw){
         cp.platforms.win={v:base.v||'2.1.5',type:'EXE',pending:true};
       }
     }
-    if(!seen.has(cp.cat)){seen.add(cp.cat);categories.push({id:slugify(cp.cat)||uid('cat'),name:cp.cat,desc:'',order:categories.length+1});}
+    if(!seen.has(cp.cat)){seen.add(cp.cat);categories.push({id:slugify(cp.cat)||uid('cat'),name:cp.cat,desc:'',order:categories.length+1,platforms:PLAT_DEFS.map(p=>p.key).filter(k=>cp.platforms[k])});}
     return cp;
   });
   categories.sort((a,b)=>(a.order||999)-(b.order||999)||a.name.localeCompare(b.name,'zh-Hans-CN'));
@@ -1121,7 +1124,7 @@ function renderCategories(){
     <div class="toolbar"><div class="toolbar-left"><span class="status ok"><i></i>共 ${cats.length} 个分类</span></div><div class="toolbar-right"><button type="button" class="btn primary" id="addCatBtn">＋ 新建分类</button></div></div>
     <div class="list">
       ${cats.length?cats.map(c=>{const n=catCount(c.name);return `
-        <div class="row"><div class="ident"><span class="app-icon" style="background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#07131a">${esc(c.name.slice(0,1))}</span><div class="ident-txt"><b>${esc(c.name)}</b><small>${esc(c.desc||'未填写说明')} · 排序 ${c.order}</small></div></div><div class="meta-cell tags"><i class="tag">${n} 个应用</i></div><div class="actions"><button type="button" class="icon-btn" data-edit-cat="${esc(c.id)}" aria-label="编辑分类"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 20h4l10.5-10.5a2.5 2.5 0 0 0-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg></button><button type="button" class="icon-btn danger" data-del-cat="${esc(c.id)}" aria-label="删除分类"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 7h16M9 7V5h6v2M7 7l1 13h8l1-13"/></svg></button></div></div>`}).join(''):'<div class="empty"><b>还没有分类</b>新建一个分类，应用才有地方归档。</div>'}
+        <div class="row"><div class="ident"><span class="app-icon" style="background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#07131a">${esc(c.name.slice(0,1))}</span><div class="ident-txt"><b>${esc(c.name)}</b><small>${esc(c.desc||'未填写说明')} · 排序 ${c.order}</small></div></div><div class="meta-cell tags"><i class="tag">${n} 个应用</i><span class="tags">${PLAT_DEFS.filter(p=>(Array.isArray(c.platforms)&&c.platforms.length?c.platforms:PLAT_DEFS.map(x=>x.key)).includes(p.key)).map(p=>`<i class="tag ${p.key}">${p.short}</i>`).join('')}</span></div><div class="actions"><button type="button" class="icon-btn" data-edit-cat="${esc(c.id)}" aria-label="编辑分类"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 20h4l10.5-10.5a2.5 2.5 0 0 0-4-4L4 16v4z"/><path d="M13.5 6.5l4 4"/></svg></button><button type="button" class="icon-btn danger" data-del-cat="${esc(c.id)}" aria-label="删除分类"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M4 7h16M9 7V5h6v2M7 7l1 13h8l1-13"/></svg></button></div></div>`}).join(''):'<div class="empty"><b>还没有分类</b>新建一个分类，应用才有地方归档。</div>'}
     </div>`;
   $('#addCatBtn').onclick=()=>openCatModal();
   $$('#viewCategories [data-edit-cat]').forEach(b=>b.onclick=()=>openCatModal(b.dataset.editCat));
@@ -1356,18 +1359,44 @@ function renderAppList(){
 }
 
 function setView(v){view=v;renderAll();}
+function catPlatforms(name){
+  const cat=data.categories.find(c=>c.name===name);
+  const ps=cat&&Array.isArray(cat.platforms)?cat.platforms.filter(k=>PLAT_BY_KEY[k]):[];
+  return ps.length?ps:PLAT_DEFS.map(p=>p.key);
+}
+function paintCatPlatHint(){
+  const hint=$('#catPlatHint'),catEl=$('#appCat');
+  if(!hint||!catEl) return;
+  const name=catEl.value,covered=catPlatforms(name);
+  const chosen=$$('[data-plat-check]:checked').map(cb=>cb.dataset.platCheck);
+  const missing=chosen.filter(k=>!covered.includes(k));
+  const coveredLabel=PLAT_DEFS.filter(p=>covered.includes(p.key)).map(p=>p.label).join(' / ');
+  if(!chosen.length){hint.classList.remove('warn');hint.textContent=`该分类覆盖 ${coveredLabel}。`;return;}
+  if(missing.length){
+    hint.classList.add('warn');
+    hint.textContent=`分类「${name}」覆盖 ${coveredLabel}；当前勾选的 ${PLAT_DEFS.filter(p=>missing.includes(p.key)).map(p=>p.label).join('、')} 不在该分类内。`;
+  }else{
+    hint.classList.remove('warn');
+    hint.textContent=`该分类覆盖 ${coveredLabel}，与当前平台一致。`;
+  }
+}
 function openCatModal(id){
   modalMode='cat';editingCatId=id||null;
   const cat=id?data.categories.find(c=>c.id===id):null;
-  const obj=cat||{name:'',desc:'',order:data.categories.length+1};
+  const obj=cat||{name:'',desc:'',order:data.categories.length+1,platforms:PLAT_DEFS.map(p=>p.key)};
+  const catPlats=Array.isArray(obj.platforms)&&obj.platforms.length?obj.platforms:PLAT_DEFS.map(p=>p.key);
   $('#modalKicker').textContent=cat?'EDIT CATEGORY':'NEW CATEGORY';
   $('#modalTitle').textContent=cat?'编辑分类':'新建分类';
   $('#modalSave').textContent='保存分类';
-  $('#modalBody').innerHTML=`<div class="form-section"><div class="form-grid">
+  $('#modalBody').innerHTML=`<div class="form-section"><div class="form-section-title"><b>分类信息</b><span>名称与排序</span></div><div class="form-grid">
     <label class="field wide"><span>分类名称 *</span><input id="catName" maxlength="16" value="${esc(obj.name)}" placeholder="例如：网络工具"><span class="hint">前台分类筛选会显示这个名字，最多 16 字。</span></label>
     <label class="field wide"><span>分类说明</span><textarea id="catDesc" rows="3" placeholder="这个分类收录什么？">${esc(obj.desc||'')}</textarea></label>
     <label class="field"><span>排序</span><input id="catOrder" type="number" min="1" step="1" value="${Number(obj.order)||1}"><span class="hint">数字越小越靠前。</span></label>
-  </div></div>`;
+  </div></div>
+  <div class="form-section"><div class="form-section-title"><b>适用平台</b><span>至少选一个</span></div>
+    <div class="plat-checks" id="catPlatChecks">${PLAT_DEFS.map(p=>`<label class="plat-check"><input type="checkbox" data-cat-plat="${p.key}" ${catPlats.includes(p.key)?'checked':''}>${p.label}</label>`).join('')}</div>
+    <p class="plat-note">这个分类属于哪些平台。前台切到某个平台时，只显示覆盖该平台的分类；应用保存时也会提示分类与平台是否匹配。</p>
+  </div>`;
   $('#modal').showModal();
   setTimeout(()=>$('#catName').focus(),80);
 }
@@ -1375,17 +1404,20 @@ function saveCategory(){
   const name=$('#catName').value.trim();
   const desc=$('#catDesc').value.trim();
   const order=Math.max(1,parseInt($('#catOrder').value,10)||1);
+  const chosen=$$('[data-cat-plat]:checked').map(cb=>cb.dataset.catPlat);
+  const platforms=PLAT_DEFS.map(p=>p.key).filter(k=>chosen.includes(k));
   if(!name) return toast('请填写分类名称。','err');
+  if(!platforms.length) return toast('请至少选择一个适用平台。','err');
   const dup=data.categories.find(c=>c.name===name&&c.id!==editingCatId);
   if(dup) return toast('这个分类名称已经存在。','err');
   if(editingCatId){
     const cat=data.categories.find(c=>c.id===editingCatId);
     if(!cat) return;
     const old=cat.name;
-    cat.name=name;cat.desc=desc;cat.order=order;
+    cat.name=name;cat.desc=desc;cat.order=order;cat.platforms=platforms;
     if(old!==name) data.apps.forEach(a=>{if(a.cat===old)a.cat=name;});
   }else{
-    data.categories.push({id:slugify(name)||uid('cat'),name,desc,order});
+    data.categories.push({id:slugify(name)||uid('cat'),name,desc,order,platforms});
   }
   data.categories=sortedCategories().map((c,i)=>({...c,order:i+1}));
   if(saveData()){ $('#modal').close();toast('分类已保存。','ok'); }
@@ -1490,7 +1522,7 @@ function openAppModal(id){
     <div class="form-section"><div class="form-section-title"><b>基本信息</b><span>带 * 为必填</span></div><div class="form-grid">
       <label class="field"><span>应用名称 *</span><input id="appName" value="${esc(app.name)}" maxlength="32" placeholder="例如 QXNET"></label>
       <label class="field"><span>英文名</span><input id="appEn" value="${esc(app.en||'')}" maxlength="48" placeholder="例如 WEAK NETWORK LAB"></label>
-      <div class="field"><span>分类 *</span><input type="hidden" id="appCat" value="${esc(catSel)}">${cselectMarkup('appCatSelect',catOpts,catSel,'form-select')}</div>
+      <div class="field"><span>分类 *</span><input type="hidden" id="appCat" value="${esc(catSel)}">${cselectMarkup('appCatSelect',catOpts,catSel,'form-select')}<span class="hint" id="catPlatHint"></span></div>
       <label class="field"><span>官网</span><input id="appSite" type="url" value="${esc(app.site||'')}" placeholder="https://…"></label>
       <label class="field wide"><span>一句话介绍</span><input id="appTagline" value="${esc(app.tagline||'')}" maxlength="80" placeholder="前台卡片上显示的一句话"></label>
       <label class="field wide"><span>详细描述</span><textarea id="appDesc" rows="3" placeholder="应用是做什么的，适合谁。">${esc(app.desc||'')}</textarea></label>
@@ -1504,7 +1536,8 @@ function openAppModal(id){
     </div></div>
     <div class="form-section"><div class="form-section-title"><b>平台与安装包</b><span>至少选一个平台</span></div><div class="plat-checks">${plats}</div>${panels}</div>`;
   paintIcon(app);
-  bindCSelect($('#modalBody [data-csel="appCatSelect"]'),v=>{ const el=$('#appCat'); if(el) el.value=v; });
+  bindCSelect($('#modalBody [data-csel="appCatSelect"]'),v=>{ const el=$('#appCat'); if(el) el.value=v; paintCatPlatHint(); });
+  paintCatPlatHint();
   $$('#modalBody [data-seg="pending"]').forEach(seg=>{
     const input=seg.querySelector('input');
     seg.querySelectorAll('button').forEach(btn=>{
@@ -1563,6 +1596,7 @@ function openAppModal(id){
   $('.plat-checks').addEventListener('change',e=>{
     const cb=e.target.closest('[data-plat-check]');if(!cb)return;
     const panel=$(`[data-panel="${cb.dataset.platCheck}"]`);if(panel)panel.hidden=!cb.checked;
+    paintCatPlatHint();
   });
   $('#appIconFile').addEventListener('change',async e=>{
     const f=e.target.files&&e.target.files[0];if(!f)return;

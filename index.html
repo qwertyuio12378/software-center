@@ -817,6 +817,7 @@ let APPS = [
    ============================================================ */
 const ADMIN_DATA_KEY = 'weakdock_admin_v1';
 let ADMIN_CATEGORIES = null;
+let CAT_PLATS = {};
 let COPY_OVERRIDES = {};
 const FILE_DB_NAME='weakdock_files';
 let fileDBPromise=null;
@@ -857,6 +858,12 @@ function applyAdminSnapshot(snap){
     .sort((a,b)=>(a.order??999)-(b.order??999));
   const cats = ordered.map(c=>c.name);
   const allCats = [...new Set([...cats,...apps.map(a=>a.cat)])];
+  const VALID_PLAT=['win','android','ios','os'];
+  CAT_PLATS={};
+  ordered.forEach(c=>{
+    const ps=Array.isArray(c.platforms)?c.platforms.filter(k=>VALID_PLAT.includes(k)):[];
+    if(ps.length) CAT_PLATS[c.name]=ps;
+  });
   apps.forEach(a=>{
     if(a.live && a.live.assets){
       Object.keys(a.live.assets).forEach(k=>{
@@ -1078,13 +1085,20 @@ function positionSegThumb(){
   thumb.style.transform=`translateX(${btn.offsetLeft-4}px)`;
   if(!seg.classList.contains('thumb-ready')) requestAnimationFrame(()=>seg.classList.add('thumb-ready'));
 }
+function catPlatsOf(cat){
+  const ps=CAT_PLATS[cat];
+  return Array.isArray(ps)&&ps.length?ps:PLAT_ORDER;
+}
 function renderCats(){
   const pool = catPool();
   const counts={};
   pool.forEach(a=>counts[a.cat]=(counts[a.cat]||0)+1);
-  $('#cats').innerHTML = ['全部',...CAT_ORDER].map(cat=>
-    `<button type="button" data-cat="${cat}" class="${state.cat===cat?'on':''}" aria-pressed="${state.cat===cat}">${cat}<em>${cat==='全部'?pool.length:(counts[cat]||0)}</em></button>`
-  ).join('');
+  const cats = CAT_ORDER.filter(c=>state.plat==='all'||catPlatsOf(c).includes(state.plat)||(counts[c]||0)>0);
+  if(state.cat!=='全部'&&!cats.includes(state.cat)) state.cat='全部';
+  $('#cats').innerHTML = ['全部',...cats].map(cat=>{
+    const plats = cat==='全部' ? '' : ' title="覆盖 '+catPlatsOf(cat).map(k=>PLAT_LABEL[k]).join(' / ')+'"';
+    return `<button type="button" data-cat="${cat}"${plats} class="${state.cat===cat?'on':''}" aria-pressed="${state.cat===cat}">${cat}<em>${cat==='全部'?pool.length:(counts[cat]||0)}</em></button>`;
+  }).join('');
 }
 function renderResult(list){
   const total = APPS.length;
