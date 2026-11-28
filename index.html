@@ -488,16 +488,51 @@ section[id]{scroll-margin-top:calc(var(--header-h) + 20px)}
 .foot-col h4{margin:0 0 8px;font-size:10px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--muted-2)}
 .foot-col a,.foot-col button{text-align:left;font-size:12px;color:var(--muted);padding:5px 0;transition:color .2s;align-self:flex-start}
 .foot-col a:hover,.foot-col button:hover{color:var(--accent)}
-.site-detail{display:grid;grid-template-columns:minmax(180px,.7fr) minmax(0,2fr);gap:24px;padding:22px 0 24px;border-bottom:1px solid var(--line)}
-.sd-head .sec-kicker{display:block;margin-bottom:6px}
-.sd-head h3{margin:0;font-size:15px;font-weight:800;letter-spacing:-.01em}
-.sd-head p{margin:6px 0 0;font-size:10.5px;color:var(--muted-2);line-height:1.6}
-.sd-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--line)}
-.sd-item{display:flex;align-items:baseline;justify-content:space-between;gap:14px;padding:9px 13px;background:var(--bg-2)}
-.sd-item dt{font-size:10px;letter-spacing:.06em;color:var(--muted-2);white-space:nowrap}
-.sd-item dd{margin:0;font-size:11px;font-weight:700;color:var(--muted);text-align:right;line-height:1.5}
-.sd-item dd b{font-weight:800;color:var(--ink);font-variant-numeric:tabular-nums}
-.sd-item dd a{color:var(--accent);border-bottom:1px solid rgba(62,230,192,.28)}
+/* 页脚网站详情入口 */
+.site-entry{display:flex;align-items:center;gap:14px;width:100%;margin:16px 0 0;padding:12px 15px;border:1px solid var(--line);border-radius:14px;background:var(--panel);text-align:left;transition:background .25s,border-color .25s,transform .25s var(--ease)}
+.site-entry:hover{border-color:var(--line-strong);background:var(--panel-2);transform:translateY(-1px)}
+.se-ico{width:35px;height:35px;flex:0 0 auto;border-radius:10px;display:grid;place-items:center;color:var(--accent);background:rgba(62,230,192,.08);border:1px solid rgba(62,230,192,.18)}
+.se-ico svg{width:16px;height:16px}
+.se-main{display:flex;flex-direction:column;gap:4px;min-width:0}
+.se-kicker{font-size:9px;font-weight:800;letter-spacing:.15em;line-height:1;color:var(--muted-2);text-transform:uppercase}
+.se-main b{font-size:13px;font-weight:800;letter-spacing:-.01em}
+.se-sub{flex:1;min-width:0;font-size:10.5px;color:var(--muted-2);text-align:right;letter-spacing:.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.se-go{flex:0 0 auto;display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:var(--accent);letter-spacing:.04em}
+.se-go svg{width:12px;height:12px;transition:transform .25s var(--ease)}
+.site-entry:hover .se-go svg{transform:translateX(3px)}
+[data-theme="light"] .se-ico{background:rgba(15,184,148,.07);border-color:rgba(15,184,148,.2)}
+
+/* 网站详情抽屉 */
+#siteScrim{z-index:76}
+#siteDrawer{z-index:77}
+.site-drawer .drawer-panel{width:min(600px,100%)}
+.sd-page{padding-top:6px}
+.sd-page-head{padding-right:34px}
+.sd-page-head .sec-kicker{display:block;margin-bottom:9px}
+.sd-page-head h2{margin:0;font-size:31px;line-height:1.12;font-weight:900;letter-spacing:-.045em}
+.sd-page-head p{margin:10px 0 0;font-size:12px;line-height:1.75;color:var(--muted)}
+.sd-brand{position:relative;display:flex;align-items:center;gap:13px;margin-top:21px;padding:16px;border:1px solid var(--line);border-radius:16px;overflow:hidden;background:linear-gradient(135deg,rgba(62,230,192,.08),rgba(74,168,255,.045))}
+.sd-brand::after{content:'';position:absolute;right:-24px;top:-52px;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(74,168,255,.14),transparent 68%);pointer-events:none}
+.sd-brand .brand-mark{width:44px;height:44px;border-radius:13px;flex:0 0 auto;z-index:1}
+.sd-brand .brand-mark svg{width:23px;height:23px}
+.sd-brand-copy{position:relative;z-index:1;min-width:0;flex:1}
+.sd-brand-copy span{display:block;font-size:9px;font-weight:800;letter-spacing:.14em;color:var(--muted-2);text-transform:uppercase}
+.sd-brand-copy b{display:block;margin-top:3px;font-size:17px;font-weight:900;letter-spacing:-.025em;line-height:1.2}
+.sd-brand-copy em{display:block;margin-top:4px;font-size:10px;font-style:normal;letter-spacing:.03em;color:var(--muted-2)}
+.sd-brand-tag{position:relative;z-index:1;flex:0 0 auto;padding:4px 8px;border:1px solid rgba(62,230,192,.26);border-radius:99px;background:rgba(62,230,192,.07);color:var(--accent);font-size:9px;font-weight:800;letter-spacing:.08em}
+.sd-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:13px 0 0;padding:0}
+.sd-item{padding:12px 13px;border:1px solid var(--line);border-radius:12px;background:var(--panel);min-height:69px}
+.sd-item dt{font-size:9.5px;font-weight:800;letter-spacing:.1em;color:var(--muted-2);text-transform:uppercase}
+.sd-item dd{margin:8px 0 0;font-size:12px;font-weight:700;line-height:1.5;color:var(--ink);word-break:break-word}
+.sd-item dd b{font-weight:900;color:var(--accent);font-variant-numeric:tabular-nums}
+.sd-item dd a{color:var(--accent);border-bottom:1px solid rgba(62,230,192,.28);padding-bottom:1px}
+.sd-item.wide{grid-column:1/-1;display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:0;padding:12px 14px}
+.sd-item.wide dd{margin:0;text-align:right;font-variant-numeric:tabular-nums}
+.sd-rule{margin:18px 0 0;padding:0 0 0 13px;border-left:2px solid rgba(62,230,192,.35)}
+.sd-rule span{display:block;font-size:9px;font-weight:800;letter-spacing:.14em;color:var(--muted-2);text-transform:uppercase}
+.sd-rule p{margin:6px 0 0;font-size:11px;line-height:1.8;color:var(--muted)}
+.sd-foot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:20px;padding-top:14px;border-top:1px solid var(--line);font-size:9.5px;letter-spacing:.03em;color:var(--muted-2)}
+[data-theme="light"] .sd-brand{background:linear-gradient(135deg,rgba(15,184,148,.08),rgba(43,130,232,.045))}
 [data-theme="light"] .sd-item{background:#fbfcfe}
 .foot-bottom{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:18px;font-size:11px;color:var(--muted-2)}
 .foot-bottom b{font-weight:700;color:var(--muted)}
@@ -527,9 +562,19 @@ section[id]{scroll-margin-top:calc(var(--header-h) + 20px)}
   .timeline li{padding:14px 15px}
   .foot-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:22px 14px}
   .foot-about{grid-column:1/-1;max-width:none}
-  .site-detail{display:block;padding:20px 0 22px}
-  .sd-grid{grid-template-columns:1fr;margin-top:14px}
-  .sd-item{padding:10px 12px}
+  .site-entry{margin-top:15px;padding:11px 13px;gap:11px}
+  .se-ico{width:33px;height:33px}
+  .se-main{flex:1}
+  .se-sub{display:none}
+  .sd-page-head h2{font-size:26px}
+  .sd-page-head p{font-size:11.5px}
+  .sd-brand{margin-top:18px;padding:14px}
+  .sd-brand .brand-mark{width:41px;height:41px}
+  .sd-brand-copy b{font-size:15.5px}
+  .sd-grid{grid-template-columns:1fr;margin-top:11px}
+  .sd-item{min-height:0;padding:11px 12px}
+  .sd-item.wide{padding:12px}
+  .sd-rule{margin-top:15px}
   .foot-bottom{font-size:10.5px}
 }
 @media(max-width:420px){
@@ -918,27 +963,64 @@ section[id]{scroll-margin-top:calc(var(--header-h) + 20px)}
         <a href="#top">回到顶部</a>
       </nav>
     </div>
-    <section class="site-detail" aria-label="网站详情">
-      <div class="sd-head">
-        <span class="sec-kicker">Site Details</span>
-        <h3>网站详情</h3>
-        <p>本站公开信息与当前收录范围。</p>
-      </div>
-      <dl class="sd-grid">
-        <div class="sd-item"><dt>网站名称</dt><dd>弱网坞 WeakDock</dd></div>
-        <div class="sd-item"><dt>官网域名</dt><dd><a href="https://qxnetz.ccwu.cc/" target="_blank" rel="noopener">qxnetz.ccwu.cc</a></dd></div>
-        <div class="sd-item"><dt>站点性质</dt><dd>官网兼官方下载索引站</dd></div>
-        <div class="sd-item"><dt>收录内容</dt><dd><b id="siteApps">6</b> 款工具 · <b id="siteLinks">5</b> 条官方直链</dd></div>
-        <div class="sd-item"><dt>下载来源</dt><dd>自有云存储 + 厂商官方源</dd></div>
-        <div class="sd-item"><dt>最近校验</dt><dd id="siteCheck">—</dd></div>
-      </dl>
-    </section>
+    <button class="site-entry" id="siteDetailBtn" type="button" aria-haspopup="dialog" aria-controls="siteDrawer" aria-expanded="false" aria-label="查看网站详情">
+      <span class="se-ico" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><circle cx="12" cy="12" r="8.2"/><path d="M12 8.2h.01M12 11.4v4.4"/></svg>
+      </span>
+      <span class="se-main"><span class="se-kicker">Site Details</span><b>网站详情</b></span>
+      <span class="se-sub">站点性质 · 收录范围 · 最近校验</span>
+      <span class="se-go">查看<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"><path d="M9 5l7 7-7 7"/></svg></span>
+    </button>
     <div class="foot-bottom">
       <span>© <b id="yearNow">2026</b> 弱网坞 WeakDock</span>
       <span>官方直链 · 逐条实测 · 不捆绑下载器</span>
     </div>
   </div>
 </footer>
+
+<!-- ================= 网站详情抽屉 ================= -->
+<div class="scrim" id="siteScrim"></div>
+<aside class="drawer site-drawer" id="siteDrawer" role="dialog" aria-modal="true" aria-labelledby="siteDrawerTitle" aria-hidden="true" inert>
+  <div class="drawer-panel" id="siteDrawerPanel">
+    <div class="grab" aria-hidden="true"></div>
+    <button class="drawer-x" id="siteDrawerX" type="button" aria-label="关闭网站详情">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg>
+    </button>
+    <div class="sd-page">
+      <header class="sd-page-head">
+        <span class="sec-kicker">Site Details</span>
+        <h2 id="siteDrawerTitle">网站详情</h2>
+        <p>本站公开信息与当前收录范围。</p>
+      </header>
+      <div class="sd-brand">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v10m0 0l-4-4m4 4l4-4M5 18h14"/></svg>
+        </span>
+        <div class="sd-brand-copy">
+          <span>网站名称</span>
+          <b>弱网坞 WeakDock</b>
+          <em>官方网站 · 官方下载</em>
+        </div>
+        <span class="sd-brand-tag">官网</span>
+      </div>
+      <dl class="sd-grid">
+        <div class="sd-item"><dt>官网域名</dt><dd><a href="https://qxnetz.ccwu.cc/" target="_blank" rel="noopener">qxnetz.ccwu.cc</a></dd></div>
+        <div class="sd-item"><dt>站点性质</dt><dd>官网兼官方下载索引站</dd></div>
+        <div class="sd-item"><dt>收录内容</dt><dd><b id="siteApps">6</b> 款工具 · <b id="siteLinks">5</b> 条官方直链</dd></div>
+        <div class="sd-item"><dt>下载来源</dt><dd>自有云存储 + 厂商官方源</dd></div>
+        <div class="sd-item wide"><dt>最近校验</dt><dd id="siteCheck">—</dd></div>
+      </dl>
+      <blockquote class="sd-rule">
+        <span>收录原则</span>
+        <p>只收录官方下载源。自研产品由自有云端存储分发，第三方工具只跳转厂商官方地址；不转存、不捆绑、不插下载器。</p>
+      </blockquote>
+      <div class="sd-foot">
+        <span>信息公开页</span>
+        <span>收录数量随站点数据自动更新</span>
+      </div>
+    </div>
+  </div>
+</aside>
 
 <!-- ================= 详情抽屉 ================= -->
 <div class="scrim" id="scrim"></div>
@@ -1574,7 +1656,8 @@ document.addEventListener('keydown',e=>{
   if(e.key==='/' && !isTyping){ e.preventDefault(); $('#q').focus(); }
   if(e.key==='Escape'){
     if($('#shotViewer').classList.contains('open')) return;
-    if($('#drawer').classList.contains('open')) closeDrawer();
+    if($('#siteDrawer').classList.contains('open')) closeSiteDrawer();
+    else if($('#drawer').classList.contains('open')) closeDrawer();
     else if($('#modal').classList.contains('open')) closeModal();
   }
 });
@@ -1703,6 +1786,39 @@ $('#drawerPanel').addEventListener('click',e=>{
   if(localBtn){ const app=appById(localBtn.dataset.localDl); if(app) doDownload(app,localBtn.dataset.localPlat); }
   const shotBtn=e.target.closest('[data-shot-index]');
   if(shotBtn){ const app=appById(shotBtn.dataset.shotApp); if(app) openShotViewer(app,Number(shotBtn.dataset.shotIndex)||0); }
+});
+
+/* ---------- 网站详情抽屉 ---------- */
+const siteDrawer=$('#siteDrawer'), siteScrim=$('#siteScrim'), siteBtn=$('#siteDetailBtn');
+let siteLastFocus=null;
+
+function openSiteDrawer(){
+  siteLastFocus=document.activeElement;
+  siteDrawer.inert=false;
+  siteDrawer.classList.add('open'); siteScrim.classList.add('open');
+  siteDrawer.setAttribute('aria-hidden','false');
+  if(siteBtn) siteBtn.setAttribute('aria-expanded','true');
+  document.body.classList.add('locked');
+  setTimeout(()=>$('#siteDrawerX').focus({preventScroll:true}),80);
+}
+function closeSiteDrawer(){
+  siteDrawer.classList.remove('open'); siteScrim.classList.remove('open');
+  siteDrawer.setAttribute('aria-hidden','true'); siteDrawer.inert=true;
+  if(siteBtn) siteBtn.setAttribute('aria-expanded','false');
+  if(!(drawer && drawer.classList.contains('open')) && !(modal && modal.classList.contains('open'))) document.body.classList.remove('locked');
+  if(siteLastFocus && siteLastFocus.focus) siteLastFocus.focus({preventScroll:true});
+  siteLastFocus=null;
+}
+if(siteBtn) siteBtn.addEventListener('click',openSiteDrawer);
+if(siteScrim) siteScrim.addEventListener('click',closeSiteDrawer);
+if($('#siteDrawerX')) $('#siteDrawerX').addEventListener('click',closeSiteDrawer);
+siteDrawer.addEventListener('keydown',e=>{
+  if(e.key!=='Tab') return;
+  const items=[...siteDrawer.querySelectorAll('a[href],button:not([disabled])')].filter(el=>el.offsetParent!==null);
+  if(!items.length) return;
+  const first=items[0],last=items[items.length-1];
+  if(e.shiftKey && document.activeElement===first){e.preventDefault();last.focus();}
+  else if(!e.shiftKey && document.activeElement===last){e.preventDefault();first.focus();}
 });
 
 $('#shotClose').onclick=closeShotViewer;
