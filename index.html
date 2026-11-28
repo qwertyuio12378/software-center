@@ -1308,6 +1308,12 @@ body::before{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;op
   .site-drawer .drawer-panel{height:auto;max-height:92dvh}
 }
 
+
+/* 移动端筛选条不再下移，避免压住第一张软件卡 */
+@media(max-width:900px){
+  .toolbar{position:relative;top:auto;z-index:auto}
+}
+
 </style>
 </head>
 <body id="top">
